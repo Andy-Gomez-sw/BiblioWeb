@@ -1,250 +1,205 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catálogo — Biblioteca Digital</title>
-  <link rel="stylesheet" href="../assets/css/styles.css">
-  <style>
-    .collection-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
-    .collection-card {
-      background: #fff; border: 1px solid var(--cream-300); border-radius: var(--radius-md);
-      padding: 28px 20px; text-align: center; cursor: pointer; transition: box-shadow .2s, transform .15s;
-    }
-    .collection-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .collection-icon { font-size: 36px; margin-bottom: 10px; }
-    .collection-name { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
-    .collection-count { font-size: 13px; color: var(--text-muted); }
-
-    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
-    .results-count { font-size: 13px; color: var(--text-muted); }
-    .sort-select {
-      border: 1.5px solid var(--cream-300); border-radius: var(--radius-pill);
-      padding: 6px 14px; font-size: 13px; color: var(--text-secondary); background: #fff;
-      outline: none; cursor: pointer; transition: border-color .2s;
-    }
-    .sort-select:focus { border-color: var(--amber); }
-
-    .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-
-    .card-doc-list {
-      background: #fff; border-radius: var(--radius-md); border: 1px solid var(--cream-300);
-      padding: 16px; display: flex; flex-direction: column; gap: 8px;
-      cursor: pointer; transition: box-shadow .2s, transform .15s;
-    }
-    .card-doc-list:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-
-    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
-    .empty-state p { font-size: 32px; margin-bottom: 12px; }
-
-    /* Pagination */
-    .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 32px; }
-    .page-btn {
-      width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1.5px solid var(--cream-300);
-      background: #fff; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      color: var(--text-secondary); transition: all .2s;
-    }
-    .page-btn:hover { border-color: var(--amber); color: var(--amber); }
-    .page-btn.active { background: var(--brown-900); border-color: var(--brown-900); color: #fff; }
-    .page-btn.arrow { font-size: 16px; }
-
-    @media (max-width: 900px) { .results-grid { grid-template-columns: repeat(2,1fr); } .collection-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 600px) { .results-grid { grid-template-columns: 1fr; } .collection-grid { grid-template-columns: repeat(3,1fr); } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo — BIBLIOWEB</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/catalgo.css">
+    <script src="../assets/js/catalogo.js" defer></script>
 </head>
+
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-brand">BIBLIOTECA<br>UNIVERSIDAD — COLECCIÓN DIGITAL</div>
-    <div class="navbar-actions">
-      <button class="nav-btn" id="btn-modo">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
-        Modo explorador
-      </button>
-      <a href="login.html" class="nav-btn primary">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-        Inicia sesión
-      </a>
-    </div>
-  </nav>
-
-  <!-- Guest banner -->
-  <div class="alert-banner" id="guest-banner">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    Estás navegando como invitado. Solo puedes consultar el catálogo.
-    Para guardar documentos, <a href="login.html" style="color:var(--amber-light);font-weight:600;margin-left:4px">inicia sesión.</a>
-    <button onclick="document.getElementById('guest-banner').style.display='none'">×</button>
-  </div>
-
-  <main class="page-content">
-
-    <!-- Search -->
-    <div style="margin-bottom:20px">
-      <div class="search-row" style="margin-bottom:12px">
-        <div class="input-group">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" id="search-input" placeholder="Buscar por título, autor, año..." oninput="filterDocs()">
-        </div>
-        <button class="btn btn-dark" onclick="filterDocs()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          Buscar
-        </button>
-      </div>
-      <div class="filter-tabs" id="filter-tabs">
-        <button class="filter-tab active" data-filter="todo" onclick="setFilter(this)">🗂️ Todo</button>
-        <button class="filter-tab" data-filter="tesis" onclick="setFilter(this)">🎓 Tesis</button>
-        <button class="filter-tab" data-filter="articulo" onclick="setFilter(this)">📄 Artículo</button>
-        <button class="filter-tab" data-filter="libro" onclick="setFilter(this)">📚 Libros</button>
-      </div>
-    </div>
-
-    <!-- Collections -->
-    <section style="margin-bottom:36px" id="collections-section">
-      <div class="section-heading">
-        <span style="font-size:18px">🗂️</span>
-        <h2>Colecciones disponibles</h2>
-      </div>
-      <div class="collection-grid">
-        <div class="collection-card" onclick="setFilterById('tesis')">
-          <div class="collection-icon">🎓</div>
-          <div class="collection-name">Tesis</div>
-          <div class="collection-count">830 documentos</div>
-        </div>
-        <div class="collection-card" onclick="setFilterById('articulo')">
-          <div class="collection-icon">📄</div>
-          <div class="collection-name">Artículo</div>
-          <div class="collection-count">490 publicaciones</div>
-        </div>
-        <div class="collection-card" onclick="setFilterById('libro')">
-          <div class="collection-icon">📚</div>
-          <div class="collection-name">Libro</div>
-          <div class="collection-count">180 títulos</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Results -->
-    <section>
-      <div class="results-header">
-        <div>
-          <div class="section-heading" style="margin-bottom:4px">
-            <span style="font-size:18px">🕐</span>
-            <h2 id="section-title">Vistos recientemente</h2>
-          </div>
-          <span class="results-count" id="results-count">4 documentos</span>
-        </div>
-        <select class="sort-select" onchange="sortDocs(this.value)">
-          <option value="reciente">Más recientes</option>
-          <option value="antiguo">Más antiguos</option>
-          <option value="titulo">Título A–Z</option>
-        </select>
-      </div>
-
-      <div class="results-grid" id="results-grid"></div>
-      <div class="empty-state" id="empty-state" style="display:none">
-        <p>🔍</p>
-        <p style="font-size:16px;font-weight:500;color:var(--text-secondary)">No se encontraron documentos</p>
-        <p style="font-size:14px;margin-top:4px">Intenta con otro término o cambia el filtro</p>
-      </div>
-
-      <!-- Pagination -->
-      <div class="pagination">
-        <button class="page-btn arrow">‹</button>
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <span style="color:var(--text-muted);font-size:13px;padding:0 4px">…</span>
-        <button class="page-btn">12</button>
-        <button class="page-btn arrow">›</button>
-      </div>
-    </section>
-
-  </main>
-
-  <script>
-    const docs = [
-      { tipo:'tesis',   emoji:'🎓', titulo:'El romanticismo tardío en la literatura mexicana del siglo XIX', autor:'García Martínez, L. A.', anio:2022 },
-      { tipo:'articulo',emoji:'📄', titulo:'IA aplicada a la catalogación de acervos bibliotecarios',       autor:'Hernández Ruiz, P. & Torres, M.', anio:2023 },
-      { tipo:'libro',   emoji:'📚', titulo:'El laberinto de la soledad',                                    autor:'Paz, O.', anio:1993 },
-      { tipo:'tesis',   emoji:'🎓', titulo:'Análisis socioeconómico del desarrollo rural en Oaxaca',        autor:'Ramírez López, C.', anio:2024 },
-      { tipo:'articulo',emoji:'📄', titulo:'Cambio climático y biodiversidad en ecosistemas mexicanos',      autor:'Gutiérrez, A. & Soto, R.', anio:2023 },
-      { tipo:'tesis',   emoji:'🎓', titulo:'Filosofía del derecho en el México posrevolucionario',           autor:'Morales Vega, J.', anio:2021 },
-      { tipo:'libro',   emoji:'📚', titulo:'Matemáticas avanzadas para ingeniería — Vol. II',               autor:'Flores Mendoza, E.', anio:2019 },
-      { tipo:'articulo',emoji:'📄', titulo:'Neurociencia cognitiva y procesos de aprendizaje en adolescentes', autor:'Reyes Castillo, M.', anio:2022 },
-      { tipo:'libro',   emoji:'📚', titulo:'Historia económica de México, siglo XX',                        autor:'Domínguez Ortiz, A.', anio:2015 },
-      { tipo:'tesis',   emoji:'🎓', titulo:'Gestión de residuos sólidos urbanos en zonas metropolitanas',    autor:'Vargas Ríos, P.', anio:2023 },
-      { tipo:'articulo',emoji:'📄', titulo:'Derecho constitucional comparado en América Latina',             autor:'Salinas Cruz, J.', anio:2020 },
-      { tipo:'libro',   emoji:'📚', titulo:'Química orgánica: fundamentos y aplicaciones',                  autor:'López Rueda, F.', anio:2018 },
-    ];
-
-    let activeFilter = 'todo';
-
-    function setFilter(btn) {
-      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      activeFilter = btn.dataset.filter;
-      filterDocs();
-    }
-    function setFilterById(type) {
-      const btn = document.querySelector(`.filter-tab[data-filter="${type}"]`);
-      if (btn) setFilter(btn);
-      document.getElementById('results-grid').scrollIntoView({ behavior:'smooth' });
-    }
-
-    function filterDocs() {
-      const q = document.getElementById('search-input').value.toLowerCase();
-      let filtered = docs.filter(d => {
-        const matchFilter = activeFilter === 'todo' || d.tipo === activeFilter;
-        const matchSearch = !q || d.titulo.toLowerCase().includes(q) || d.autor.toLowerCase().includes(q) || String(d.anio).includes(q);
-        return matchFilter && matchSearch;
-      });
-      renderDocs(filtered);
-    }
-
-    function sortDocs(val) {
-      filterDocs();
-    }
-
-    function renderDocs(list) {
-      const grid = document.getElementById('results-grid');
-      const empty = document.getElementById('empty-state');
-      const count = document.getElementById('results-count');
-      const title = document.getElementById('section-title');
-      const q = document.getElementById('search-input').value.trim();
-
-      title.textContent = q ? 'Resultados de búsqueda' : 'Vistos recientemente';
-      count.textContent = list.length + ' documento' + (list.length !== 1 ? 's' : '');
-
-      if (!list.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
-      empty.style.display = 'none';
-
-      grid.innerHTML = list.map(d => `
-        <div class="card-doc-list" onclick="window.location.href='login.html'">
-          <div class="doc-type">${d.emoji} ${capitalize(d.tipo)}</div>
-          <div class="doc-title">${d.titulo}</div>
-          <div class="doc-meta">${d.autor}</div>
-          <div class="doc-footer">
-            <span class="doc-year">${d.anio}</span>
-            <button class="icon-btn" title="Vista previa" onclick="event.stopPropagation()">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">BIBLIOWEB</div>
+        <div class="navbar-actions">
+            <button class="nav-btn" id="btn-modo" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="8" r="5" />
+                    <path d="M20 21a8 8 0 1 0-16 0" />
+                </svg>
+                Modo explorador
             </button>
-          </div>
-        </div>`).join('');
-    }
+            <a href="login.html" class="nav-btn primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+                Inicia sesión
+            </a>
+        </div>
+    </nav>
 
-    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+    <!-- Guest banner -->
+    <div class="alert-banner" id="guest-banner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        Estás navegando como invitado. Solo puedes consultar el catálogo.
+        Para guardar documentos, <a href="login.html"
+            style="color:var(--amber-light);font-weight:600;margin-left:4px">inicia sesión.</a>
+        <button onclick="document.getElementById('guest-banner').style.display='none'">×</button>
+    </div>
 
-    // Pagination buttons
-    document.querySelectorAll('.page-btn:not(.arrow)').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.page-btn:not(.arrow)').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
+    <main class="page-content">
 
-    // Init
-    filterDocs();
-  </script>
+        <!-- Search -->
+        <div style="margin-bottom:20px">
+            <div class="search-row" style="margin-bottom:12px">
+                <div class="input-group">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" id="search-input" placeholder="Buscar por título, autor, año..."
+                        oninput="filterDocs()">
+                </div>
+                <button class="btn btn-dark" onclick="filterDocs()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    Buscar
+                </button>
+            </div>
+            <div class="filter-tabs" id="filter-tabs">
+                <button class="filter-tab active" data-filter="todo" onclick="setFilter(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                        fill="none">
+                        <path
+                            d="M168-192q-29 0-50.5-21.5T96-264v-432q0-29.7 21.5-50.85Q139-768 168-768h216l96 96h312q29.7 0 50.85 21.15Q864-629.7 864-600v336q0 29-21.15 50.5T792-192H168Zm0-72h624v-336H450l-96-96H168v432Zm0 0v-432 432Z" />
+                    </svg>
+                    Todo
+                </button>
+                <button class="filter-tab" data-filter="tesis" onclick="setFilter(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                        fill="none">
+                        <path
+                            d="M480-144 216-276v-240L48-600l432-216 432 216v312h-72v-276l-96 48v240L480-144Zm0-321 271-135-271-135-271 135 271 135Zm0 240 192-96v-159l-192 96-192-96v159l192 96Zm0-240Zm0 81Zm0 0Z" />
+                    </svg>
+                    Tesis
+                </button>
+                <button class="filter-tab" data-filter="articulo" onclick="setFilter(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                        fill="none">
+                        <path
+                            d="M288-288h288v-72H288v72Zm0-156h384v-72H288v72Zm0-156h384v-72H288v72Zm-72 456q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h528q29.7 0 50.85 21.15Q816-773.7 816-744v528q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm0-72h528v-528H216v528Zm0-528v528-528Z" />
+                    </svg>
+                    Artículo</button>
+                <button class="filter-tab" data-filter="libro" onclick="setFilter(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                        fill="none">
+                        <path
+                            d="M288-96q-40 0-68-27.5T192-190v-553q0-34 22-59.5t56-32.5l354-74v626l-338.95 71.13Q277-210 270.5-203.75 264-197.5 264-190q0 10 7.2 16t16.8 6h407.55v-624H768v696H288Zm96-211 168-36v-477l-168 35v478Zm-72 15v-477l-30 6q-8 2-13 7.19T264-743v463q5-2 10.5-3t10.5-3l27-6Zm-48-469v481-481Z" />
+                    </svg>
+                    Libros</button>
+            </div>
+        </div>
+
+        <!-- Collections -->
+        <section style="margin-bottom:36px" id="collections-section">
+            <div class="section-heading">
+                <svg xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960" width="25px"
+                    fill="#D4915C">
+                    <path
+                        d="M168-192q-32 0-52-21.16t-20-50.88v-432.24Q96-726 116-747t52-21h216l96 96h313q31 0 50.5 21t21.5 51H451l-96-96H168v432l78-264h690l-85 285q-8 23-21 37t-38 14H168Zm75-72h538l59-192H300l-57 192Zm0 0 57-192-57 192Zm-75-336v-96 96Z" />
+                </svg>
+                <h2>Colecciones disponibles</h2>
+            </div>
+            <div class="collection-grid">
+                <div class="collection-card" onclick="setFilterById('tesis')">
+                    <div class="collection-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px"
+                            fill="none">
+                            <path
+                                d="M480-144 216-276v-240L48-600l432-216 432 216v312h-72v-276l-96 48v240L480-144Zm0-321 271-135-271-135-271 135 271 135Zm0 240 192-96v-159l-192 96-192-96v159l192 96Zm0-240Zm0 81Zm0 0Z" />
+                        </svg>
+                    </div>
+                    <div class="collection-name">Tesis</div>
+                    <div class="collection-count">830 documentos</div>
+                </div>
+                <div class="collection-card" onclick="setFilterById('articulo')">
+                    <div class="collection-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px"
+                            fill="none">
+                            <path
+                                d="M288-288h288v-72H288v72Zm0-156h384v-72H288v72Zm0-156h384v-72H288v72Zm-72 456q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h528q29.7 0 50.85 21.15Q816-773.7 816-744v528q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm0-72h528v-528H216v528Zm0-528v528-528Z" />
+                        </svg>
+                    </div>
+                    <div class="collection-name">Artículo</div>
+                    <div class="collection-count">490 publicaciones</div>
+                </div>
+                <div class="collection-card" onclick="setFilterById('libro')">
+                    <div class="collection-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 -960 960 960" width="36px"
+                            fill="none">
+                            <path
+                                d="M288-96q-40 0-68-27.5T192-190v-553q0-34 22-59.5t56-32.5l354-74v626l-338.95 71.13Q277-210 270.5-203.75 264-197.5 264-190q0 10 7.2 16t16.8 6h407.55v-624H768v696H288Zm96-211 168-36v-477l-168 35v478Zm-72 15v-477l-30 6q-8 2-13 7.19T264-743v463q5-2 10.5-3t10.5-3l27-6Zm-48-469v481-481Z" />
+                        </svg>
+                    </div>
+                    <div class="collection-name">Libro</div>
+                    <div class="collection-count">180 títulos</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section>
+            <div class="results-header">
+                <div>
+                    <div class="section-heading" style="margin-bottom:4px">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                            fill="#D4915C">
+                            <path
+                                d="M360-853.33V-920h240v66.67H360Zm86.67 444.66h66.66V-642h-66.66v233.33ZM340.5-109.17q-65.5-28.5-114.5-77.5t-77.5-114.5q-28.5-65.5-28.5-139.5t28.5-139.5q28.5-65.5 77.5-114.5t114.5-77.5q65.5-28.5 139.5-28.5 65.33 0 123.67 21.67 58.33 21.67 105.66 61L762-770.67 808.67-724 756-671.33Q792.67-628 816.33-571 840-514 840-440.67q0 74-28.5 139.5T734-186.67q-49 49-114.5 77.5T480-80.67q-74 0-139.5-28.5ZM687.67-233q85.66-85.67 85.66-207.67 0-122-85.66-207.66Q602-734 480-734q-122 0-207.67 85.67-85.66 85.66-85.66 207.66T272.33-233Q358-147.33 480-147.33q122 0 207.67-85.67ZM480-440Z" />
+                        </svg>
+                        <h2 id="section-title">Vistos recientemente</h2>
+                    </div>
+                    <span class="results-count" id="results-count">4 documentos</span>
+                </div>
+                <select class="sort-select" onchange="sortDocs(this.value)">
+                    <option value="reciente">Más recientes</option>
+                    <option value="antiguo">Más antiguos</option>
+                    <option value="titulo">Título A–Z</option>
+                </select>
+            </div>
+
+            <div class="results-grid" id="results-grid"></div>
+            <div class="empty-state" id="empty-state" style="display:none">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+                <p style="font-size:16px;font-weight:500;color:var(--text-secondary)">No se encontraron documentos</p>
+                <p style="font-size:14px;margin-top:4px">Intenta con otro término o cambia el filtro</p>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <button class="page-btn arrow">‹</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span style="color:var(--text-muted);font-size:13px;padding:0 4px">…</span>
+                <button class="page-btn">12</button>
+                <button class="page-btn arrow">›</button>
+            </div>
+        </section>
+
+    </main>
+
 </body>
+
 </html>
