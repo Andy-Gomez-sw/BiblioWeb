@@ -53,15 +53,12 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-brand">BIBLIOTECA<br>UNIVERSIDAD — COLECCIÓN DIGITAL</div>
   </nav>
 
-  <!-- Hero split -->
   <div class="hero">
 
-    <!-- Left cover -->
     <div class="hero-cover">
       <div class="hero-cover-bg"></div>
       <div class="hero-cover-content">
@@ -70,7 +67,6 @@
       </div>
     </div>
 
-    <!-- Right form -->
     <div class="hero-form">
       <h2 class="form-title">Inicia sesión</h2>
       <p class="form-subtitle">Accede a tu cuenta</p>
@@ -78,16 +74,16 @@
       <div class="form-stack">
         <div class="input-group">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          <input type="email" placeholder="Correo electrónico" autocomplete="email">
+          <input type="email" placeholder="Correo electrónico" autocomplete="email" id="f-email">
         </div>
 
         <div class="input-group">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
-          <input type="password" placeholder="Contraseña" autocomplete="current-password">
+          <input type="password" placeholder="Contraseña" autocomplete="current-password" id="f-password">
         </div>
 
-        <button class="btn btn-primary btn-full" onclick="window.location.href='dashboard.html'">
-          Entrar
+        <button class="btn btn-primary btn-full" id="btn-google">
+          Entrar con Google
         </button>
 
         <div class="divider"><span>o</span></div>
@@ -100,6 +96,48 @@
     </div>
 
   </div>
+
+  <script type="module">
+    // Importamos las funciones necesarias desde la CDN oficial para usar módulos en el navegador
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // Tus datos de configuración reales de BiblioWeb
+    const firebaseConfig = {
+      apiKey: "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
+      authDomain: "biblioweb-1efc6.firebaseapp.com",
+      projectId: "biblioweb-1efc6",
+      storageBucket: "biblioweb-1efc6.firebasestorage.app",
+      messagingSenderId: "688727975714",
+      appId: "1:688727975714:web:7cf8556eddc5fbeb10e77b",
+      measurementId: "G-Y8JHDHN33N"
+    };
+
+    // Inicializamos Firebase y la autenticación
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Función para manejar el inicio de sesión
+    async function iniciarSesionConGoogle() {
+      try {
+        const resultado = await signInWithPopup(auth, provider);
+        const usuario = resultado.user;
+        
+        console.log("Sesión iniciada correctamente:", usuario.displayName, usuario.email);
+        
+        // Redirección automática al dashboard tras validar el login exitoso
+        window.location.href = 'dashboard.html';
+        
+      } catch (error) {
+        console.error("Error al autenticar con Google:", error.code, error.message);
+        alert("No se pudo completar el inicio de sesión: " + error.message);
+      }
+    }
+
+    // Escuchar el click en tu botón para ejecutar la ventana de Google
+    document.getElementById('btn-google').addEventListener('click', iniciarSesionConGoogle);
+  </script>
 
 </body>
 </html>
