@@ -6,59 +6,136 @@
   <title>Inicia sesión — Biblioteca Digital</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
   <style>
-    body { display: flex; flex-direction: column; min-height: 100vh; background: var(--cream-100); }
+    body { display: flex; flex-direction: column; min-height: 100vh; }
 
     .hero {
-      background: var(--brown-900); color: #fff;
-      display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 56px);
+      display: grid; grid-template-columns: 1fr 1fr; flex: 1; min-height: calc(100vh - 56px);
     }
 
-    /* Left: cover image side */
+    /* ── Lado izquierdo: imagen de librería ── */
     .hero-cover {
       position: relative; overflow: hidden;
-      background: linear-gradient(160deg, var(--brown-800) 0%, var(--brown-900) 100%);
     }
     .hero-cover-bg {
       position: absolute; inset: 0;
       background:
-        linear-gradient(to bottom, rgba(59,31,26,.55) 0%, rgba(59,31,26,.75) 100%),
+        linear-gradient(to bottom, rgba(40,18,12,.45) 0%, rgba(40,18,12,.62) 100%),
         url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=900&q=80') center/cover no-repeat;
     }
     .hero-cover-content {
-      position: relative; z-index: 1; padding: 52px 48px;
-      display: flex; flex-direction: column; justify-content: flex-end; height: 100%;
+      position: relative; z-index: 1; padding: 48px 44px;
+      display: flex; flex-direction: column; justify-content: center; height: 100%;
     }
     .hero-cover-content h1 {
-      font-family: 'Crimson Pro', serif; font-size: 56px; font-weight: 400;
-      line-height: 1.1; margin-bottom: 16px; color: #fff;
+      font-family: 'Crimson Pro', serif; font-size: 54px; font-weight: 400;
+      line-height: 1.1; margin-bottom: 14px; color: #fff;
     }
-    .hero-cover-content h1 em { color: var(--amber-light); font-style: italic; }
-    .hero-cover-content p { font-size: 15px; color: rgba(255,255,255,.7); max-width: 360px; line-height: 1.6; }
+    .hero-cover-content h1 em { color: #D4915C; font-style: italic; }
+    .hero-cover-content p { font-size: 14px; color: rgba(255,255,255,.8); max-width: 320px; line-height: 1.6; }
 
-    /* Right: login form */
+    /* ── Lado derecho: fondo café oscuro del prototipo ── */
     .hero-form {
-      background: var(--cream-100); display: flex; flex-direction: column;
+      background: #68432d;         /* café oscuro exacto de la imagen */
+      display: flex; flex-direction: column;
       justify-content: center; padding: 52px 56px;
     }
-    .form-title { font-family: 'Crimson Pro', serif; font-size: 36px; font-weight: 400; color: var(--text-primary); margin-bottom: 4px; }
-    .form-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; }
-    .form-stack { display: flex; flex-direction: column; gap: 14px; }
+
+    .form-title    { font-family: 'Crimson Pro', serif; font-size: 34px; font-weight: 400; color: #fff; margin-bottom: 2px; }
+    .form-subtitle { font-size: 14px; color: rgba(255,255,255,.6); margin-bottom: 32px; }
+    .form-stack    { display: flex; flex-direction: column; gap: 14px; }
+
+    /* Inputs con borde ámbar, fondo semi-transparente */
+    .login-input {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid #C4896E;          /* borde ámbar/dorado del prototipo */
+      border-radius: 999px;
+      padding: 13px 20px;
+      transition: border-color .2s, background .2s;
+    }
+    .login-input:focus-within {
+      border-color: #D4915C;
+      background: rgba(255,255,255,0.13);
+    }
+    .login-input svg { color: #C4896E; flex-shrink: 0; }
+    .login-input input {
+      border: none; outline: none; background: transparent;
+      color: #fff; font-size: 14px; width: 100%;
+    }
+    .login-input input::placeholder { color: rgba(255,255,255,.55); }
+
+    /* Botón "Entrar" — ámbar sólido del prototipo */
+    .btn-entrar {
+      background: #C4896E;
+      color: #fff; border: none; border-radius: 999px;
+      padding: 14px 24px; font-size: 14px; font-weight: 500;
+      cursor: pointer; width: 100%; transition: background .2s;
+    }
+    .btn-entrar:hover { background: #D4915C; }
+
+    /* Botones outline (Google, crear cuenta, sin sesión) */
+    .btn-login-outline {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: transparent;
+      border: 1.5px solid #C4896E;
+      color: #C4896E; border-radius: 999px;
+      padding: 12px 24px; font-size: 14px; font-weight: 400;
+      cursor: pointer; width: 100%; transition: all .2s; text-decoration: none;
+    }
+    .btn-login-outline:hover { background: rgba(196,137,110,.12); color: #D4915C; border-color: #D4915C; }
+    .btn-login-outline svg { flex-shrink: 0; }
+
+    /* Divisor */
+    .login-divider { display: flex; align-items: center; gap: 10px; }
+    .login-divider span { font-size: 13px; color: rgba(255,255,255,.4); }
+    .login-divider::before, .login-divider::after {
+      content: ''; flex: 1; height: 1px; background: rgba(255,255,255,.2);
+    }
+
+    /* Enlace olvidé contraseña */
+    .forgot-link {
+      text-align: right; font-size: 12px;
+      color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s;
+    }
+    .forgot-link:hover { color: #D4915C; }
+
+    /* Error */
+    .error-msg {
+      background: rgba(220,53,69,.2); border: 1px solid rgba(220,53,69,.4);
+      border-radius: 8px; padding: 10px 14px; font-size: 13px;
+      color: #ffb3b3; display: none; align-items: center; gap: 8px;
+    }
+    .error-msg.show { display: flex; }
+    .btn-loading { opacity: .6; pointer-events: none; }
+
+    /* Footer */
+    footer {
+      background: #3B1F1A; color: rgba(255,255,255,.4);
+      padding: 20px 32px; display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    }
+    footer p { font-size: 12px; }
+    footer nav { display: flex; gap: 20px; }
+    footer nav a { font-size: 12px; color: rgba(255,255,255,.4); text-decoration: none; transition: color .2s; }
+    footer nav a:hover { color: #C4896E; }
 
     @media (max-width: 768px) {
       .hero { grid-template-columns: 1fr; }
       .hero-cover { display: none; }
-      .hero-form { padding: 40px 24px; }
+      .hero-form  { padding: 40px 24px; min-height: 100vh; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-brand">BIBLIOTECA<br>UNIVERSIDAD — COLECCIÓN DIGITAL</div>
   </nav>
 
   <div class="hero">
 
+    <!-- Izquierda: foto librería -->
     <div class="hero-cover">
       <div class="hero-cover-bg"></div>
       <div class="hero-cover-content">
@@ -67,76 +144,141 @@
       </div>
     </div>
 
+    <!-- Derecha: formulario café oscuro -->
     <div class="hero-form">
       <h2 class="form-title">Inicia sesión</h2>
       <p class="form-subtitle">Accede a tu cuenta</p>
 
       <div class="form-stack">
-        <div class="input-group">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+
+        <!-- Error -->
+        <div class="error-msg" id="error-msg">⚠️ <span id="error-text"></span></div>
+
+        <!-- Correo -->
+        <div class="login-input">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
           <input type="email" placeholder="Correo electrónico" autocomplete="email" id="f-email">
         </div>
 
-        <div class="input-group">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
+        <!-- Contraseña -->
+        <div class="login-input">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
           <input type="password" placeholder="Contraseña" autocomplete="current-password" id="f-password">
         </div>
 
-        <button class="btn btn-primary btn-full" id="btn-google">
-          Entrar con Google
+        <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+
+        <!-- Entrar -->
+        <button class="btn-entrar" id="btn-login">Entrar</button>
+
+        <div class="login-divider"><span>o</span></div>
+
+        <!-- Google -->
+        <button class="btn-login-outline" id="btn-google">
+          <svg width="17" height="17" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.5 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.8 6C12.3 13.3 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.5 2.8-2.2 5.2-4.7 6.8l7.3 5.7c4.3-4 6.8-9.9 6.8-16.5z"/><path fill="#FBBC05" d="M10.4 28.7A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.9-4.7l-7.8-6A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.6 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.3-5.7c-2 1.4-4.6 2.2-7.9 2.2-6.3 0-11.7-3.8-13.6-9.3l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>
+          Continuar con Google
         </button>
 
-        <div class="divider"><span>o</span></div>
+        <!-- Crear cuenta -->
+        <button class="btn-login-outline" onclick="window.location.href='registro.html'">
+          ✏️ Crear cuenta nueva
+        </button>
 
-        <button class="btn btn-outline" onclick="window.location.href='catalogo.html'">
+        <!-- Sin cuenta -->
+        <button class="btn-login-outline" onclick="window.location.href='catalogo.html'">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
           Entrar sin iniciar sesión
         </button>
+
       </div>
     </div>
-
   </div>
 
-  <script type="module">
-    // Importamos las funciones necesarias desde la CDN oficial para usar módulos en el navegador
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Biblioteca Universidad — Colección Digital. Todos los derechos reservados.</p>
+    <nav>
+      <a href="#">Aviso de privacidad</a>
+      <a href="#">Términos de uso</a>
+      <a href="#">Soporte</a>
+      <a href="#">Contacto</a>
+    </nav>
+  </footer>
 
-    // Tus datos de configuración reales de BiblioWeb
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithPopup, signInWithEmailAndPassword, GoogleAuthProvider }
+      from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
     const firebaseConfig = {
-      apiKey: "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
-      authDomain: "biblioweb-1efc6.firebaseapp.com",
-      projectId: "biblioweb-1efc6",
-      storageBucket: "biblioweb-1efc6.firebasestorage.app",
+      apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
+      authDomain:        "biblioweb-1efc6.firebaseapp.com",
+      projectId:         "biblioweb-1efc6",
+      storageBucket:     "biblioweb-1efc6.firebasestorage.app",
       messagingSenderId: "688727975714",
-      appId: "1:688727975714:web:7cf8556eddc5fbeb10e77b",
-      measurementId: "G-Y8JHDHN33N"
+      appId:             "1:688727975714:web:7cf8556eddc5fbeb10e77b",
+      measurementId:     "G-Y8JHDHN33N"
     };
 
-    // Inicializamos Firebase y la autenticación
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Función para manejar el inicio de sesión
-    async function iniciarSesionConGoogle() {
-      try {
-        const resultado = await signInWithPopup(auth, provider);
-        const usuario = resultado.user;
-        
-        console.log("Sesión iniciada correctamente:", usuario.displayName, usuario.email);
-        
-        // Redirección automática al dashboard tras validar el login exitoso
-        window.location.href = 'dashboard.html';
-        
-      } catch (error) {
-        console.error("Error al autenticar con Google:", error.code, error.message);
-        alert("No se pudo completar el inicio de sesión: " + error.message);
-      }
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      document.getElementById('error-text').textContent = msg;
+      el.classList.add('show');
+    }
+    function hideError() { document.getElementById('error-msg').classList.remove('show'); }
+
+    function setLoading(id, on, label) {
+      const btn = document.getElementById(id);
+      btn.classList.toggle('btn-loading', on);
+      btn.textContent = on ? 'Cargando...' : label;
     }
 
-    // Escuchar el click en tu botón para ejecutar la ventana de Google
-    document.getElementById('btn-google').addEventListener('click', iniciarSesionConGoogle);
+    // Google
+    document.getElementById('btn-google').addEventListener('click', async () => {
+      hideError();
+      setLoading('btn-google', true, 'Continuar con Google');
+      try {
+        await signInWithPopup(auth, provider);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        setLoading('btn-google', false, 'Continuar con Google');
+        if (err.code !== 'auth/popup-closed-by-user')
+          showError('No se pudo iniciar con Google: ' + err.message);
+      }
+    });
+
+    // Email / contraseña
+    document.getElementById('btn-login').addEventListener('click', async () => {
+      hideError();
+      const email    = document.getElementById('f-email').value.trim();
+      const password = document.getElementById('f-password').value;
+      if (!email || !password) { showError('Ingresa tu correo y contraseña.'); return; }
+      setLoading('btn-login', true, 'Entrar');
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        setLoading('btn-login', false, 'Entrar');
+        const msgs = {
+          'auth/user-not-found':    'No existe una cuenta con ese correo.',
+          'auth/wrong-password':    'Contraseña incorrecta.',
+          'auth/invalid-email':     'El correo no tiene un formato válido.',
+          'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde.',
+        };
+        showError(msgs[err.code] || 'Error: ' + err.message);
+      }
+    });
+
+    ['f-email', 'f-password'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') document.getElementById('btn-login').click();
+      });
+    });
   </script>
 
 </body>

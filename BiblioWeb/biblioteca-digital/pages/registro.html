@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear cuenta — Biblioteca Digital</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; background: var(--cream-100); }
+
+    .hero {
+      background: var(--brown-900); color: #fff;
+      display: grid; grid-template-columns: 1fr 1fr; flex: 1;
+    }
+
+    /* Left cover — igual que login */
+    .hero-cover { position: relative; overflow: hidden; background: linear-gradient(160deg, var(--brown-800) 0%, var(--brown-900) 100%); }
+    .hero-cover-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(59,31,26,.52) 0%, rgba(59,31,26,.78) 100%),
+        url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=900&q=80') center/cover no-repeat;
+    }
+    .hero-cover-content {
+      position: relative; z-index: 1; padding: 52px 48px;
+      display: flex; flex-direction: column; justify-content: flex-end; height: 100%;
+    }
+    .hero-cover-content h1 { font-family: 'Crimson Pro', serif; font-size: 48px; font-weight: 400; line-height: 1.1; margin-bottom: 14px; color: #fff; }
+    .hero-cover-content h1 em { color: var(--amber-light); font-style: italic; }
+    .hero-cover-content p { font-size: 14px; color: rgba(255,255,255,.7); max-width: 340px; line-height: 1.6; }
+
+    /* Benefit list */
+    .benefit-list { margin-top: 28px; display: flex; flex-direction: column; gap: 10px; }
+    .benefit-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255,255,255,.8); }
+    .benefit-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.12); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+
+    /* Right form */
+    .hero-form {
+      background: var(--cream-100); display: flex; flex-direction: column;
+      justify-content: center; padding: 40px 56px; overflow-y: auto;
+    }
+    .form-title    { font-family: 'Crimson Pro', serif; font-size: 32px; font-weight: 400; color: var(--text-primary); margin-bottom: 4px; }
+    .form-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+    .form-stack    { display: flex; flex-direction: column; gap: 12px; }
+    .form-grid-2   { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Google button */
+    .btn-google {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 500;
+      cursor: pointer; border: 1.5px solid var(--cream-300); background: #fff;
+      color: var(--text-primary); transition: all .2s; width: 100%;
+    }
+    .btn-google:hover { border-color: var(--amber); background: var(--cream-200); }
+
+    /* Password strength */
+    .strength-bar  { height: 4px; border-radius: 2px; background: var(--cream-300); margin-top: 5px; overflow: hidden; }
+    .strength-fill { height: 100%; border-radius: 2px; width: 0%; transition: width .3s, background .3s; }
+
+    /* Terms checkbox */
+    .check-row { display: flex; align-items: flex-start; gap: 10px; }
+    .check-row input[type="checkbox"] { margin-top: 3px; accent-color: var(--amber); width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
+    .check-row label { font-size: 13px; color: var(--text-muted); cursor: pointer; line-height: 1.5; }
+    .check-row label a { color: var(--amber); text-decoration: none; }
+
+    /* Error / success */
+    .error-msg {
+      background: #fde8e8; border: 1px solid #f5c6c6; border-radius: var(--radius-sm);
+      padding: 10px 14px; font-size: 13px; color: #c0392b; display: none; align-items: center; gap: 8px;
+    }
+    .error-msg.show { display: flex; }
+
+    .btn-loading { opacity: .7; pointer-events: none; }
+
+    /* Success overlay */
+    .success-overlay {
+      position: fixed; inset: 0; background: rgba(59,31,26,.55);
+      display: none; align-items: center; justify-content: center; z-index: 100;
+    }
+    .success-overlay.show { display: flex; }
+    .success-card {
+      background: #fff; border-radius: var(--radius-lg); padding: 44px 40px;
+      text-align: center; max-width: 400px; width: 90%; box-shadow: var(--shadow-md);
+    }
+    .success-card .check-circle {
+      width: 64px; height: 64px; border-radius: 50%; background: var(--brown-900);
+      display: flex; align-items: center; justify-content: center; font-size: 28px;
+      margin: 0 auto 18px;
+    }
+    .success-card h2 { font-family: 'Crimson Pro', serif; font-size: 26px; color: var(--text-primary); margin-bottom: 8px; }
+    .success-card p  { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+
+    /* Footer */
+    footer {
+      background: var(--brown-900); color: rgba(255,255,255,.5);
+      padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    footer p   { font-size: 12px; }
+    footer nav { display: flex; gap: 18px; }
+    footer nav a { font-size: 12px; color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s; }
+    footer nav a:hover { color: var(--amber-light); }
+
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-cover { display: none; }
+      .hero-form  { padding: 36px 24px; }
+      .form-grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">BIBLIOTECA<br>UNIVERSIDAD — COLECCIÓN DIGITAL</div>
+    <div class="navbar-actions">
+      <a href="login.html" class="nav-btn">← Ya tengo cuenta</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+
+    <!-- Left cover -->
+    <div class="hero-cover">
+      <div class="hero-cover-bg"></div>
+      <div class="hero-cover-content">
+        <h1>Únete a la<br><em>colección digital</em></h1>
+        <p>Crea tu cuenta gratuita y accede a miles de documentos académicos al instante.</p>
+        <div class="benefit-list">
+          <div class="benefit-item"><div class="benefit-icon">📚</div> Acceso a más de 12,000 títulos</div>
+          <div class="benefit-item"><div class="benefit-icon">⬆️</div> Sube y comparte tus propios documentos</div>
+          <div class="benefit-item"><div class="benefit-icon">❝</div> Generador automático de citas APA</div>
+          <div class="benefit-item"><div class="benefit-icon">♡</div> Guarda tus favoritos y tu historial</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right form -->
+    <div class="hero-form">
+      <h2 class="form-title">Crear cuenta</h2>
+      <p class="form-subtitle">Es gratis y solo toma un momento</p>
+
+      <div class="form-stack">
+
+        <!-- Google register -->
+        <button class="btn-google" id="btn-google">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.5 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.8 6C12.3 13.3 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.5 2.8-2.2 5.2-4.7 6.8l7.3 5.7c4.3-4 6.8-9.9 6.8-16.5z"/><path fill="#FBBC05" d="M10.4 28.7A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.9-4.7l-7.8-6A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.6 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.3-5.7c-2 1.4-4.6 2.2-7.9 2.2-6.3 0-11.7-3.8-13.6-9.3l-7.8 6C6.6 42.6 14.6 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+          Registrarse con Google
+        </button>
+
+        <div class="divider"><span>o con correo</span></div>
+
+        <!-- Error -->
+        <div class="error-msg" id="error-msg">⚠️ <span id="error-text"></span></div>
+
+        <!-- Name row -->
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Nombre <span>*</span></label>
+            <input type="text" id="r-nombre" placeholder="María" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label>Apellido <span>*</span></label>
+            <input type="text" id="r-apellido" placeholder="García" autocomplete="family-name">
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="field">
+          <label>Correo electrónico <span>*</span></label>
+          <div class="input-group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input type="email" id="r-email" placeholder="correo@universidad.edu.mx" autocomplete="email">
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <label>Contraseña <span>*</span></label>
+          <div class="input-group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="r-password" placeholder="Mínimo 8 caracteres" oninput="checkStrength(this.value)">
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+          <span id="strength-label" style="font-size:11px;color:var(--text-muted)"></span>
+        </div>
+
+        <!-- Confirm password -->
+        <div class="field">
+          <label>Confirmar contraseña <span>*</span></label>
+          <div class="input-group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="r-confirm" placeholder="Repite tu contraseña">
+          </div>
+        </div>
+
+        <!-- Institution (optional) -->
+        <div class="field">
+          <label>Institución <span style="color:var(--text-muted);font-weight:400">(opcional)</span></label>
+          <input type="text" id="r-inst" placeholder="Universidad Nacional">
+        </div>
+
+        <!-- Terms -->
+        <div class="check-row">
+          <input type="checkbox" id="r-terms">
+          <label for="r-terms">
+            Acepto los <a href="#">Términos de uso</a> y el <a href="#">Aviso de privacidad</a> de la Biblioteca Digital.
+          </label>
+        </div>
+
+        <!-- Register button -->
+        <button class="btn btn-dark btn-full" id="btn-register" style="margin-top:4px">
+          ✏️ Crear mi cuenta
+        </button>
+
+        <p style="text-align:center;font-size:13px;color:var(--text-muted)">
+          ¿Ya tienes cuenta?
+          <a href="login.html" style="color:var(--amber);text-decoration:none;font-weight:500">Inicia sesión</a>
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Biblioteca Universidad — Colección Digital. Todos los derechos reservados.</p>
+    <nav>
+      <a href="#">Aviso de privacidad</a>
+      <a href="#">Términos de uso</a>
+      <a href="#">Soporte</a>
+      <a href="#">Contacto</a>
+    </nav>
+  </footer>
+
+  <!-- Success overlay -->
+  <div class="success-overlay" id="success-overlay">
+    <div class="success-card">
+      <div class="check-circle">✓</div>
+      <h2>¡Cuenta creada!</h2>
+      <p id="success-msg">Bienvenida a la Biblioteca Digital. Ya puedes explorar toda la colección.</p>
+      <button class="btn btn-dark btn-full" onclick="window.location.href='dashboard.html'">
+        Ir al inicio →
+      </button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile,
+             signInWithPopup, GoogleAuthProvider }
+                              from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, serverTimestamp }
+                              from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
+      authDomain:        "biblioweb-1efc6.firebaseapp.com",
+      projectId:         "biblioweb-1efc6",
+      storageBucket:     "biblioweb-1efc6.firebasestorage.app",
+      messagingSenderId: "688727975714",
+      appId:             "1:688727975714:web:7cf8556eddc5fbeb10e77b",
+      measurementId:     "G-Y8JHDHN33N"
+    };
+
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
+    const db       = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // ── Helpers ──
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      document.getElementById('error-text').textContent = msg;
+      el.classList.add('show');
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function hideError() { document.getElementById('error-msg').classList.remove('show'); }
+
+    function setLoading(id, on, label) {
+      const btn = document.getElementById(id);
+      btn.classList.toggle('btn-loading', on);
+      btn.textContent = on ? 'Cargando...' : label;
+    }
+
+    // Saves extra user data to Firestore
+    async function saveUserProfile(uid, data) {
+      await setDoc(doc(db, 'usuarios', uid), {
+        ...data,
+        creadoEn: serverTimestamp(),
+        archivosSubidos: 0,
+        favoritos: 0,
+        documentosConsultados: 0,
+      });
+    }
+
+    // ── Password strength ──
+    window.checkStrength = function(val) {
+      const fill  = document.getElementById('strength-fill');
+      const label = document.getElementById('strength-label');
+      let score = 0;
+      if (val.length >= 8)           score++;
+      if (/[A-Z]/.test(val))         score++;
+      if (/[0-9]/.test(val))         score++;
+      if (/[^A-Za-z0-9]/.test(val))  score++;
+      const levels = [
+        { w:'0%',   c:'var(--cream-300)', t:'' },
+        { w:'25%',  c:'#e74c3c',          t:'Muy débil' },
+        { w:'50%',  c:'var(--amber)',      t:'Moderada'  },
+        { w:'75%',  c:'#f1c40f',          t:'Buena'     },
+        { w:'100%', c:'#27ae60',          t:'Muy segura'},
+      ];
+      fill.style.width      = levels[score].w;
+      fill.style.background = levels[score].c;
+      label.textContent     = levels[score].t;
+    };
+
+    // ── Google register / login ──
+    document.getElementById('btn-google').addEventListener('click', async () => {
+      hideError();
+      setLoading('btn-google', true, 'Registrarse con Google');
+      try {
+        const result  = await signInWithPopup(auth, provider);
+        const user    = result.user;
+        // Save profile if new user
+        const isNew   = result._tokenResponse?.isNewUser;
+        if (isNew) {
+          await saveUserProfile(user.uid, {
+            nombre:       user.displayName || '',
+            correo:       user.email,
+            institucion:  '',
+            fotoURL:      user.photoURL || '',
+            metodo:       'google',
+          });
+        }
+        document.getElementById('success-msg').textContent =
+          `¡Bienvenido/a, ${user.displayName || user.email}! Ya puedes explorar la colección.`;
+        document.getElementById('success-overlay').classList.add('show');
+      } catch (err) {
+        setLoading('btn-google', false, 'Registrarse con Google');
+        if (err.code !== 'auth/popup-closed-by-user') showError('Error con Google: ' + err.message);
+      }
+    });
+
+    // ── Email / password register ──
+    document.getElementById('btn-register').addEventListener('click', async () => {
+      hideError();
+      const nombre   = document.getElementById('r-nombre').value.trim();
+      const apellido = document.getElementById('r-apellido').value.trim();
+      const email    = document.getElementById('r-email').value.trim();
+      const password = document.getElementById('r-password').value;
+      const confirm  = document.getElementById('r-confirm').value;
+      const inst     = document.getElementById('r-inst').value.trim();
+      const terms    = document.getElementById('r-terms').checked;
+
+      // Validations
+      if (!nombre || !apellido)       { showError('Por favor ingresa tu nombre y apellido.'); return; }
+      if (!email)                     { showError('El correo electrónico es obligatorio.'); return; }
+      if (password.length < 8)        { showError('La contraseña debe tener al menos 8 caracteres.'); return; }
+      if (password !== confirm)       { showError('Las contraseñas no coinciden.'); return; }
+      if (!terms)                     { showError('Debes aceptar los términos de uso para continuar.'); return; }
+
+      setLoading('btn-register', true, '✏️ Crear mi cuenta');
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        const user = cred.user;
+
+        // Set display name in Firebase Auth
+        await updateProfile(user, { displayName: `${nombre} ${apellido}` });
+
+        // Save full profile to Firestore
+        await saveUserProfile(user.uid, {
+          nombre:      nombre,
+          apellido:    apellido,
+          correo:      email,
+          institucion: inst,
+          fotoURL:     '',
+          metodo:      'email',
+        });
+
+        document.getElementById('success-msg').textContent =
+          `¡Bienvenida, ${nombre}! Tu cuenta ha sido creada. Ya puedes explorar la colección.`;
+        document.getElementById('success-overlay').classList.add('show');
+
+      } catch (err) {
+        setLoading('btn-register', false, '✏️ Crear mi cuenta');
+        const msgs = {
+          'auth/email-already-in-use': 'Ese correo ya tiene una cuenta registrada.',
+          'auth/invalid-email':        'El correo no tiene un formato válido.',
+          'auth/weak-password':        'La contraseña es demasiado débil.',
+        };
+        showError(msgs[err.code] || 'Error al crear la cuenta: ' + err.message);
+      }
+    });
+  </script>
+
+</body>
+</html>
