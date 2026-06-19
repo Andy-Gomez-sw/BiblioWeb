@@ -4,13 +4,12 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
-// Si es una petición OPTIONS (Preflight), responder OK y terminar
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-
+// ── CREDENCIALES REALES DE TU BASE DE DATOS EN HOSTINGER ──
 $host = 'localhost';
 $user = 'u816348338_admin';        
 $pass = 'publiWeb0';      
@@ -29,28 +28,27 @@ try {
 $json = file_get_contents('php://input');
 $datos = json_decode($json, true);
 
-$google_id = $datos['google_id'] ?? null;
 $email     = $datos['email'] ?? null;
 $nombre    = $datos['nombre'] ?? null;
 $avatar    = $datos['avatar'] ?? null;
 
-if (!$google_id || !$email) {
-    echo json_encode(["error" => "Faltan datos obligatorios del usuario."]);
+if (!$email) {
+    echo json_encode(["error" => "Falta el correo electrónico obligatorio de Google."]);
     http_response_code(400);
     exit();
 }
 
 try {
-    // 1. Buscar si el usuario ya existe por su google_id
-    $stmt = $pdo->prepare("SELECT id, nombre FROM usuarios WHERE google_id = ?");
-    $stmt->execute([$google_id]);
+    // 1. Buscamos al usuario por su email único en tu tabla de MySQL
+    $stmt = $pdo->prepare("SELECT id, nombre FROM usuarios WHERE email = ?");
+    $stmt->execute([$email]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$usuario) {
-        // 2. Si no existe, lo registramos automáticamente respetando las columnas exactas de tu SQL
-        $sql_insert = "INSERT INTO usuarios (nombre, email, password, avatar_url, metodo, google_id) VALUES (?, ?, NULL, ?, 'google', ?)";
+        // 2. Si no existe en MySQL, lo registramos usando las columnas reales de tu SQL
+        $sql_insert = "INSERT INTO usuarios (nombre, email, password, avatar_url, metodo) VALUES (?, ?, NULL, ?, 'google')";
         $stmt_insert = $pdo->prepare($sql_insert);
-        $stmt_insert->execute([$nombre, $email, $avatar, $google_id]);
+        $stmt_insert->execute([$nombre, $email, $avatar]);
 
         // Obtener el ID asignado automáticamente por MySQL
         $usuario_id = $pdo->lastInsertId();
@@ -60,7 +58,7 @@ try {
         $nombre_usuario = $usuario['nombre'];
     }
 
-    // 3. Responder al frontend con éxito y pasarle el ID del usuario para su sesión
+    // 3. Responder al frontend con éxito para armar la sesión
     echo json_encode([
         "mensaje" => "Usuario autenticado con éxito en MySQL",
         "usuario_id" => $usuario_id,
@@ -69,7 +67,7 @@ try {
     http_response_code(200);
 
 } catch (Exception $e) {
-    echo json_encode(["error" => "Error al procesar la solicitud: " . $e->getMessage()]);
+    echo json_encode(["error" => "Error al procesar la solicitud en MySQL: " . $e->getMessage()]);
     http_response_code(500);
 }
 ?>
