@@ -118,7 +118,7 @@
       <div class="check-circle-register">✓</div>
       <h2>¡Cuenta creada!</h2>
       <p id="success-msg-text">Bienvenida a la Biblioteca Digital. Ya puedes explorar toda la colección.</p>
-      <button class="btn btn-dark btn-full" onclick="window.location.href='dashboard.html'">
+      <button class="btn btn-dark btn-full" id="btn-go-dashboard">
         Ir al inicio →
       </button>
     </div>
@@ -144,7 +144,6 @@
 
     provider.setCustomParameters({ prompt: 'select_account' });
 
-    // Apuntamos directo al dominio base de Hostinger donde residen tus scripts PHP
     const API_URL = "https://bibliowebb.com.mx"; 
 
     function showError(msg) {
@@ -170,6 +169,11 @@
         btn.textContent = on ? 'Cargando...' : label;
       }
     }
+
+    // Evento manual para el botón de redirección segura del modal
+    document.getElementById('btn-go-dashboard').addEventListener('click', () => {
+      window.location.href = './dashboard.html';
+    });
 
     window.checkStrength = function(val) {
       const fill  = document.getElementById('strength-fill');
@@ -201,7 +205,6 @@
         const result  = await signInWithPopup(auth, provider);
         const user = result.user;
 
-        // Se envía a login_google.php encargado de insertar o buscar el perfil en MySQL
         const response = await fetch(`${API_URL}/login_google.php`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
