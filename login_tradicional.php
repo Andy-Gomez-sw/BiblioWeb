@@ -30,7 +30,7 @@ $datos = json_decode($json, true);
 $email    = $datos['email'] ?? null;
 $password = $datos['password'] ?? null;
 
-if (!$email || !password) {
+if (!$email || !$password) { // <-- CORREGIDO: Añadido el signo $ que faltaba
     echo json_encode(["error" => "El correo y la contraseña son obligatorios."]);
     http_response_code(400);
     exit();
@@ -42,7 +42,7 @@ try {
     $stmt->execute([$email]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // 2. Verificar si el usuario existe y si su método es tradicional
+    // 2. Verificar si el usuario existe
     if (!$usuario) {
         echo json_encode(["error" => "El correo electrónico no está registrado."]);
         http_response_code(401);
@@ -57,7 +57,6 @@ try {
 
     // 3. Comparar la contraseña ingresada con el hash encriptado de la base de datos
     if (password_verify($password, $usuario['password'])) {
-        // Contraseña correcta: respondemos con los datos de sesión para el localStorage
         echo json_encode([
             "mensaje" => "Inicio de sesión exitoso",
             "usuario_id" => $usuario['id'],
