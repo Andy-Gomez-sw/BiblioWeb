@@ -17,7 +17,7 @@
       <div class="hero-cover-bg-login"></div>
       <div class="hero-cover-content-login">
         <h1>Tu próxima<br><em>gran lectura</em><br>te espera</h1>
-        <p>Más de 12,000 títulos organizados y disponibles para ti en cualquier momento.</p>
+        <p>Más de 12,000 títulos organizados and disponibles para ti en cualquier momento.</p>
       </div>
     </div>
 
@@ -92,9 +92,6 @@
     // Configuración para forzar parámetros correctos en el Popup
     provider.setCustomParameters({ prompt: 'select_account' });
 
-    // CAMBIA ESTO: La URL del dominio o IP real donde Hostinger corre tu Backend de Python (app.py)
-    const API_URL = "https://bibliowebb.com.mx"; 
-
     function showError(msg) {
       const el = document.getElementById('error-msg');
       document.getElementById('error-text').textContent = msg;
@@ -110,30 +107,39 @@
       }
     }
 
-    // ── RETORNO AL MÉTODO POPUP OPTIMIZADO ──
+    // ── GOOGLE AUTH CON CONEXIÓN HÍBRIDA A PHP ──
     document.getElementById('btn-google').addEventListener('click', async () => {
       hideError();
       setLoading('btn-google', true, 'Continuar con Google');
       try {
+        // 1. Firebase abre la ventana emergente segura y valida con Google
         const resultado = await signInWithPopup(auth, provider);
-        const credential = GoogleAuthProvider.credentialFromResult(resultado);
-        const idToken = credential.idToken;
-        const nombreReal = resultado.user.displayName;
+        const user = resultado.user;
 
-        const response = await fetch(`${API_URL}/api/auth/google`, {
+        // 2. Mandamos los datos del usuario directo a nuestra API de PHP nativa en Hostinger
+        const response = await fetch('https://bibliowebb.com.mx/login_google.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: idToken, nombre: nombreReal })
+          body: JSON.stringify({ 
+            google_id: user.uid,
+            email: user.email, 
+            nombre: user.displayName,
+            avatar: user.photoURL
+          })
         });
 
         const data = await response.json();
 
         if (response.ok) {
-          localStorage.setItem('token_jwt', data.token);
+          // 3. Guardamos los datos de sesión devueltos por PHP en el almacenamiento del navegador
+          localStorage.setItem('usuario_id', data.usuario_id);
+          localStorage.setItem('usuario_nombre', data.nombre);
+          
+          // Redirección limpia al dashboard
           window.location.href = './dashboard.html';
         } else {
           setLoading('btn-google', false, 'Continuar con Google');
-          showError(data.error || 'No se pudo sincronizar el perfil en el servidor.');
+          showError(data.error || 'No se pudo sincronizar el perfil con la base de datos MySQL.');
         }
       } catch (err) {
         setLoading('btn-google', false, 'Continuar con Google');
@@ -157,7 +163,8 @@
       setLoading('btn-login', true, 'Entrar');
 
       try {
-        const response = await fetch(`${API_URL}/api/auth/login`, {
+        // Apuntamos temporalmente al endpoint tradicional de PHP si decides migrar también el login manual
+        const response = await fetch('https://bibliowebb.com.mx/login_tradicional.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email, password: password })
@@ -166,7 +173,8 @@
         const data = await response.json();
 
         if (response.ok) {
-          localStorage.setItem('token_jwt', data.token);
+          localStorage.setItem('usuario_id', data.usuario_id);
+          localStorage.setItem('usuario_nombre', data.nombre);
           window.location.href = './dashboard.html';
         } else {
           setLoading('btn-login', false, 'Entrar');
@@ -174,7 +182,7 @@
         }
       } catch (err) {
         setLoading('btn-login', false, 'Entrar');
-        showError('No se pudo conectar con el servidor backend MySQL.');
+        showError('No se pudo conectar con el servidor de Hostinger.');
       }
     });
   </script>
