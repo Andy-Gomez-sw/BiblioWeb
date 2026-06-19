@@ -76,7 +76,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // Cambiamos importaciones de Popup a Redirect para producción en Hostinger
+    import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
@@ -92,7 +93,8 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    const API_URL = "http://127.0.0.1:5000"; 
+    // Reemplazada tu IP local por tu dominio real en Hostinger para la conexión de la API
+    const API_URL = "https://bibliowebb.com.mx"; 
 
     function showError(msg) {
       const el = document.getElementById('error-msg');
@@ -103,44 +105,51 @@
 
     function setLoading(id, on, label) {
       const btn = document.getElementById(id);
-      btn.classList.toggle('btn-loading', on);
-      btn.textContent = on ? 'Cargando...' : label;
+      if (btn) {
+        btn.classList.toggle('btn-loading', on);
+        btn.textContent = on ? 'Cargando...' : label;
+      }
     }
 
-    // ── GOOGLE AUTH CORREGIDO ──
-    document.getElementById('btn-google').addEventListener('click', async () => {
+    // ── GOOGLE AUTH CON REDIRECCIÓN (EVITA TRASTRADAS DE CORS / BLOCKED POPUPS) ──
+    document.getElementById('btn-google').addEventListener('click', () => {
       hideError();
       setLoading('btn-google', true, 'Continuar con Google');
+      signInWithRedirect(auth, provider);
+    });
+
+    // Escuchador que detecta el regreso automático de la redirección segura de Google
+    window.addEventListener('DOMContentLoaded', async () => {
       try {
-        const resultado = await signInWithPopup(auth, provider);
-        const credential = GoogleAuthProvider.credentialFromResult(resultado);
-        const idToken = credential.idToken;
+        const resultado = await getRedirectResult(auth);
+        if (resultado) {
+          setLoading('btn-google', true, 'Verificando credenciales...');
+          const credential = GoogleAuthProvider.credentialFromResult(resultado);
+          const idToken = credential.idToken;
+          const nombreReal = resultado.user.displayName;
 
-        // Recupera el nombre completo del perfil público de Google
-        const nombreReal = resultado.user.displayName;
+          const response = await fetch(`${API_URL}/api/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              token: idToken,
+              nombre: nombreReal 
+            })
+          });
 
-        const response = await fetch(`${API_URL}/api/auth/google`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            token: idToken,
-            nombre: nombreReal // Enviado para su inserción limpia en la base de datos
-          })
-        });
+          const data = await response.json();
 
-        const data = await response.json();
-
-        if (response.ok) {
-          localStorage.setItem('token_jwt', data.token);
-          window.location.href = './dashboard.html';
-        } else {
-          setLoading('btn-google', false, 'Continuar con Google');
-          showError(data.error || 'No se pudo autorizar la cuenta en el servidor.');
+          if (response.ok) {
+            localStorage.setItem('token_jwt', data.token);
+            window.location.href = './dashboard.html';
+          } else {
+            setLoading('btn-google', false, 'Continuar con Google');
+            showError(data.error || 'No se pudo autorizar la cuenta en el servidor.');
+          }
         }
       } catch (err) {
         setLoading('btn-google', false, 'Continuar con Google');
-        if (err.code !== 'auth/popup-closed-by-user')
-          showError('No se pudo iniciar con Google: ' + err.message);
+        showError('Error al retornar de Google: ' + err.message);
       }
     });
 
