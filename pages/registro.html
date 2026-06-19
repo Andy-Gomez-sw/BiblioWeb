@@ -123,7 +123,8 @@
 
   <script type="module">
     import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // Cambiamos signInWithPopup por el módulo de redireccionamiento nativo
+    import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
@@ -171,6 +172,53 @@
       window.location.href = './dashboard.html';
     });
 
+    // ── ESCUCHAR RETORNO EN REGISTRO ──
+    window.addEventListener('load', async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          setLoading('btn-google', true, 'Validando datos...');
+          const user = result.user;
+
+          const response = await fetch(`${API_URL}/login_google.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              google_id: user.uid,
+              email: user.email, 
+              nombre: user.displayName,
+              avatar: user.photoURL
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            localStorage.setItem('usuario_id', data.usuario_id);
+            localStorage.setItem('usuario_nombre', data.nombre);
+            localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
+            
+            document.getElementById('success-msg-text').textContent =
+              `¡Bienvenido/a, ${data.nombre}! Tu cuenta ha sido validada con éxito con Google.`;
+            document.getElementById('success-overlay').classList.add('show');
+          } else {
+            setLoading('btn-google', false, 'Registrarse con Google');
+            showError(data.error || 'No se pudo sincronizar el perfil con la base de datos.');
+          }
+        }
+      } catch (err) {
+        console.error("Error en redirección de registro:", err);
+        showError('Error de autenticación: ' + err.message);
+      }
+    });
+
+    // Botón de Google optimizado para redirección
+    document.getElementById('btn-google').addEventListener('click', async () => {
+      hideError();
+      setLoading('btn-google', true, 'Abriendo Google...');
+      await signInWithRedirect(auth, provider);
+    });
+
     window.checkStrength = function(val) {
       const fill  = document.getElementById('strength-fill');
       const label = document.getElementById('strength-label');
@@ -192,46 +240,6 @@
       fill.style.background = levels[score].c;
       label.textContent     = levels[score].t;
     };
-
-    // ── BOTÓN GOOGLE REGISTRO CORREGIDO ──
-    document.getElementById('btn-google').addEventListener('click', async () => {
-      hideError();
-      setLoading('btn-google', true, 'Registrarse con Google');
-      try {
-        const result  = await signInWithPopup(auth, provider);
-        const user = result.user;
-
-        const response = await fetch(`${API_URL}/login_google.php`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            google_id: user.uid,
-            email: user.email, 
-            nombre: user.displayName,
-            avatar: user.photoURL
-          })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          localStorage.setItem('usuario_id', data.usuario_id);
-          localStorage.setItem('usuario_nombre', data.nombre);
-          localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
-          
-          document.getElementById('success-msg-text').textContent =
-            `¡Bienvenido/a, ${data.nombre}! Tu cuenta ha sido validada con éxito con Google.`;
-          document.getElementById('success-overlay').classList.add('show');
-        } else {
-          setLoading('btn-google', false, 'Registrarse con Google');
-          showError(data.error || 'No se pudo sincronizar el perfil con la base de datos.');
-        }
-      } catch (err) {
-        setLoading('btn-google', false, 'Registrarse con Google');
-        console.error("Error capturado de Firebase:", err);
-        if (err.code !== 'auth/popup-closed-by-user') showError('Error con Google: ' + err.message);
-      }
-    });
 
     // ── REGISTRO TRADICIONAL ──
     document.getElementById('btn-register').addEventListener('click', async () => {
