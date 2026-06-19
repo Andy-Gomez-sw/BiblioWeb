@@ -209,50 +209,42 @@
       });
     });
 
-    // ── INTEGRACIÓN DE CONTROL DINÁMICO CON TU API ──
-    document.addEventListener('DOMContentLoaded', async () => {
+    // ── CARGA DINÁMICA DE LA SESIÓN DE USUARIO DESDE LATEST LOCALSTORAGE ──
+    document.addEventListener('DOMContentLoaded', () => {
       const token = localStorage.getItem('token_jwt');
-      const API_URL = "http://127.0.0.1:5000";
+      const nombreGuardado = localStorage.getItem('usuario_nombre');
 
+      // Si no hay sesión válida, expulsamos al login
       if (!token) {
         window.location.href = './login.html';
         return;
       }
 
-      try {
-        const response = await fetch(`${API_URL}/api/usuario/dashboard`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          // Asignamos la información real desde MySQL
-          document.getElementById('dash-nombre').textContent = data.nombre;
-          document.getElementById('dash-subidos').textContent = data.subidos;
-          document.getElementById('dash-favoritos').textContent = data.favoritos;
-          document.getElementById('dash-consultados').textContent = data.consultados;
-          
-          // Actualizamos también las etiquetas de las tarjetas inferiores
-          document.getElementById('card-sub-favs').textContent = `${data.favoritos} guardados`;
-          document.getElementById('card-sub-historial').textContent = `${data.consultados} acciones`;
-
-          // Extraemos la primera letra del nombre para el Avatar circular
-          if (data.nombre && data.nombre.length > 0) {
-            document.getElementById('dash-avatar').textContent = data.nombre.charAt(0).toUpperCase();
-          }
-        } else {
-          localStorage.removeItem('token_jwt');
-          window.location.href = './login.html';
-        }
-      } catch (err) {
-        console.error("Error de comunicación de red con Flask:", err);
+      // Si el nombre existe en el LocalStorage, lo pintamos directamente de inmediato
+      if (nombreGuardado) {
+        document.getElementById('dash-nombre').textContent = nombreGuardado;
+        
+        // Ponemos la primera letra en el avatar
+        document.getElementById('dash-avatar').textContent = nombreGuardado.charAt(0).toUpperCase();
+      } else {
         document.getElementById('dash-nombre').textContent = "Usuario Conectado";
+        document.getElementById('dash-avatar').textContent = "U";
       }
+
+      // ── MIGRACIÓN COMPLETA A API PHP (Para traer contadores de documentos en el futuro) ──
+      // Puedes descomentar y adaptar esto cuando tengas listos tus archivos PHP para contar registros:
+      /*
+      const usuarioId = localStorage.getItem('usuario_id');
+      fetch(`https://bibliowebb.com.mx/obtener_estadisticas.php?id=${usuarioId}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('dash-subidos').textContent = data.subidos || 0;
+            document.getElementById('dash-favoritos').textContent = data.favoritos || 0;
+            document.getElementById('dash-consultados').textContent = data.consultados || 0;
+            document.getElementById('card-sub-favs').textContent = `${data.favoritos || 0} guardados`;
+            document.getElementById('card-sub-historial').textContent = `${data.consultados || 0} acciones`;
+        }).catch(err => console.log("Contadores listos para el backend en PHP"));
+      */
     });
   </script>
 </body>
