@@ -13,7 +13,6 @@
   </nav>
 
   <div class="hero-login">
-
     <div class="hero-cover-login">
       <div class="hero-cover-bg-login"></div>
       <div class="hero-cover-content-login">
@@ -27,7 +26,6 @@
       <p class="form-subtitle-login">Accede a tu cuenta</p>
 
       <div class="form-stack-login">
-
         <div class="error-msg" id="error-msg"> <span id="error-text"></span></div>
 
         <div class="login-custom-input">
@@ -59,7 +57,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
           Entrar sin iniciar sesión
         </button>
-
       </div>
     </div>
   </div>
@@ -76,8 +73,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    // Cambiamos importaciones de Popup a Redirect para producción en Hostinger
-    import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
@@ -93,7 +89,10 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Reemplazada tu IP local por tu dominio real en Hostinger para la conexión de la API
+    // Configuración para forzar parámetros correctos en el Popup
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    // CAMBIA ESTO: La URL del dominio o IP real donde Hostinger corre tu Backend de Python (app.py)
     const API_URL = "https://bibliowebb.com.mx"; 
 
     function showError(msg) {
@@ -111,45 +110,36 @@
       }
     }
 
-    // ── GOOGLE AUTH CON REDIRECCIÓN (EVITA TRASTRADAS DE CORS / BLOCKED POPUPS) ──
-    document.getElementById('btn-google').addEventListener('click', () => {
+    // ── RETORNO AL MÉTODO POPUP OPTIMIZADO ──
+    document.getElementById('btn-google').addEventListener('click', async () => {
       hideError();
       setLoading('btn-google', true, 'Continuar con Google');
-      signInWithRedirect(auth, provider);
-    });
-
-    // Escuchador que detecta el regreso automático de la redirección segura de Google
-    window.addEventListener('DOMContentLoaded', async () => {
       try {
-        const resultado = await getRedirectResult(auth);
-        if (resultado) {
-          setLoading('btn-google', true, 'Verificando credenciales...');
-          const credential = GoogleAuthProvider.credentialFromResult(resultado);
-          const idToken = credential.idToken;
-          const nombreReal = resultado.user.displayName;
+        const resultado = await signInWithPopup(auth, provider);
+        const credential = GoogleAuthProvider.credentialFromResult(resultado);
+        const idToken = credential.idToken;
+        const nombreReal = resultado.user.displayName;
 
-          const response = await fetch(`${API_URL}/api/auth/google`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              token: idToken,
-              nombre: nombreReal 
-            })
-          });
+        const response = await fetch(`${API_URL}/api/auth/google`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: idToken, nombre: nombreReal })
+        });
 
-          const data = await response.json();
+        const data = await response.json();
 
-          if (response.ok) {
-            localStorage.setItem('token_jwt', data.token);
-            window.location.href = './dashboard.html';
-          } else {
-            setLoading('btn-google', false, 'Continuar con Google');
-            showError(data.error || 'No se pudo autorizar la cuenta en el servidor.');
-          }
+        if (response.ok) {
+          localStorage.setItem('token_jwt', data.token);
+          window.location.href = './dashboard.html';
+        } else {
+          setLoading('btn-google', false, 'Continuar con Google');
+          showError(data.error || 'No se pudo sincronizar el perfil en el servidor.');
         }
       } catch (err) {
         setLoading('btn-google', false, 'Continuar con Google');
-        showError('Error al retornar de Google: ' + err.message);
+        if (err.code !== 'auth/popup-closed-by-user') {
+          showError('Error con Google: ' + err.message);
+        }
       }
     });
 
@@ -187,13 +177,6 @@
         showError('No se pudo conectar con el servidor backend MySQL.');
       }
     });
-
-    ['f-email', 'f-password'].forEach(id => {
-      document.getElementById(id).addEventListener('keydown', e => {
-        if (e.key === 'Enter') document.getElementById('btn-login').click();
-      });
-    });
   </script>
-
 </body>
 </html>
