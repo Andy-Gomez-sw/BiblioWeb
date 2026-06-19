@@ -20,7 +20,7 @@
       <div class="hero-cover-bg-register"></div>
       <div class="hero-cover-content-register">
         <h1>Únete a la<br><em>colección digital</em></h1>
-        <p>Crea tu cuenta gratuita y accede a miles de documentos académicos al instante.</p>
+        <p>Crea tu cuenta gratuita and accede a miles de documentos académicos al instante.</p>
         <div class="benefit-list-register">
           <div class="benefit-item-register"><div class="benefit-icon-register">📚</div> Acceso a más de 12,000 títulos</div>
           <div class="benefit-item-register"><div class="benefit-icon-register">⬆️</div> Sube y comparte tus propios documentos</div>
@@ -123,8 +123,7 @@
 
   <script type="module">
     import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    // IMPORTACIÓN CORREGIDA CON EL RESOLVER DE POPUPS
-    import { getAuth, signInWithPopup, GoogleAuthProvider, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
@@ -194,13 +193,12 @@
       label.textContent     = levels[score].t;
     };
 
-    // ── BOTÓN GOOGLE CORREGIDO CON EL RESOLVER DE POPUPS ──
+    // ── BOTÓN GOOGLE REGISTRO CORREGIDO ──
     document.getElementById('btn-google').addEventListener('click', async () => {
       hideError();
       setLoading('btn-google', true, 'Registrarse con Google');
       try {
-        // CORREGIDO: Pasamos browserPopupRedirectResolver como tercer argumento
-        const result  = await signInWithPopup(auth, provider, browserPopupRedirectResolver);
+        const result  = await signInWithPopup(auth, provider);
         const user = result.user;
 
         const response = await fetch(`${API_URL}/login_google.php`, {
@@ -230,6 +228,7 @@
         }
       } catch (err) {
         setLoading('btn-google', false, 'Registrarse con Google');
+        console.error("Error capturado de Firebase:", err);
         if (err.code !== 'auth/popup-closed-by-user') showError('Error con Google: ' + err.message);
       }
     });

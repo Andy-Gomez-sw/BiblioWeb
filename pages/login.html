@@ -73,8 +73,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    // IMPORTACIÓN CORREGIDA CON EL RESOLVER DE POPUPS
-    import { getAuth, signInWithPopup, GoogleAuthProvider, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
@@ -114,13 +113,12 @@
       }
     }
 
-    // ── BOTÓN GOOGLE CORREGIDO CON EL RESOLVER DE POPUPS ──
+    // ── BOTÓN GOOGLE ESTÁNDAR CON CONTROL DE EXCEPCIONES ──
     document.getElementById('btn-google').addEventListener('click', async () => {
       hideError();
       setLoading('btn-google', true, 'Continuar con Google');
       try {
-        // CORREGIDO: Pasamos browserPopupRedirectResolver como tercer argumento
-        const resultado = await signInWithPopup(auth, provider, browserPopupRedirectResolver);
+        const resultado = await signInWithPopup(auth, provider);
         const user = resultado.user;
 
         const response = await fetch(`${API_URL}/login_google.php`, {
@@ -144,10 +142,11 @@
           window.location.href = './dashboard.html';
         } else {
           setLoading('btn-google', false, 'Continuar con Google');
-          showError(data.error || 'No se pudo sincronizar el perfil con la base de datos MySQL.');
+          showError(data.error || 'No se pudo sincronizar el perfil con MySQL.');
         }
       } catch (err) {
         setLoading('btn-google', false, 'Continuar con Google');
+        console.error("Error capturado de Firebase:", err);
         if (err.code !== 'auth/popup-closed-by-user') {
           showError('Error con Google: ' + err.message);
         }
