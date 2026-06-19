@@ -103,21 +103,21 @@
     </div>
   </div>
 
-  <footer class="register-footer">
+  <nav class="register-footer" style="display: block; text-align: center; padding: 20px 0; background: var(--bg-dark, #1a1a1a); color: #fff;">
     <p>© 2026 Biblioteca Universidad — Colección Digital. Todos los derechos reservados.</p>
-    <nav>
-      <a href="#">Aviso de privacidad</a>
-      <a href="#">Términos de uso</a>
-      <a href="#">Soporte</a>
-      <a href="#">Contacto</a>
-    </nav>
-  </footer>
+    <div style="margin-top: 10px;">
+      <a href="#" style="color: #bbb; text-decoration: none; margin: 0 10px;">Aviso de privacidad</a>
+      <a href="#" style="color: #bbb; text-decoration: none; margin: 0 10px;">Términos de uso</a>
+      <a href="#" style="color: #bbb; text-decoration: none; margin: 0 10px;">Soporte</a>
+      <a href="#" style="color: #bbb; text-decoration: none; margin: 0 10px;">Contacto</a>
+    </div>
+  </nav>
 
   <div class="success-overlay-register" id="success-overlay">
     <div class="success-card-register">
       <div class="check-circle-register">✓</div>
       <h2>¡Cuenta creada!</h2>
-      <p id="success-msg">Bienvenida a la Biblioteca Digital. Ya puedes explorar toda la colección.</p>
+      <p id="success-msg-text">Bienvenida a la Biblioteca Digital. Ya puedes explorar toda la colección.</p>
       <button class="btn btn-dark btn-full" onclick="window.location.href='dashboard.html'">
         Ir al inicio →
       </button>
@@ -142,7 +142,10 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    const API_URL = "http://127.0.0.1:5000"; 
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    // Apuntamos directo al dominio base de Hostinger donde residen tus scripts PHP
+    const API_URL = "https://bibliowebb.com.mx"; 
 
     function showError(msg) {
       const el = document.getElementById('error-msg');
@@ -181,7 +184,7 @@
       const levels = [
         { w:'0%',   c:'var(--cream-300)', t:'' },
         { w:'25%',  c:'#e74c3c',          t:'Muy débil' },
-        { w:'50%',  c:'var(--amber)',      t:'Moderada'  },
+        { w:'50%',  c:'var(--amber)',     t:'Moderada'  },
         { w:'75%',  c:'#f1c40f',          t:'Buena'     },
         { w:'100%', c:'#27ae60',          t:'Muy segura'},
       ];
@@ -190,37 +193,38 @@
       label.textContent     = levels[score].t;
     };
 
-    // ── GOOGLE AUTH CORREGIDO ──
+    // ── REGISTRO / AUTENTICACIÓN CON GOOGLE EN PHP ──
     document.getElementById('btn-google').addEventListener('click', async () => {
       hideError();
       setLoading('btn-google', true, 'Registrarse con Google');
       try {
         const result  = await signInWithPopup(auth, provider);
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const idToken = credential.idToken;
+        const user = result.user;
 
-        // Recupera el nombre completo del perfil público de Google
-        const nombreReal = result.user.displayName;
-
-        const response = await fetch(`${API_URL}/api/auth/google`, {
+        // Se envía a login_google.php encargado de insertar o buscar el perfil en MySQL
+        const response = await fetch(`${API_URL}/login_google.php`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            token: idToken,
-            nombre: nombreReal // Enviado para su inserción limpia en la base de datos
+            google_id: user.uid,
+            email: user.email, 
+            nombre: user.displayName,
+            avatar: user.photoURL
           })
         });
 
         const data = await response.json();
 
         if (response.ok) {
-          localStorage.setItem('token_jwt', data.token);
-          document.getElementById('success-msg').textContent =
-            `¡Bienvenido/a, ${result.user.displayName || result.user.email}! Tu cuenta ha sido validada con éxito.`;
+          localStorage.setItem('usuario_id', data.usuario_id);
+          localStorage.setItem('usuario_nombre', data.nombre);
+          
+          document.getElementById('success-msg-text').textContent =
+            `¡Bienvenido/a, ${data.nombre}! Tu cuenta ha sido validada con éxito con Google.`;
           document.getElementById('success-overlay').classList.add('show');
         } else {
           setLoading('btn-google', false, 'Registrarse con Google');
-          showError(data.error || 'No se pudo sincronizar el perfil con el servidor.');
+          showError(data.error || 'No se pudo sincronizar el perfil con la base de datos.');
         }
       } catch (err) {
         setLoading('btn-google', false, 'Registrarse con Google');
@@ -228,6 +232,7 @@
       }
     });
 
+    // ── REGISTRO TRADICIONAL CON CORREO Y CONTRASEÑA EN PHP ──
     document.getElementById('btn-register').addEventListener('click', async () => {
       hideError();
       const nombre   = document.getElementById('r-nombre').value.trim();
@@ -243,10 +248,10 @@
       if (password !== confirm)       { showError('Las contraseñas no coinciden.'); return; }
       if (!terms)                     { showError('Debes aceptar los términos de uso para continuar.'); return; }
 
-      setLoading('btn-register', true, ' Crear mi cuenta');
+      setLoading('btn-register', true, 'Crear mi cuenta');
       
       try {
-        const response = await fetch(`${API_URL}/api/auth/register`, {
+        const response = await fetch(`${API_URL}/registro_tradicional.php`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -260,18 +265,20 @@
         const data = await response.json();
 
         if (response.ok) {
-          localStorage.setItem('token_jwt', data.token);
-          document.getElementById('success-msg').textContent =
-            `¡Bienvenida, ${nombre}! Tu cuenta ha sido registrada. Ya puedes explorar la colección.`;
+          localStorage.setItem('usuario_id', data.usuario_id);
+          localStorage.setItem('usuario_nombre', data.nombre);
+          
+          document.getElementById('success-msg-text').textContent =
+            `¡Bienvenida, ${data.nombre}! Tu cuenta ha sido registrada en el sistema. Ya puedes explorar la colección.`;
           document.getElementById('success-overlay').classList.add('show');
         } else {
-          setLoading('btn-register', false, ' Crear mi cuenta');
+          setLoading('btn-register', false, 'Crear mi cuenta');
           showError(data.error || 'No se pudo crear la cuenta en el servidor.');
         }
 
       } catch (err) {
-        setLoading('btn-register', false, ' Crear mi cuenta');
-        showError('No hay respuesta del servidor backend de MySQL. Revisa tu conexión.');
+        setLoading('btn-register', false, 'Crear mi cuenta');
+        showError('No se pudo conectar con el servidor de Hostinger. Intenta más tarde.');
       }
     });
   </script>
