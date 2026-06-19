@@ -1,4 +1,5 @@
 <?php
+require_once '../config.php';
 // Permitir que tu frontend se comunique sin bloqueos de CORS
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -9,20 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// ── CREDENCIALES REALES DE TU BASE DE DATOS EN HOSTINGER ──
-$host = 'localhost';
-$user = 'u816348338_admin';        
-$pass = 'publiWeb0';      
-$db   = 'u816348338_biblioweb';     
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo json_encode(["error" => "Error de conexión a la base de datos: " . $e->getMessage()]);
-    http_response_code(500);
-    exit();
-}
+// ── CONEXION A BD ── 
+$pdo = getDB();
 
 // Leer los datos que manda el JavaScript del Frontend
 $json = file_get_contents('php://input');

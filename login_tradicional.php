@@ -1,4 +1,6 @@
 <?php
+require_once '../config.php';
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
@@ -8,20 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// ── CREDENCIALES DE TU BASE DE DATOS ──
-$host = 'localhost';
-$user = 'u816348338_admin';        
-$pass = 'publiWeb0'; 
-$db   = 'u816348338_biblioweb';    
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo json_encode(["error" => "Error de conexión: " . $e->getMessage()]);
-    http_response_code(500);
-    exit();
-}
+// ── CONEXION A BD ── 
+$pdo = getDB();
 
 // Leer datos enviados desde el formulario
 $json = file_get_contents('php://input');
