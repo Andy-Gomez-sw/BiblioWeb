@@ -48,13 +48,15 @@ try {
         exit();
     }
 
-    // 2. Encriptar la contraseña de forma segura con BCRYPT (el estándar nativo)
+    // 2. Encriptar la contraseña de forma segura con BCRYPT
     $password_encriptada = password_hash($password, PASSWORD_BCRYPT);
     $nombre_completo = trim($nombre . " " . $apellido);
 
-    // 3. Guardar en tu tabla respetando las columnas de tu SQL
-    $sql = "INSERT INTO usuarios (nombre, email, password, avatar_url, metodo, google_id) VALUES (?, ?, ?, NULL, 'email', NULL)";
+    // 3. Insertar datos respetando las columnas de tu archivo SQL real
+    $sql = "INSERT INTO usuarios (nombre, email, password, avatar_url, metodo) VALUES (?, ?, ?, NULL, 'email')";
     $stmt_insert = $pdo->prepare($sql);
+    
+    // Aquí pasamos el nombre completo unido para que guarde también el apellido
     $stmt_insert->execute([$nombre_completo, $email, $password_encriptada]);
 
     $usuario_id = $pdo->lastInsertId();
