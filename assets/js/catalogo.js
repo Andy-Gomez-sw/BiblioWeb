@@ -32,10 +32,18 @@ function setFilterById(type) {
 
 function filterDocs() {
     const q = document.getElementById('search-input').value.toLowerCase();
+    const sortVal = document.querySelector('.sort-select').value;
     let filtered = docs.filter(d => {
         const matchFilter = activeFilter === 'todo' || d.tipo === activeFilter;
         const matchSearch = !q || d.titulo.toLowerCase().includes(q) || d.autor.toLowerCase().includes(q) || String(d.anio).includes(q);
         return matchFilter && matchSearch;
+    });
+
+    filtered.sort((a, b) => {
+        if (sortVal === 'reciente') return b.anio - a.anio;
+        if (sortVal === 'antiguo')  return a.anio - b.anio;
+        if (sortVal === 'titulo')   return a.titulo.localeCompare(b.titulo, 'es');
+        return 0;
     });
     renderDocs(filtered);
 }
