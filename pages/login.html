@@ -73,8 +73,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    // Cambiamos signInWithPopup por signInWithRedirect y agregamos getRedirectResult
-    import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
@@ -114,54 +113,49 @@
       }
     }
 
-    // ── ESCUCHAR EL RETORNO DE LA REDIRECCIÓN DE GOOGLE ──
-    window.addEventListener('load', async () => {
-      try {
-        const resultado = await getRedirectResult(auth);
-        if (resultado && resultado.user) {
-          setLoading('btn-google', true, 'Verificando cuenta...');
-          const user = resultado.user;
-
-          const response = await fetch(`${API_URL}/login_google.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              google_id: user.uid,
-              email: user.email, 
-              nombre: user.displayName,
-              avatar: user.photoURL
-            })
-          });
-
-          const data = await response.json();
-
-          if (response.ok) {
-            localStorage.setItem('usuario_id', data.usuario_id);
-            localStorage.setItem('usuario_nombre', data.nombre);
-            localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
-            window.location.href = './dashboard.html';
-          } else {
-            setLoading('btn-google', false, 'Continuar con Google');
-            showError(data.error || 'No se pudo sincronizar el perfil con MySQL.');
-          }
-        }
-      } catch (err) {
-        console.error("Error en redirección:", err);
-        showError('No se pudo completar el inicio de sesión con Google: ' + err.message);
-      }
-    });
-
-    // Disparador del botón con redirección nativa
+    // ── BOTÓN DE GOOGLE (Vuelve al recuadro pequeño flotante original) ──
     document.getElementById('btn-google').addEventListener('click', async () => {
       hideError();
-      setLoading('btn-google', true, 'Redirigiendo a Google...');
-      await signInWithRedirect(auth, provider);
+      setLoading('btn-google', true, 'Continuar con Google');
+      try {
+        const resultado = await signInWithPopup(auth, provider);
+        const user = resultado.user;
+
+        const response = await fetch(`${API_URL}/login_google.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            email: user.email, 
+            nombre: user.displayName,
+            avatar: user.photoURL
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('usuario_id', data.usuario_id);
+          localStorage.setItem('usuario_nombre', data.nombre);
+          localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
+          
+          // Abre tu Dashboard de inmediato
+          window.location.href = './dashboard.html';
+        } else {
+          setLoading('btn-google', false, 'Continuar con Google');
+          showError(data.error || 'No se pudo sincronizar el perfil con MySQL.');
+        }
+      } catch (err) {
+        setLoading('btn-google', false, 'Continuar con Google');
+        if (err.code !== 'auth/popup-closed-by-user') {
+          showError('Error con Google: ' + err.message);
+        }
+      }
     });
 
     // ── LOGIN TRADICIONAL ──
     document.getElementById('btn-login').addEventListener('click', async () => {
       hideError();
-      const email    = document.getElementById('f-email').value.trim();
+      const email = document.getElementById('f-email').value.trim();
       const password = document.getElementById('f-password').value;
 
       if (!email || !password) { 
