@@ -13,8 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $host = 'localhost';
 $user = 'u816348338_admin';        
-$pass = 'TU_CONTRASEÑA_AQUÍ';      
-$db   = 'publiWeb0';     
+$pass = 'publiWeb0';      
+$db   = 'u816348338_biblioweb';     
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
