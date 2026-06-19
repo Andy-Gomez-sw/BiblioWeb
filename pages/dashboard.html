@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio — Biblioteca Digital</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+  <style>
+    .welcome-bar {
+      background: var(--brown-900); color: #fff;
+      padding: 24px 20px 0;
+    }
+    .welcome-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 24px; }
+    .welcome-name { font-family: 'Crimson Pro', serif; font-size: 32px; font-weight: 400; color: #fff; }
+    .quick-actions-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px; }
+    .section-gap { display: flex; flex-direction: column; gap: 32px; }
+    @media (max-width: 900px) { .quick-actions-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) { .quick-actions-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-brand">BIBLIOTECA<br>UNIVERSIDAD — COLECCIÓN DIGITAL</div>
+    <div class="navbar-actions">
+      <button class="nav-btn" title="Notificaciones">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <div class="avatar" id="dash-avatar">-</div>
+    </div>
+  </nav>
+
+  <div class="welcome-bar">
+    <div class="welcome-inner">
+      <div>
+        <p style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px">Bienvenida,</p>
+        <h2 class="welcome-name" id="dash-nombre">Cargando...</h2>
+      </div>
+      <div class="stats-row" style="padding-bottom:6px">
+        <div style="text-align:center">
+          <div class="stat-num" style="color:#fff" id="dash-subidos">0</div>
+          <div class="stat-lbl" style="color:rgba(255,255,255,.6)">Subidos</div>
+        </div>
+        <div style="text-align:center">
+          <div class="stat-num" style="color:#fff" id="dash-favoritos">0</div>
+          <div class="stat-lbl" style="color:rgba(255,255,255,.6)">Favoritos</div>
+        </div>
+        <div style="text-align:center">
+          <div class="stat-num" style="color:#fff" id="dash-consultados">0</div>
+          <div class="stat-lbl" style="color:rgba(255,255,255,.6)">Consultados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="page-content">
+    <div class="section-gap">
+
+      <section>
+        <p style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px">Acciones rápidas</p>
+        <div class="quick-actions-grid">
+          <a href="catalogo.html" class="action-card">
+            <div class="action-icon">🔍</div>
+            <div class="action-label">Buscar documentos</div>
+            <div class="action-sublabel">Catálogo completo</div>
+          </a>
+          <a href="subir.html" class="action-card">
+            <div class="action-icon">⬆️</div>
+            <div class="action-label">Subir documento</div>
+            <div class="action-sublabel">Tesis, artículo o libro</div>
+          </a>
+          <a href="citas.html" class="action-card">
+            <div class="action-icon">❝</div>
+            <div class="action-label">Generar cita APA</div>
+            <div class="action-sublabel">7.ª edición</div>
+          </a>
+          <a href="#" class="action-card active-bg">
+            <div class="action-icon">♡</div>
+            <div class="action-label">Mis favoritos</div>
+            <div class="action-sublabel" id="card-sub-favs">0 guardados</div>
+          </a>
+          <a href="mis-archivos.html" class="action-card">
+            <div class="action-icon">🕐</div>
+            <div class="action-label">Historial</div>
+            <div class="action-sublabel" id="card-sub-historial">0 acciones</div>
+          </a>
+        </div>
+      </section>
+
+      <section>
+        <div class="search-row" style="margin-bottom:12px">
+          <div class="input-group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" placeholder="Buscar por título, autor, año...">
+          </div>
+          <button class="btn btn-dark">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Buscar
+          </button>
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active">🗂️ Todo</button>
+          <button class="filter-tab">🎓 Tesis</button>
+          <button class="filter-tab">📄 Artículo</button>
+          <button class="filter-tab">📚 Libros</button>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-heading">
+          <span style="font-size:18px">☆</span>
+          <h2>Recomendados</h2>
+        </div>
+        <div class="grid-3">
+
+          <div class="card-doc" onclick="window.location.href='citas.html'">
+            <div class="doc-type">🎓 Tesis</div>
+            <div class="doc-title">El romanticismo tardío en la literatura mexicana del siglo XIX</div>
+            <div class="doc-meta">García Martínez, L. A.</div>
+            <div class="doc-footer">
+              <span class="doc-year">2022</span>
+              <button class="icon-btn" title="Vista previa">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="card-doc" onclick="window.location.href='citas.html'">
+            <div class="doc-type">📄 Artículo</div>
+            <div class="doc-title">IA aplicada a la catalogación de acervos bibliotecarios</div>
+            <div class="doc-meta">Hernández Ruiz, P. &amp; Torres, M.</div>
+            <div class="doc-footer">
+              <span class="doc-year">2023</span>
+              <button class="icon-btn" title="Vista previa">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="card-doc" onclick="window.location.href='citas.html'">
+            <div class="doc-type">📚 Libro</div>
+            <div class="doc-title">El laberinto de la soledad</div>
+            <div class="doc-meta">Paz, O.</div>
+            <div class="doc-footer">
+              <span class="doc-year">1993</span>
+              <button class="icon-btn" title="Vista previa">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <div class="section-heading">
+          <span style="font-size:18px">🕐</span>
+          <h2>Vistos recientemente</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+
+          <div class="recent-item">
+            <div style="flex:1">
+              <div class="recent-title">Cambio climático y biodiversidad en ecosistemas mexicanos</div>
+              <div class="recent-meta">Gutiérrez, A. &amp; Soto, R. · 2023 · Rev. Ecología</div>
+            </div>
+            <span class="tag">Artículo</span>
+            <button class="fav-btn" title="Guardar">♡</button>
+          </div>
+
+          <div class="recent-item">
+            <div style="flex:1">
+              <div class="recent-title">Filosofía del derecho en el México posrevolucionario</div>
+              <div class="recent-meta">Morales Vega, J. · 2021 · UNAM</div>
+            </div>
+            <span class="tag">Tesis</span>
+            <button class="fav-btn" title="Guardar">♡</button>
+          </div>
+
+          <div class="recent-item">
+            <div style="flex:1">
+              <div class="recent-title">Matemáticas avanzadas para ingeniería — Vol. II</div>
+              <div class="recent-meta">Flores Mendoza, E. · 2019 · Ed. Trillas</div>
+            </div>
+            <span class="tag">Libro</span>
+            <button class="fav-btn" title="Guardar">♡</button>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Control de estilos visuales nativos
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('.fav-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        btn.textContent = btn.textContent === '♡' ? '♥' : '♡';
+        btn.style.color = btn.textContent === '♥' ? 'var(--amber)' : '';
+      });
+    });
+
+    // ── CARGA DINÁMICA DE LA SESIÓN DE USUARIO DESDE LATEST LOCALSTORAGE ──
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token_jwt');
+      const nombreGuardado = localStorage.getItem('usuario_nombre');
+
+      // Si no hay sesión válida, expulsamos al login
+      if (!token) {
+        window.location.href = './login.html';
+        return;
+      }
+
+      // Si el nombre existe en el LocalStorage, lo pintamos directamente de inmediato
+      if (nombreGuardado) {
+        document.getElementById('dash-nombre').textContent = nombreGuardado;
+        
+        // Ponemos la primera letra en el avatar
+        document.getElementById('dash-avatar').textContent = nombreGuardado.charAt(0).toUpperCase();
+      } else {
+        document.getElementById('dash-nombre').textContent = "Usuario Conectado";
+        document.getElementById('dash-avatar').textContent = "U";
+      }
+
+      // ── MIGRACIÓN COMPLETA A API PHP (Para traer contadores de documentos en el futuro) ──
+      // Puedes descomentar y adaptar esto cuando tengas listos tus archivos PHP para contar registros:
+      /*
+      const usuarioId = localStorage.getItem('usuario_id');
+      fetch(`https://bibliowebb.com.mx/obtener_estadisticas.php?id=${usuarioId}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('dash-subidos').textContent = data.subidos || 0;
+            document.getElementById('dash-favoritos').textContent = data.favoritos || 0;
+            document.getElementById('dash-consultados').textContent = data.consultados || 0;
+            document.getElementById('card-sub-favs').textContent = `${data.favoritos || 0} guardados`;
+            document.getElementById('card-sub-historial').textContent = `${data.consultados || 0} acciones`;
+        }).catch(err => console.log("Contadores listos para el backend en PHP"));
+      */
+    });
+  </script>
+</body>
+</html>

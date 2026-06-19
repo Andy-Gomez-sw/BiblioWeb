@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear cuenta — Biblioteca Digital</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="register-body">
+
+  <nav class="navbar">
+    <div class="navbar-brand">BIBLIOTECA<br>UNIVERSIDAD — COLECCIÓN DIGITAL</div>
+    <div class="navbar-actions">
+      <a href="login.html" class="nav-btn">← Ya tengo cuenta</a>
+    </div>
+  </nav>
+
+  <div class="hero-register">
+    <div class="hero-cover-register">
+      <div class="hero-cover-bg-register"></div>
+      <div class="hero-cover-content-register">
+        <h1>Únete a la<br><em>colección digital</em></h1>
+        <p>Crea tu cuenta gratuita and accede a miles de documentos académicos al instante.</p>
+        <div class="benefit-list-register">
+          <div class="benefit-item-register"><div class="benefit-icon-register">📚</div> Acceso a más de 12,000 títulos</div>
+          <div class="benefit-item-register"><div class="benefit-icon-register">⬆️</div> Sube y comparte tus propios documentos</div>
+          <div class="benefit-item-register"><div class="benefit-icon-register">❝</div> Generador automático de citas APA</div>
+          <div class="benefit-item-register"><div class="benefit-icon-register">♡</div> Guarda tus favoritos y tu historial</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-form-register">
+      <h2 class="form-title-register">Crear cuenta</h2>
+      <p class="form-subtitle-register">Es gratis y solo toma un momento</p>
+
+      <div class="form-stack-register">
+        <button class="btn-google-register" id="btn-google">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.5 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.8 6C12.3 13.3 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.5 2.8-2.2 5.2-4.7 6.8l7.3 5.7c4.3-4 6.8-9.9 6.8-16.5z"/><path fill="#FBBC05" d="M10.4 28.7A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.9-4.7l-7.8-6A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.6 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.3-5.7c-2 1.4-4.6 2.2-7.9 2.2-6.3 0-11.7-3.8-13.6-9.3l-7.8 6C6.6 42.6 14.6 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+          Registrarse con Google
+        </button>
+
+        <div class="divider"><span>o con correo</span></div>
+
+        <div class="error-msg" id="error-msg" style="display:none; color: #e74c3c; margin-bottom: 10px; font-size: 14px;">⚠️ <span id="error-text"></span></div>
+
+        <div class="form-grid-2-register">
+          <div class="field">
+            <label>Nombre <span>*</span></label>
+            <input type="text" id="r-nombre" placeholder="María" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label>Apellido <span>*</span></label>
+            <input type="text" id="r-apellido" placeholder="García" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Correo electrónico <span>*</span></label>
+          <div class="input-group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-8.97 5.7 a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input type="email" id="r-email" placeholder="correo@universidad.edu.mx" autocomplete="email">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Contraseña <span>*</span></label>
+          <div class="input-group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="r-password" placeholder="Mínimo 8 caracteres" oninput="checkStrength(this.value)">
+          </div>
+          <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+          <span id="strength-label" style="font-size:11px;color:var(--text-muted)"></span>
+        </div>
+
+        <div class="field">
+          <label>Confirmar contraseña <span>*</span></label>
+          <div class="input-group">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="r-confirm" placeholder="Repite tu contraseña">
+          </div>
+        </div>
+
+        <div class="check-row-register">
+          <input type="checkbox" id="r-terms">
+          <label for="r-terms">
+            Acepto los <a href="#">Términos de uso</a> y el <a href="#">Aviso de privacidad</a> de la Biblioteca Digital.
+          </label>
+        </div>
+
+        <button class="btn btn-dark btn-full" id="btn-register" style="margin-top:4px">
+           Crear mi cuenta
+        </button>
+
+        <p style="text-align:center;font-size:13px;color:var(--text-muted)">
+          ¿Ya tienes cuenta?
+          <a href="login.html" style="color:var(--amber);text-decoration:none;font-weight:500">Inicia sesión</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <nav class="register-footer" style="display: block; text-align: center; padding: 20px 0; background: var(--bg-dark, #1a1a1a); color: #fff;">
+    <p>© 2026 Biblioteca Universidad — Colección Digital. Todos los derechos reservados.</p>
+    <div style="margin-top: 10px;">
+      <a href="#" style="color: #bbb; text-decoration: none; margin: 0 10px;">Aviso de privacidad</a>
+      <a href="#" style="color: #bbb; text-decoration: none; margin: 0 10px;">Términos de uso</a>
+      <a href="#" style="color: #bbb; text-decoration: none; margin: 0 10px;">Soporte</a>
+      <a href="#" style="color: #bbb; text-decoration: none; margin: 0 10px;">Contacto</a>
+    </div>
+  </nav>
+
+  <div class="success-overlay-register" id="success-overlay">
+    <div class="success-card-register">
+      <div class="check-circle-register">✓</div>
+      <h2>¡Cuenta creada!</h2>
+      <p id="success-msg-text">Bienvenida a la Biblioteca Digital. Ya puedes explorar toda la colección.</p>
+      <button class="btn btn-dark btn-full" id="btn-go-dashboard">
+        Ir al inicio →
+      </button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    // Cambiamos signInWithPopup por el módulo de redireccionamiento nativo
+    import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
+      authDomain:        "biblioweb-1efc6.firebaseapp.com",
+      projectId:         "biblioweb-1efc6",
+      storageBucket:     "biblioweb-1efc6.firebasestorage.app",
+      messagingSenderId: "688727975714",
+      appId:             "1:688727975714:web:7cf8556eddc5fbeb10e77b",
+      measurementId:     "G-Y8JHDHN33N"
+    };
+
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    const API_URL = "https://bibliowebb.com.mx"; 
+
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      if(el) {
+        document.getElementById('error-text').textContent = msg;
+        el.style.display = 'block';
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        alert(msg);
+      }
+    }
+    
+    function hideError() { 
+      const el = document.getElementById('error-msg');
+      if(el) el.style.display = 'none'; 
+    }
+
+    function setLoading(id, on, label) {
+      const btn = document.getElementById(id);
+      if(btn) {
+        btn.classList.toggle('btn-loading', on);
+        btn.textContent = on ? 'Cargando...' : label;
+      }
+    }
+
+    document.getElementById('btn-go-dashboard').addEventListener('click', () => {
+      window.location.href = './dashboard.html';
+    });
+
+    // ── ESCUCHAR RETORNO EN REGISTRO ──
+    window.addEventListener('load', async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          setLoading('btn-google', true, 'Validando datos...');
+          const user = result.user;
+
+          const response = await fetch(`${API_URL}/login_google.php`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              google_id: user.uid,
+              email: user.email, 
+              nombre: user.displayName,
+              avatar: user.photoURL
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            localStorage.setItem('usuario_id', data.usuario_id);
+            localStorage.setItem('usuario_nombre', data.nombre);
+            localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
+            
+            document.getElementById('success-msg-text').textContent =
+              `¡Bienvenido/a, ${data.nombre}! Tu cuenta ha sido validada con éxito con Google.`;
+            document.getElementById('success-overlay').classList.add('show');
+          } else {
+            setLoading('btn-google', false, 'Registrarse con Google');
+            showError(data.error || 'No se pudo sincronizar el perfil con la base de datos.');
+          }
+        }
+      } catch (err) {
+        console.error("Error en redirección de registro:", err);
+        showError('Error de autenticación: ' + err.message);
+      }
+    });
+
+    // Botón de Google optimizado para redirección
+    document.getElementById('btn-google').addEventListener('click', async () => {
+      hideError();
+      setLoading('btn-google', true, 'Abriendo Google...');
+      await signInWithRedirect(auth, provider);
+    });
+
+    window.checkStrength = function(val) {
+      const fill  = document.getElementById('strength-fill');
+      const label = document.getElementById('strength-label');
+      if(!fill || !label) return;
+      
+      let score = 0;
+      if (val.length >= 8)           score++;
+      if (/[A-Z]/.test(val))         score++;
+      if (/[0-9]/.test(val))         score++;
+      if (/[^A-Za-z0-9]/.test(val))  score++;
+      const levels = [
+        { w:'0%',   c:'var(--cream-300)', t:'' },
+        { w:'25%',  c:'#e74c3c',          t:'Muy débil' },
+        { w:'50%',  c:'var(--amber)',     t:'Moderada'  },
+        { w:'75%',  c:'#f1c40f',          t:'Buena'     },
+        { w:'100%', c:'#27ae60',          t:'Muy segura'},
+      ];
+      fill.style.width      = levels[score].w;
+      fill.style.background = levels[score].c;
+      label.textContent     = levels[score].t;
+    };
+
+    // ── REGISTRO TRADICIONAL ──
+    document.getElementById('btn-register').addEventListener('click', async () => {
+      hideError();
+      const nombre   = document.getElementById('r-nombre').value.trim();
+      const apellido = document.getElementById('r-apellido').value.trim();
+      const email    = document.getElementById('r-email').value.trim();
+      const password = document.getElementById('r-password').value;
+      const confirm  = document.getElementById('r-confirm').value;
+      const terms    = document.getElementById('r-terms').checked;
+
+      if (!nombre || !apellido)       { showError('Por favor ingresa tu nombre y apellido.'); return; }
+      if (!email)                     { showError('El correo electrónico es obligatorio.'); return; }
+      if (password.length < 8)        { showError('La contraseña debe tener al menos 8 caracteres.'); return; }
+      if (password !== confirm)       { showError('Las contraseñas no coinciden.'); return; }
+      if (!terms)                     { showError('Debes aceptar los términos de uso para continuar.'); return; }
+
+      setLoading('btn-register', true, 'Crear mi cuenta');
+      
+      try {
+        const response = await fetch(`${API_URL}/registro_tradicional.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre: nombre,
+            apellido: apellido,
+            email: email,
+            password: password
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem('usuario_id', data.usuario_id);
+          localStorage.setItem('usuario_nombre', data.nombre);
+          localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
+          
+          document.getElementById('success-msg-text').textContent =
+            `¡Bienvenida, ${data.nombre}! Tu cuenta ha sido registrada en el sistema. Ya puedes explorar la colección.`;
+          document.getElementById('success-overlay').classList.add('show');
+        } else {
+          setLoading('btn-register', false, 'Crear mi cuenta');
+          showError(data.error || 'No se pudo crear la cuenta en el servidor.');
+        }
+
+      } catch (err) {
+        setLoading('btn-register', false, 'Crear mi cuenta');
+        showError('No se pudo conectar con el servidor de Hostinger. Intenta más tarde.');
+      }
+    });
+  </script>
+</body>
+</html>
