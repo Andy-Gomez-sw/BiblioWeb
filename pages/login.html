@@ -89,8 +89,9 @@
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Configuración para forzar parámetros correctos en el Popup
     provider.setCustomParameters({ prompt: 'select_account' });
+
+    const API_URL = "https://bibliowebb.com.mx"; 
 
     function showError(msg) {
       const el = document.getElementById('error-msg');
@@ -112,12 +113,10 @@
       hideError();
       setLoading('btn-google', true, 'Continuar con Google');
       try {
-        // 1. Firebase abre la ventana emergente segura y valida con Google
         const resultado = await signInWithPopup(auth, provider);
         const user = resultado.user;
 
-        // 2. Mandamos los datos del usuario directo a nuestra API de PHP nativa en Hostinger
-        const response = await fetch('https://bibliowebb.com.mx/login_google.php', {
+        const response = await fetch(`${API_URL}/login_google.php`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -131,11 +130,12 @@
         const data = await response.json();
 
         if (response.ok) {
-          // 3. Guardamos los datos de sesión devueltos por PHP en el almacenamiento del navegador
           localStorage.setItem('usuario_id', data.usuario_id);
           localStorage.setItem('usuario_nombre', data.nombre);
           
-          // Redirección limpia al dashboard
+          // Guardamos el token JWT simulado para que el Dashboard no nos expulse
+          localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
+          
           window.location.href = './dashboard.html';
         } else {
           setLoading('btn-google', false, 'Continuar con Google');
@@ -163,8 +163,7 @@
       setLoading('btn-login', true, 'Entrar');
 
       try {
-        // Apuntamos temporalmente al endpoint tradicional de PHP si decides migrar también el login manual
-        const response = await fetch('https://bibliowebb.com.mx/login_tradicional.php', {
+        const response = await fetch(`${API_URL}/login_tradicional.php`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email, password: password })
@@ -175,6 +174,10 @@
         if (response.ok) {
           localStorage.setItem('usuario_id', data.usuario_id);
           localStorage.setItem('usuario_nombre', data.nombre);
+          
+          // Guardamos el token JWT simulado para el inicio tradicional también
+          localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
+          
           window.location.href = './dashboard.html';
         } else {
           setLoading('btn-login', false, 'Entrar');

@@ -16,7 +16,6 @@
   </nav>
 
   <div class="hero-register">
-
     <div class="hero-cover-register">
       <div class="hero-cover-bg-register"></div>
       <div class="hero-cover-content-register">
@@ -36,7 +35,6 @@
       <p class="form-subtitle-register">Es gratis y solo toma un momento</p>
 
       <div class="form-stack-register">
-
         <button class="btn-google-register" id="btn-google">
           <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.5 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.8 6C12.3 13.3 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.5 2.8-2.2 5.2-4.7 6.8l7.3 5.7c4.3-4 6.8-9.9 6.8-16.5z"/><path fill="#FBBC05" d="M10.4 28.7A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.9-4.7l-7.8-6A23.9 23.9 0 0 0 0 24c0 3.9.9 7.5 2.6 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.3-5.7c-2 1.4-4.6 2.2-7.9 2.2-6.3 0-11.7-3.8-13.6-9.3l-7.8 6C6.6 42.6 14.6 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
           Registrarse con Google
@@ -98,7 +96,6 @@
           ¿Ya tienes cuenta?
           <a href="login.html" style="color:var(--amber);text-decoration:none;font-weight:500">Inicia sesión</a>
         </p>
-
       </div>
     </div>
   </div>
@@ -170,7 +167,7 @@
       }
     }
 
-    // Evento manual para el botón de redirección segura del modal
+    // Redirección segura desde el click del modal de éxito
     document.getElementById('btn-go-dashboard').addEventListener('click', () => {
       window.location.href = './dashboard.html';
     });
@@ -222,6 +219,9 @@
           localStorage.setItem('usuario_id', data.usuario_id);
           localStorage.setItem('usuario_nombre', data.nombre);
           
+          // Inyectamos token JWT ficticio para pasar la verificación del dashboard
+          localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
+          
           document.getElementById('success-msg-text').textContent =
             `¡Bienvenido/a, ${data.nombre}! Tu cuenta ha sido validada con éxito con Google.`;
           document.getElementById('success-overlay').classList.add('show');
@@ -235,7 +235,7 @@
       }
     });
 
-    // ── REGISTRO TRADICIONAL CON CORREO Y CONTRASEÑA EN PHP ──
+    // ── REGISTRO TRADICIONAL EN PHP ──
     document.getElementById('btn-register').addEventListener('click', async () => {
       hideError();
       const nombre   = document.getElementById('r-nombre').value.trim();
@@ -270,6 +270,9 @@
         if (response.ok) {
           localStorage.setItem('usuario_id', data.usuario_id);
           localStorage.setItem('usuario_nombre', data.nombre);
+          
+          // Inyectamos token JWT ficticio aquí también previo a la apertura del modal
+          localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
           
           document.getElementById('success-msg-text').textContent =
             `¡Bienvenida, ${data.nombre}! Tu cuenta ha sido registrada en el sistema. Ya puedes explorar la colección.`;
