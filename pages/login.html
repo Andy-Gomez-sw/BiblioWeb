@@ -73,7 +73,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // IMPORTACIÓN CORREGIDA CON EL RESOLVER DE POPUPS
+    import { getAuth, signInWithPopup, GoogleAuthProvider, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
@@ -95,10 +96,15 @@
 
     function showError(msg) {
       const el = document.getElementById('error-msg');
-      document.getElementById('error-text').textContent = msg;
-      el.classList.add('show');
+      if (el) {
+        document.getElementById('error-text').textContent = msg;
+        el.style.display = 'block';
+      }
     }
-    function hideError() { document.getElementById('error-msg').classList.remove('show'); }
+    function hideError() { 
+      const el = document.getElementById('error-msg');
+      if (el) el.style.display = 'none'; 
+    }
 
     function setLoading(id, on, label) {
       const btn = document.getElementById(id);
@@ -108,12 +114,13 @@
       }
     }
 
-    // ── GOOGLE AUTH CON CONEXIÓN HÍBRIDA A PHP ──
+    // ── BOTÓN GOOGLE CORREGIDO CON EL RESOLVER DE POPUPS ──
     document.getElementById('btn-google').addEventListener('click', async () => {
       hideError();
       setLoading('btn-google', true, 'Continuar con Google');
       try {
-        const resultado = await signInWithPopup(auth, provider);
+        // CORREGIDO: Pasamos browserPopupRedirectResolver como tercer argumento
+        const resultado = await signInWithPopup(auth, provider, browserPopupRedirectResolver);
         const user = resultado.user;
 
         const response = await fetch(`${API_URL}/login_google.php`, {
@@ -132,8 +139,6 @@
         if (response.ok) {
           localStorage.setItem('usuario_id', data.usuario_id);
           localStorage.setItem('usuario_nombre', data.nombre);
-          
-          // Guardamos el token JWT simulado para que el Dashboard no nos expulse
           localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
           
           window.location.href = './dashboard.html';
@@ -174,8 +179,6 @@
         if (response.ok) {
           localStorage.setItem('usuario_id', data.usuario_id);
           localStorage.setItem('usuario_nombre', data.nombre);
-          
-          // Guardamos el token JWT simulado para el inicio tradicional también
           localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
           
           window.location.href = './dashboard.html';

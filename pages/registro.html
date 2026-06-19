@@ -123,7 +123,8 @@
 
   <script type="module">
     import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    // IMPORTACIÓN CORREGIDA CON EL RESOLVER DE POPUPS
+    import { getAuth, signInWithPopup, GoogleAuthProvider, browserPopupRedirectResolver } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey:            "AIzaSyBPxXw8pCaubDU0ynSCW7tGYfAvlVVqvgM",
@@ -167,7 +168,6 @@
       }
     }
 
-    // Redirección segura desde el click del modal de éxito
     document.getElementById('btn-go-dashboard').addEventListener('click', () => {
       window.location.href = './dashboard.html';
     });
@@ -194,12 +194,13 @@
       label.textContent     = levels[score].t;
     };
 
-    // ── REGISTRO / AUTENTICACIÓN CON GOOGLE EN PHP ──
+    // ── BOTÓN GOOGLE CORREGIDO CON EL RESOLVER DE POPUPS ──
     document.getElementById('btn-google').addEventListener('click', async () => {
       hideError();
       setLoading('btn-google', true, 'Registrarse con Google');
       try {
-        const result  = await signInWithPopup(auth, provider);
+        // CORREGIDO: Pasamos browserPopupRedirectResolver como tercer argumento
+        const result  = await signInWithPopup(auth, provider, browserPopupRedirectResolver);
         const user = result.user;
 
         const response = await fetch(`${API_URL}/login_google.php`, {
@@ -218,8 +219,6 @@
         if (response.ok) {
           localStorage.setItem('usuario_id', data.usuario_id);
           localStorage.setItem('usuario_nombre', data.nombre);
-          
-          // Inyectamos token JWT ficticio para pasar la verificación del dashboard
           localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
           
           document.getElementById('success-msg-text').textContent =
@@ -235,7 +234,7 @@
       }
     });
 
-    // ── REGISTRO TRADICIONAL EN PHP ──
+    // ── REGISTRO TRADICIONAL ──
     document.getElementById('btn-register').addEventListener('click', async () => {
       hideError();
       const nombre   = document.getElementById('r-nombre').value.trim();
@@ -270,8 +269,6 @@
         if (response.ok) {
           localStorage.setItem('usuario_id', data.usuario_id);
           localStorage.setItem('usuario_nombre', data.nombre);
-          
-          // Inyectamos token JWT ficticio aquí también previo a la apertura del modal
           localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
           
           document.getElementById('success-msg-text').textContent =
