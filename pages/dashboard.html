@@ -15,7 +15,6 @@
       <button class="nav-btn" title="Notificaciones">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
       </button>
-      <!-- BOTÓN CERRAR SESIÓN -->
       <button class="btn-logout" id="btn-cerrar-sesion" title="Cerrar sesión">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -58,12 +57,11 @@
       <!-- ══════════ SECCIÓN PROPÓSITO ══════════ -->
       <section>
         <div class="purpose-section">
-          <!-- Texto -->
           <div class="purpose-body">
             <p class="purpose-eyebrow">Sistema de gestión bibliográfica</p>
             <h1 class="purpose-title">Bienvenido a Biblioweb</h1>
             <p class="purpose-desc">
-              Este sistema te facilitará la identificación, organización y consulta de referencias bibliográficas utilizadas en trabajos académicos o proyectos de investigación. Asimismo, te permite generar citas en formato APA (7.ª edición), contribuyendo a que los estudiantes elaboren documentos con mayor calidad y apego a las normas académicas.
+              Este sistema te facilitará la identificación, organization y consulta de referencias bibliográficas utilizadas en trabajos académicos o proyectos de investigación. Asimismo, te permite generar citas en formato APA (7.ª edición), contribuyendo a que los estudiantes elaboren documentos con mayor calidad y apego a las normas académicas.
             </p>
             <p class="purpose-list-title">¿Qué puedes hacer en este sistema?</p>
             <ul class="purpose-list">
@@ -78,7 +76,6 @@
               📱 Diseñado para ser accesible desde cualquier dispositivo con conexión a internet, ofreciendo una experiencia intuitiva, eficiente y segura.
             </p>
           </div>
-          <!-- Imagen / ilustración decorativa -->
           <div class="purpose-img-wrap">
             <div class="purpose-img-overlay">
               <div class="purpose-img-icon">📚</div>
@@ -282,7 +279,7 @@
         document.getElementById('dash-nombre').textContent = nombreGuardado;
         document.getElementById('dash-avatar').textContent = nombreGuardado.charAt(0).toUpperCase();
       } else {
-        document.getElementById('dash-nombre').textContent = 'Usuario Connected';
+        document.getElementById('dash-nombre').textContent = 'Usuario Conectado';
         document.getElementById('dash-avatar').textContent = 'U';
       }
     });
