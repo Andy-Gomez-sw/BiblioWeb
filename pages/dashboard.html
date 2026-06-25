@@ -5,280 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio — Biblioteca Digital</title>
   <link rel="stylesheet" href="../assets/css/styles.css">
-  <style>
-    /* ── Navbar ── */
-    .navbar {
-      background: var(--brown-900, #2c1a0e);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      height: 56px;
-    }
-    .navbar-brand {
-      font-family: 'Crimson Pro', serif;
-      color: #fff;
-      font-size: 13px;
-      line-height: 1.4;
-      letter-spacing: .04em;
-    }
-    .navbar-actions { display: flex; align-items: center; gap: 10px; }
-    .nav-btn {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,.7);
-      cursor: pointer;
-      padding: 6px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color .15s, background .15s;
-    }
-    .nav-btn:hover { color: #fff; background: rgba(255,255,255,.08); }
-
-    /* Botón cerrar sesión */
-    .btn-logout {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.15);
-      color: rgba(255,255,255,.85);
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: .03em;
-      padding: 6px 13px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background .15s, color .15s, border-color .15s;
-    }
-    .btn-logout:hover {
-      background: rgba(220,53,53,.18);
-      border-color: rgba(220,53,53,.45);
-      color: #ff8a8a;
-    }
-    .avatar {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: rgba(255,255,255,.15);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* ── Welcome bar ── */
-    .welcome-bar {
-      background: var(--brown-900, #2c1a0e);
-      color: #fff;
-      padding: 24px 20px 0;
-    }
-    .welcome-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      padding-bottom: 24px;
-    }
-    .welcome-name { font-family: 'Crimson Pro', serif; font-size: 32px; font-weight: 400; color: #fff; }
-    .stat-num { font-size: 22px; font-weight: 700; }
-    .stat-lbl { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
-    .stats-row { display: flex; gap: 28px; }
-
-    /* ── Sección propósito ── */
-    .purpose-section {
-      background: #faf7f3;
-      border: 1px solid #e8e0d5;
-      border-radius: 14px;
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 1fr 260px;
-      gap: 0;
-    }
-    @media (max-width: 760px) {
-      .purpose-section { grid-template-columns: 1fr; }
-      .purpose-img-wrap { display: none; }
-    }
-    .purpose-body { padding: 32px 36px; }
-    .purpose-eyebrow {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: #8b6340;
-      margin-bottom: 6px;
-    }
-    .purpose-title {
-      font-family: 'Crimson Pro', serif;
-      font-size: 26px;
-      font-weight: 600;
-      color: #1c1008;
-      margin-bottom: 10px;
-      line-height: 1.25;
-    }
-    .purpose-desc {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #4a3828;
-      margin-bottom: 20px;
-      max-width: 560px;
-    }
-    .purpose-list-title {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: #8b6340;
-      margin-bottom: 10px;
-    }
-    .purpose-list {
-      list-style: none;
-      padding: 0; margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-    .purpose-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 9px;
-      font-size: 13.5px;
-      color: #3a2a1a;
-      line-height: 1.5;
-    }
-    .purpose-list li::before {
-      content: '✦';
-      color: #c8933a;
-      font-size: 9px;
-      margin-top: 4px;
-      flex-shrink: 0;
-    }
-    .purpose-footer-note {
-      margin-top: 18px;
-      font-size: 12px;
-      color: #8b7560;
-      line-height: 1.55;
-      border-top: 1px solid #e0d5c8;
-      padding-top: 14px;
-    }
-    .purpose-img-wrap {
-      position: relative;
-      background: linear-gradient(135deg, #2c1a0e 0%, #5c3a1e 60%, #8b6340 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 260px;
-      overflow: hidden;
-    }
-    .purpose-img-wrap::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=520&q=80') center/cover no-repeat;
-      opacity: .45;
-    }
-    .purpose-img-overlay {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 24px;
-    }
-    .purpose-img-icon { font-size: 56px; line-height: 1; margin-bottom: 10px; }
-    .purpose-img-label {
-      font-family: 'Crimson Pro', serif;
-      font-size: 18px;
-      color: #fff;
-      opacity: .9;
-      letter-spacing: .02em;
-    }
-
-    /* ── Quick actions ── */
-    .quick-actions-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px; }
-    @media (max-width: 900px) { .quick-actions-grid { grid-template-columns: repeat(3, 1fr); } }
-    @media (max-width: 600px) { .quick-actions-grid { grid-template-columns: repeat(2, 1fr); } }
-
-    /* ── Layout ── */
-    .section-gap { display: flex; flex-direction: column; gap: 32px; }
-    .page-content { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
-
-    /* Generic resets for cards / tags / buttons if styles.css absent */
-    .action-card {
-      display: flex; flex-direction: column; align-items: flex-start;
-      gap: 6px; padding: 18px 16px; border-radius: 10px;
-      background: #fff; border: 1px solid #e8e0d5;
-      text-decoration: none; color: inherit;
-      transition: box-shadow .15s, transform .1s;
-    }
-    .action-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); transform: translateY(-1px); }
-    .action-card.active-bg { background: #faf0e0; border-color: #d4aa6a; }
-    .action-icon { font-size: 22px; }
-    .action-label { font-size: 13px; font-weight: 600; color: #1c1008; }
-    .action-sublabel { font-size: 11px; color: #8b7560; }
-
-    .card-doc {
-      background: #fff; border: 1px solid #e8e0d5; border-radius: 10px;
-      padding: 18px; cursor: pointer; transition: box-shadow .15s;
-    }
-    .card-doc:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
-    .doc-type { font-size: 11px; font-weight: 600; color: #8b7560; margin-bottom: 8px; }
-    .doc-title { font-size: 14px; font-weight: 600; color: #1c1008; line-height: 1.45; margin-bottom: 6px; }
-    .doc-meta { font-size: 12px; color: #8b7560; margin-bottom: 14px; }
-    .doc-footer { display: flex; align-items: center; justify-content: space-between; }
-    .doc-year { font-size: 12px; color: #a08060; }
-    .icon-btn { background: none; border: none; cursor: pointer; color: #8b7560; padding: 4px; border-radius: 5px; }
-    .icon-btn:hover { color: #2c1a0e; }
-
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    @media (max-width: 700px) { .grid-3 { grid-template-columns: 1fr; } }
-
-    .section-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-    .section-heading h2 { font-family: 'Crimson Pro', serif; font-size: 20px; font-weight: 600; color: #1c1008; }
-
-    .recent-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 16px; border-radius: 8px;
-      background: #fff; border: 1px solid #e8e0d5;
-    }
-    .recent-title { font-size: 13.5px; font-weight: 500; color: #1c1008; margin-bottom: 3px; }
-    .recent-meta { font-size: 11.5px; color: #8b7560; }
-    .tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: #f0e8dc; color: #6b4a28; font-weight: 500; white-space: nowrap; }
-    .fav-btn { background: none; border: none; font-size: 18px; cursor: pointer; color: #c0a882; padding: 2px 4px; }
-    .fav-btn:hover { color: #c8933a; }
-
-    .search-row { display: flex; gap: 10px; }
-    .input-group { flex: 1; display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #e0d5c8; border-radius: 8px; padding: 0 12px; }
-    .input-group input { border: none; outline: none; font-size: 14px; width: 100%; padding: 10px 0; background: transparent; }
-    .btn { display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; }
-    .btn-dark { background: #2c1a0e; color: #fff; }
-    .btn-dark:hover { background: #3e2510; }
-
-    .filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
-    .filter-tab { background: #f0e8dc; border: none; border-radius: 20px; padding: 6px 14px; font-size: 12px; cursor: pointer; color: #4a3828; font-weight: 500; }
-    .filter-tab.active { background: #2c1a0e; color: #fff; }
-
-    /* Modal cerrar sesión */
-    .modal-overlay {
-      display: none;
-      position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,.45);
-      align-items: center; justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-box {
-      background: #fff; border-radius: 14px;
-      padding: 32px 28px; max-width: 360px; width: 90%;
-      text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.2);
-    }
-    .modal-icon { font-size: 40px; margin-bottom: 12px; }
-    .modal-title { font-family: 'Crimson Pro', serif; font-size: 22px; color: #1c1008; margin-bottom: 8px; }
-    .modal-msg { font-size: 14px; color: #6b5540; line-height: 1.55; margin-bottom: 24px; }
-    .modal-actions { display: flex; gap: 10px; justify-content: center; }
-    .btn-cancel { background: #f0e8dc; border: none; color: #4a3828; padding: 10px 22px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; }
-    .btn-confirm-logout { background: #c0392b; border: none; color: #fff; padding: 10px 22px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; }
-    .btn-confirm-logout:hover { background: #a93226; }
-  </style>
 </head>
 <body>
 
@@ -311,16 +37,16 @@
       </div>
       <div class="stats-row" style="padding-bottom:6px">
         <div style="text-align:center">
-          <div class="stat-num" style="color:#fff" id="dash-subidos">0</div>
-          <div class="stat-lbl" style="color:rgba(255,255,255,.6)">Subidos</div>
+          <div class="stat-num" id="dash-subidos">0</div>
+          <div class="stat-lbl">Subidos</div>
         </div>
         <div style="text-align:center">
-          <div class="stat-num" style="color:#fff" id="dash-favoritos">0</div>
-          <div class="stat-lbl" style="color:rgba(255,255,255,.6)">Favoritos</div>
+          <div class="stat-num" id="dash-favoritos">0</div>
+          <div class="stat-lbl">Favoritos</div>
         </div>
         <div style="text-align:center">
-          <div class="stat-num" style="color:#fff" id="dash-consultados">0</div>
-          <div class="stat-lbl" style="color:rgba(255,255,255,.6)">Consultados</div>
+          <div class="stat-num" id="dash-consultados">0</div>
+          <div class="stat-lbl">Consultados</div>
         </div>
       </div>
     </div>
@@ -463,7 +189,7 @@
           <span style="font-size:18px">🕐</span>
           <h2>Vistos recientemente</h2>
         </div>
-        <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="section-gap" style="gap:10px">
           <div class="recent-item">
             <div style="flex:1">
               <div class="recent-title">Cambio climático y biodiversidad en ecosistemas mexicanos</div>
@@ -536,11 +262,9 @@
     modalLogout.addEventListener('click', e => { if (e.target === modalLogout) modalLogout.classList.remove('open'); });
 
     modalConfirmar.addEventListener('click', () => {
-      // Limpiar datos de sesión
       localStorage.removeItem('token_jwt');
       localStorage.removeItem('usuario_nombre');
       localStorage.removeItem('usuario_id');
-      // Redirigir al login
       window.location.href = './login.html';
     });
 
@@ -558,23 +282,9 @@
         document.getElementById('dash-nombre').textContent = nombreGuardado;
         document.getElementById('dash-avatar').textContent = nombreGuardado.charAt(0).toUpperCase();
       } else {
-        document.getElementById('dash-nombre').textContent = 'Usuario Conectado';
+        document.getElementById('dash-nombre').textContent = 'Usuario Connected';
         document.getElementById('dash-avatar').textContent = 'U';
       }
-
-      // Descomentar cuando el backend PHP esté listo:
-      /*
-      const usuarioId = localStorage.getItem('usuario_id');
-      fetch(`https://bibliowebb.com.mx/obtener_estadisticas.php?id=${usuarioId}`)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById('dash-subidos').textContent    = data.subidos    || 0;
-          document.getElementById('dash-favoritos').textContent  = data.favoritos  || 0;
-          document.getElementById('dash-consultados').textContent= data.consultados|| 0;
-          document.getElementById('card-sub-favs').textContent   = `${data.favoritos || 0} guardados`;
-          document.getElementById('card-sub-historial').textContent = `${data.consultados || 0} acciones`;
-        }).catch(err => console.log('Contadores listos para el backend en PHP'));
-      */
     });
   </script>
 </body>
