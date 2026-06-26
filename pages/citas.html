@@ -7,12 +7,11 @@
     <title>Generador de citas APA — Biblioteca Digital</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/citas.css">
-    <script src="../assets/js/citas.js" defer></script>
+    <script src="../assets/js/citas.js"></script>
 </head>
 
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
         <div class="navbar-actions">
@@ -26,10 +25,9 @@
         <div class="page-header">
             <p>Generador de citas</p>
             <h1>Cita automática en formato APA 7.ª edición</h1>
-            <p class="subtitle">Genera tu cita de forma dinámica ingresando los datos correspondientes en el formulario.</p>
+            <p class="subtitle">Sube tu documento y se generará la cita automáticamente, o ingresa los datos manualmente.</p>
         </div>
 
-        <!-- Steps -->
         <div class="steps">
             <div class="step">
                 <div class="step-dot done" id="dot-1">✓</div>
@@ -47,23 +45,23 @@
             </div>
         </div>
 
-        <div class="warn-banner" id="warn-msg">
-            ⚠️ Campos incompletos — completa los campos obligatorios (*) para generar tu cita APA
+        <div class="warn-banner" id="warn-msg" style="display: none;">
+            ⚠️ Análisis incompleto — completa los campos faltantes para generar tu cita APA
         </div>
 
-        <!-- Document type selector -->
         <div class="doc-type-tabs">
             <button class="doc-tab active" data-dtype="libro" onclick="setDocType(this)">📚 Libro</button>
             <button class="doc-tab" data-dtype="tesis" onclick="setDocType(this)">🎓 Tesis</button>
             <button class="doc-tab" data-dtype="articulo" onclick="setDocType(this)">📄 Artículo de revista</button>
+            <button class="doc-tab" data-dtype="capitulo" onclick="setDocType(this)">📑 Capítulo de libro</button>
         </div>
 
         <div class="card" style="padding:24px">
 
-            <div class="form-stack">
+            <div class="form-stack" id="form-libro">
                 <div class="field">
-                    <label id="lbl-dinamico-titulo">Título del Libro <span>*</span></label>
-                    <input type="text" id="l-titulo" placeholder="Ej. El laberinto de la soledad" oninput="updatePreview()">
+                    <label id="lbl-dinamico-titulo">Título <span>*</span></label>
+                    <input type="text" id="l-titulo" placeholder="El laberinto de la soledad" oninput="updatePreview()">
                 </div>
                 <div class="form-grid-2">
                     <div class="field">
@@ -78,21 +76,20 @@
                 <div class="form-grid-2">
                     <div class="field">
                         <label id="lbl-dinamico-extra1">Editorial</label>
-                        <input type="text" id="l-editorial" placeholder="Ej. Fondo de Cultura Económica" oninput="updatePreview()">
+                        <input type="text" id="l-editorial" placeholder="Fondo de Cultura Económica" oninput="updatePreview()">
                     </div>
                     <div class="field">
-                        <label id="lbl-dinamico-extra2">Ciudad / Institución</label>
-                        <input type="text" id="l-ciudad" placeholder="Ej. Ciudad de México, México" oninput="updatePreview()">
+                        <label id="lbl-dinamico-extra2">Ciudad</label>
+                        <input type="text" id="l-ciudad" placeholder="Ciudad de México, México" oninput="updatePreview()">
                     </div>
                 </div>
                 <div class="field">
-                    <label>DOI / ISBN / URL <span>*</span></label>
-                    <input type="text" id="l-doi" placeholder="10.XXXX/... o 978-X-XXX o URL" oninput="updatePreview()">
-                    <span class="info-DOI">Escribe N/A si el documento no tiene un identificador digital</span>
+                    <label>DOI / ISBN <span>*</span></label>
+                    <input type="text" id="l-doi" placeholder="10.XXXX/... o 978-X-XXX" oninput="updatePreview()">
+                    <span class="info-DOI">Escribe N/A si el documento no tiene DOI</span>
                 </div>
             </div>
 
-            <!-- APA preview -->
             <div class="preview-section">
                 <p class="preview-label">Vista previa de la cita APA</p>
                 <div class="apa-preview">
@@ -102,7 +99,6 @@
 
         </div>
 
-        <!-- Actions -->
         <div class="actions-cita">
             <a href="dashboard.html" class="btn btn-outline" style="width:auto">Cancelar</a>
             <button class="btn btn-dark" onclick="generateCita()">
@@ -110,7 +106,6 @@
             </button>
         </div>
 
-        <!-- Result panel -->
         <div class="result-panel" id="result-panel">
             <div class="result-spacer"></div>
             <div class="card result-card">
@@ -120,10 +115,10 @@
                 </div>
                 <div class="result-actions">
                     <button class="btn btn-dark" onclick="copyCita()">📋 Copiar cita</button>
-                    <button class="btn btn-outline result-btn" onclick="window.location.reload()">Generar otra cita</button>
+                    <button class="btn btn-outline result-btn" onclick="window.location.href='subir.html'">Subir otro documento</button>
                     <button class="btn btn-outline result-btn" onclick="window.location.href='dashboard.html'">Volver al inicio</button>
                 </div>
-                <div id="copy-msg" class="copy-msg" style="display:none; margin-top: 15px;">
+                <div id="copy-msg" class="copy-msg" style="display: none;">
                     <span class="badge badge-green">✓ Cita copiada al portapapeles</span>
                 </div>
             </div>

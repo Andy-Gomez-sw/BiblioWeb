@@ -7,12 +7,11 @@
     <title>Mis archivos — Biblioteca Digital</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="../assets/css/mis-archivos.css">
-    <script src="../assets/js/mis-archivos.js" defer></script>
+    <script src="../assets/js/mis-archivos.js"></script>
 </head>
 
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
         <div class="navbar-actions">
@@ -21,7 +20,6 @@
         </div>
     </nav>
 
-    <!-- Header -->
     <div class="header-bar">
         <div class="header-inner">
             <h1>Mis archivos</h1>
@@ -49,7 +47,6 @@
 
     <main class="page-content">
 
-        <!-- Search + actions row -->
         <div class="search-actions-row">
             <div class="search-bar-sm">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
@@ -64,14 +61,13 @@
             </a>
         </div>
 
-        <!-- Files list -->
         <div class="files-list" id="files-list"></div>
 
-        <div id="empty-files" class="empty-files-wrapper" style="display:none;">
+        <div id="empty-files" class="empty-files-wrapper">
             <div class="empty-state">
                 <p>📂</p>
                 <p class="empty-state-title">No hay archivos que coincidan</p>
-                <p class="empty-state-sub">Intenta con otro término o sube un documento nuevo.</p>
+                <p class="empty-state-sub">Intenta con otro término</p>
             </div>
         </div>
 
@@ -83,7 +79,6 @@
 
     </main>
 
-    <!-- Delete confirm modal -->
     <div class="delete-confirm" id="delete-modal">
         <div class="delete-card">
             <div class="delete-icon">🗑️</div>
