@@ -1,6 +1,6 @@
 <?php
 // ════════════════════════════════════════
-//  subir_documento.php — Mapeado Limpio
+//  subir_documento.php 
 // ════════════════════════════════════════
 
 require_once __DIR__ . '/../config.php'; 
@@ -45,7 +45,7 @@ foreach ($campos as $c) {
 $titulo      = trim($_POST['titulo']);
 $autor       = trim($_POST['autor']);
 $anio        = (int) $_POST['anio'];
-$institucion = trim($_POST['institucion']); // Asegurar que use 'institucion'
+$institucion = trim($_POST['institucion']); 
 $area        = trim($_POST['area']);
 $doi         = trim($_POST['doi']);
 $resumen     = trim($_POST['resumen']);

@@ -1,62 +1,57 @@
 <?php
 require_once '../config.php';
-// Permitir que tu frontend se comunique sin bloqueos de CORS
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit(); }
 
-// ── CONEXION A BD ── 
+// ── CONEXION A BD ──
 $pdo = getDB();
 
-// Leer los datos que manda el JavaScript del Frontend
-$json = file_get_contents('php://input');
+$json  = file_get_contents('php://input');
 $datos = json_decode($json, true);
 
-$email     = $datos['email'] ?? null;
-$nombre    = $datos['nombre'] ?? null;
-$avatar    = $datos['avatar'] ?? null;
+$email  = $datos['email']  ?? null;
+$nombre = $datos['nombre'] ?? null;
+$avatar = $datos['avatar'] ?? null;
 
 if (!$email) {
-    echo json_encode(["error" => "Falta el correo electrónico obligatorio de Google."]);
-    http_response_code(400);
-    exit();
+    echo json_encode(["error" => "Falta el correo electrónico."]);
+    http_response_code(400); exit();
 }
 
 try {
-    // 1. Buscamos al usuario por su email único en tu tabla de MySQL
-    $stmt = $pdo->prepare("SELECT id, nombre FROM usuarios WHERE email = ?");
+    // ── Traemos también el género ──
+    $stmt = $pdo->prepare("SELECT id, nombre, genero FROM usuarios WHERE email = ?");
     $stmt->execute([$email]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$usuario) {
-        // 2. Si no existe en MySQL, lo registramos usando las columnas reales de tu SQL
-        $sql_insert = "INSERT INTO usuarios (nombre, email, password, avatar_url, metodo) VALUES (?, ?, NULL, ?, 'google')";
-        $stmt_insert = $pdo->prepare($sql_insert);
-        $stmt_insert->execute([$nombre, $email, $avatar]);
+        // Usuario nuevo — lo registramos sin género (lo podrá editar en su perfil)
+        $stmt = $pdo->prepare("INSERT INTO usuarios (nombre, genero, email, password, avatar_url, metodo) VALUES (?, '', ?, NULL, ?, 'google')");
+        $stmt->execute([$nombre, $email, $avatar]);
 
-        // Obtener el ID asignado automáticamente por MySQL
-        $usuario_id = $pdo->lastInsertId();
+        $usuario_id     = $pdo->lastInsertId();
         $nombre_usuario = $nombre;
+        $genero         = '';
     } else {
-        $usuario_id = $usuario['id'];
+        $usuario_id     = $usuario['id'];
         $nombre_usuario = $usuario['nombre'];
+        $genero         = $usuario['genero'];
     }
 
-    // 3. Responder al frontend con éxito para armar la sesión
     echo json_encode([
-        "mensaje" => "Usuario autenticado con éxito en MySQL",
+        "mensaje"    => "Usuario autenticado con éxito",
         "usuario_id" => $usuario_id,
-        "nombre" => $nombre_usuario
+        "nombre"     => $nombre_usuario,
+        "genero"     => $genero   // ← nuevo
     ]);
     http_response_code(200);
 
 } catch (Exception $e) {
-    echo json_encode(["error" => "Error al procesar la solicitud en MySQL: " . $e->getMessage()]);
+    echo json_encode(["error" => "Error: " . $e->getMessage()]);
     http_response_code(500);
 }
 ?>

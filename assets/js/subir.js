@@ -1,37 +1,36 @@
 // ════════════════════════════════════════
-//  subir.js — Versión Completa Integrada
+//  subir.js — Solución de Contador y Tarjeta
 // ════════════════════════════════════════
 
 const PHP_URL = 'https://bibliowebb.com.mx/subir_documento.php';
 
+// Configurar elementos tan pronto como el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    // ── VALIDACIÓN Y SINCRONIZACIÓN DE FLUJO DE USUARIO ──
-    const token = localStorage.getItem('token_jwt');
+    // ── PERSISTENCIA DEL AVATAR ──
     const nombreGuardado = localStorage.getItem('usuario_nombre');
     const avatar = document.getElementById("global-avatar");
 
-    // Si no hay token de sesión activo, redirige de inmediato al login para proteger el flujo
-    if (!token) {
-        window.location.href = './login.html';
-        return;
-    }
-
-    // Cargar dinámicamente la inicial en el Navbar
     if (nombreGuardado && avatar) {
         avatar.textContent = nombreGuardado.charAt(0).toUpperCase();
     } else if (avatar) {
         avatar.textContent = 'U';
     }
 
-    // Contador de caracteres para el resumen
+    // ── CONTADOR DE CARACTERES CORREGIDO ──
     const resumenInput = document.getElementById('f-resumen');
-    if (resumenInput) {
+    const charCountEl = document.getElementById('char-count');
+    
+    if (resumenInput && charCountEl) {
+        // Ejecutar inmediatamente al cargar por si quedó texto guardado
+        charCountEl.textContent = resumenInput.value.length + ' / 500';
+        
+        // Escuchar cada pulsación de tecla para actualizar dinámicamente
         resumenInput.addEventListener('input', function () {
-            document.getElementById('char-count').textContent = this.value.length + ' / 500';
+            charCountEl.textContent = this.value.length + ' / 500';
         });
     }
 
-    // Configuración Drag & Drop
+    // ── CONFIGURACIÓN DRAG & DROP ──
     const dz = document.getElementById('dropzone');
     if (dz) {
         dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
@@ -52,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ── EXPOSICIÓN GLOBAL DE FUNCIONES SELECTORAS (UI) ──
+// ── EXPOSICIÓN GLOBAL DE FUNCIONES DE INTERFAZ (UI) ──
 
 window.selectType = function(el) {
     document.querySelectorAll('.type-opt').forEach(o => o.classList.remove('selected'));
@@ -114,7 +113,7 @@ window.ocultarMsg = function() {
     if (el) el.style.display = 'none';
 };
 
-// ── PROCESAMIENTO ASÍNCRONO DEL FORMULARIO HACIA PHP ──
+// ── ENVÍO SEGURO HACIA PHP Y BASE DE DATOS ──
 window.submitForm = async function() {
     const titulo    = document.getElementById('f-titulo').value.trim();
     const autor     = document.getElementById('f-autor').value.trim();
@@ -132,13 +131,18 @@ window.submitForm = async function() {
     const tags      = window.getTags();
     const usuarioId = localStorage.getItem('usuario_id') || '';
 
-    // Validaciones obligatorias en el Frontend
+    // Validar inicio de sesión
+    if (!usuarioId) {
+        window.mostrarMsg('❌ Error: No se detectó tu sesión. Por favor, vuelve a ingresar al sistema.', 'error');
+        return;
+    }
+
     if (!titulo || !autor || !anio || !inst || !area || !resumen || !doi) {
         window.mostrarMsg('⚠️ Por favor completa todos los campos obligatorios.', 'error');
         return;
     }
     if (!archivo) {
-        window.mostrarMsg('⚠️ Debes seleccionar un archivo PDF o DOCX.', 'error');
+        window.mostrarMsg('⚠️ Debes seleccionar o arrastrar un archivo PDF o DOCX.', 'error');
         return;
     }
 
@@ -147,7 +151,7 @@ window.submitForm = async function() {
         btn.disabled = true;
         btn.textContent = '⏳ Subiendo...';
     }
-    window.mostrarMsg('Guardando en la base de datos de Hostinger...', 'info');
+    window.mostrarMsg('Registrando documento en la base de datos...', 'info');
 
     const formData = new FormData();
     formData.append('archivo',      archivo);
@@ -165,29 +169,34 @@ window.submitForm = async function() {
 
     try {
         const res = await fetch(PHP_URL, { method: 'POST', body: formData });
-        
-        if (!res.ok) {
-            const errorTxt = await res.text();
-            throw new Error(`Error en servidor (${res.status}): ${errorTxt}`);
-        }
-
         const data = await res.json();
 
         if (data.success) {
             window.ocultarMsg();
 
-            // ── INYECCIÓN REAL EN LA TARJETA DE ÉXITO ──
+            // ── INYECCIÓN DE TUS DATOS REALES EN LA TARJETA DE ÉXITO ──
             const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
             
-            document.querySelector('.success-card .doc-type').textContent =
-                `${iconos[tipo] || '📄'} ${tipo.toUpperCase()}`;
+            // 1. Tipo de documento real
+            const docTypeEl = document.querySelector('#success-overlay .doc-type');
+            if (docTypeEl) {
+                docTypeEl.textContent = `${iconos[tipo] || '📄'} ${tipo.toUpperCase()}`;
+            }
                 
-            document.querySelector('.success-card .doc-title').textContent = titulo;
+            // 2. Título escrito por ti en el input
+            const docTitleEl = document.querySelector('#success-overlay .doc-title');
+            if (docTitleEl) {
+                docTitleEl.textContent = titulo;
+            }
             
-            document.querySelector('.success-doc-meta').textContent =
-                `${autor} · ${anio} · ${data.tamano_archivo || 'Archivo Listo'}`;
+            // 3. Metadatos dinámicos reales
+            const docMetaEl = document.querySelector('#success-overlay .success-doc-meta');
+            if (docMetaEl) {
+                docMetaEl.textContent = `${autor} · ${anio} · Archivo procesado con éxito`;
+            }
 
-            const badgesContainer = document.querySelector('.success-doc-badges');
+            // 4. Badges inferiores dinámicos
+            const badgesContainer = document.querySelector('#success-overlay .success-doc-badges');
             if (badgesContainer) {
                 badgesContainer.innerHTML = `
                     <span class="badge badge-amber">${tipo.toUpperCase()}</span>
@@ -196,14 +205,14 @@ window.submitForm = async function() {
                 `;
             }
 
-            // Mostrar el Overlay únicamente si la inserción fue exitosa
+            // Mostrar el Overlay/Modal de éxito únicamente cuando data.success sea verdadero
             document.getElementById('success-overlay').classList.add('show');
         } else {
             window.mostrarMsg('❌ Base de datos: ' + data.message, 'error');
         }
     } catch (err) {
-        window.mostrarMsg('❌ No se pudo registrar. Revisa que las columnas de tu BD permitan nulos o coincidan.', 'error');
-        console.error("Detalle del fallo:", err);
+        window.mostrarMsg('❌ Error interno. Verifica que config.php esté activo y las columnas de la tabla acepten estos datos.', 'error');
+        console.error("Detalles del error detectado:", err);
     } finally {
         if (btn) {
             btn.disabled = false;

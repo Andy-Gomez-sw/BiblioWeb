@@ -29,7 +29,7 @@ function setLoading(id, on, label) {
     }
 }
 
-// ── BOTÓN DE GOOGLE (Vuelve al recuadro pequeño flotante original) ──
+// ── BOTÓN DE GOOGLE ──
 document.getElementById('btn-google').addEventListener('click', async () => {
     hideError();
     setLoading('btn-google', true, 'Continuar con Google');
@@ -50,11 +50,10 @@ document.getElementById('btn-google').addEventListener('click', async () => {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.setItem('usuario_id', data.usuario_id);
+            localStorage.setItem('usuario_id',     data.usuario_id);
             localStorage.setItem('usuario_nombre', data.nombre);
-            localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
-
-            // Abre tu Dashboard de inmediato
+            localStorage.setItem('usuario_genero', data.genero || ''); // ← nuevo
+            localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
             window.location.href = './dashboard.html';
         } else {
             setLoading('btn-google', false, 'Continuar con Google');
@@ -71,7 +70,7 @@ document.getElementById('btn-google').addEventListener('click', async () => {
 // ── LOGIN TRADICIONAL ──
 document.getElementById('btn-login').addEventListener('click', async () => {
     hideError();
-    const email = document.getElementById('f-email').value.trim();
+    const email    = document.getElementById('f-email').value.trim();
     const password = document.getElementById('f-password').value;
 
     if (!email || !password) {
@@ -91,9 +90,10 @@ document.getElementById('btn-login').addEventListener('click', async () => {
         const data = await response.json();
 
         if (response.ok) {
-            localStorage.setItem('usuario_id', data.usuario_id);
+            localStorage.setItem('usuario_id',     data.usuario_id);
             localStorage.setItem('usuario_nombre', data.nombre);
-            localStorage.setItem('token_jwt', 'sesion_activa_php_' + data.usuario_id);
+            localStorage.setItem('usuario_genero', data.genero || ''); // ← nuevo
+            localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
             window.location.href = './dashboard.html';
         } else {
             setLoading('btn-login', false, 'Entrar');
