@@ -1,279 +1,201 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Subir documento — Biblioteca Digital</title>
-  <link rel="stylesheet" href="../assets/css/styles.css">
-  <style>
-    .type-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
-    .type-opt {
-      border: 2px solid var(--cream-300); border-radius: var(--radius-md);
-      padding: 20px 14px; text-align: center; cursor: pointer; background: #fff; transition: all .2s;
-    }
-    .type-opt.selected { background: var(--brown-200); border-color: var(--brown-700); }
-    .type-opt-icon { font-size: 28px; margin-bottom: 8px; }
-    .type-opt-label { font-size: 14px; font-weight: 600; color: var(--text-primary); }
-    .type-opt-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .page-header { margin-bottom: 28px; }
-    .page-header p { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-    .page-header h1 { font-family: 'Crimson Pro', serif; font-size: 30px; font-weight: 400; color: var(--text-primary); }
-
-    .success-overlay {
-      position: fixed; inset: 0; background: rgba(59,31,26,.5); display: none;
-      align-items: center; justify-content: center; z-index: 100;
-    }
-    .success-overlay.show { display: flex; }
-    .success-card {
-      background: var(--brown-800); border-radius: var(--radius-lg); padding: 48px 40px;
-      text-align: center; max-width: 500px; width: 90%; color: #fff;
-    }
-    .success-check { width: 64px; height: 64px; border-radius: 50%; border: 3px solid var(--cream-200); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 20px; }
-    .success-card h2 { font-family: 'Crimson Pro', serif; font-size: 28px; margin-bottom: 6px; }
-    .success-card p { font-size: 14px; color: rgba(255,255,255,.7); margin-bottom: 28px; }
-    .success-doc { background: #fff; border-radius: var(--radius-md); padding: 16px; text-align: left; margin-bottom: 24px; }
-    .success-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    .success-btn {
-      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); border-radius: var(--radius-md);
-      color: #fff; padding: 16px 12px; cursor: pointer; font-size: 13px; font-weight: 500; transition: background .2s;
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-    }
-    .success-btn:hover { background: rgba(255,255,255,.22); }
-    .success-btn.single { grid-column: 1/-1; }
-
-    @media (max-width: 600px) { .form-grid-2 { grid-template-columns: 1fr; } .type-selector { grid-template-columns: 1fr; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir documento — Biblioteca Digital</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/subir.css">
+    <script src="../assets/js/subir.js" defer></script>
 </head>
+
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-brand">BIBLIOTECA<br>UNIVERSIDAD — COLECCIÓN DIGITAL</div>
-    <div class="navbar-actions">
-      <a href="dashboard.html" class="nav-btn">← Volver</a>
-      <div class="avatar">M</div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
+        <div class="navbar-actions">
+            <a href="dashboard.html" class="nav-btn">← Volver</a>
+            <div class="avatar">M</div>
+        </div>
+    </nav>
+
+    <main class="page-content-narrow">
+
+        <div class="page-header">
+            <p>Subir documento</p>
+            <h1>Agrega tesis, artículos o libros a la colección</h1>
+        </div>
+
+        <!-- Tipo de documento -->
+        <div class="type-selector">
+            <div class="type-opt selected" data-type="tesis" onclick="selectType(this)">
+                <div class="type-opt-icon">🎓</div>
+                <div class="type-opt-label">Tesis</div>
+                <div class="type-opt-sub">PDF · DOCX</div>
+            </div>
+            <div class="type-opt" data-type="articulo" onclick="selectType(this)">
+                <div class="type-opt-icon">📄</div>
+                <div class="type-opt-label">Artículo</div>
+                <div class="type-opt-sub">PDF · DOCX</div>
+            </div>
+            <div class="type-opt" data-type="libro" onclick="selectType(this)">
+                <div class="type-opt-icon">📚</div>
+                <div class="type-opt-label">Libro</div>
+                <div class="type-opt-sub">PDF · DOCX</div>
+            </div>
+        </div>
+
+        <!-- Dropzone -->
+        <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+            <input type="file" id="file-input" accept=".pdf,.docx" class="file-input" onchange="handleFile(this)">
+            <div class="dropzone-icon">⬆️</div>
+            <p class="dropzone-title">Arrastra tu archivo aquí</p>
+            <p class="dropzone-sub">o selecciónalo desde tu dispositivo</p>
+            <span class="tag" id="file-label">Formatos aceptados PDF · DOCX · Máx. 50 MB</span>
+        </div>
+
+        <div class="form-spacer"></div>
+
+        <!-- Form fields -->
+        <div class="form-fields">
+
+            <div class="field">
+                <label>Título del documento <span>*</span></label>
+                <input type="text" placeholder="Ej. Análisis comparativo del Romanticismo tardío en México"
+                    id="f-titulo">
+            </div>
+
+            <div class="form-grid-2">
+                <div class="field">
+                    <label>Autor(es) <span>*</span></label>
+                    <input type="text" placeholder="Apellido, Nombre" id="f-autor">
+                </div>
+                <div class="field">
+                    <label>Año de publicación <span>*</span></label>
+                    <input type="number" placeholder="2024" min="1900" max="2099" id="f-anio">
+                </div>
+            </div>
+
+            <div class="form-grid-2">
+                <div class="field">
+                    <label>Institución / Editorial <span>*</span></label>
+                    <input type="text" placeholder="Universidad Nacional" id="f-inst">
+                </div>
+                <div class="field">
+                    <label>Área del conocimiento <span>*</span></label>
+                    <select id="f-area">
+                        <option value="" disabled selected>Selecciona área</option>
+                        <option>Humanidades</option>
+                        <option>Ciencias Sociales</option>
+                        <option>Ciencias Exactas</option>
+                        <option>Ingeniería y Tecnología</option>
+                        <option>Ciencias de la Salud</option>
+                        <option>Artes</option>
+                        <option>Derecho</option>
+                        <option>Economía</option>
+                        <option>Educación</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field field-doi">
+                <label>DOI / ISBN <span>*</span></label>
+                <input type="text" placeholder="10.XXXX/... o 978-X-XXX" id="f-doi">
+                <span class="info-DOI">Escribe N/A si el documento no tiene DOI</span>
+            </div>
+
+            <div class="field">
+                <label>Palabras clave <span>*</span></label>
+                <div class="tags-input" id="tags-container" onclick="document.getElementById('tag-input').focus()">
+                    <span class="tag-removable">Romanticismo <button onclick="removeTag(this)">×</button></span>
+                    <span class="tag-removable">Literatura Mexicana <button onclick="removeTag(this)">×</button></span>
+                    <input type="text" id="tag-input" placeholder="Agregar etiqueta..." onkeydown="addTag(event)">
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Resumen / Abstract <span>*</span></label>
+                <textarea placeholder="Breve descripción del documento (máx. 500 caracteres)..." id="f-resumen"
+                    maxlength="500"></textarea>
+                <span class="char-count" id="char-count">0 / 500</span>
+            </div>
+
+            <!-- Acceso -->
+            <div>
+                <p class="access-label">Acceso</p>
+                <div class="access-options">
+                    <div class="access-opt selected" onclick="selectAccess(this)">
+                        <div class="access-opt-icon">🌐</div>
+                        <div class="access-opt-label">Acceso abierto</div>
+                        <div class="access-opt-sub">Disponible para todos</div>
+                    </div>
+                    <div class="access-opt" onclick="selectAccess(this)">
+                        <div class="access-opt-icon">🎓</div>
+                        <div class="access-opt-label">Institucional</div>
+                        <div class="access-opt-sub">Solo usuarios registrados</div>
+                    </div>
+                    <div class="access-opt" onclick="selectAccess(this)">
+                        <div class="access-opt-icon">🔒</div>
+                        <div class="access-opt-label">Restringido</div>
+                        <div class="access-opt-sub">Solo yo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <a href="dashboard.html" class="btn btn-outline btn-auto">Cancelar</a>
+                <button class="btn btn-dark" onclick="submitForm()">
+                    ⬆️ Subir documento
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Success overlay -->
+    <div class="success-overlay" id="success-overlay">
+        <div class="success-card">
+            <div class="success-check">✓</div>
+            <h2>¡Documento subido con éxito!</h2>
+            <p>Tu archivo ya está disponible en la colección</p>
+
+            <div class="success-doc">
+                <div class="doc-type">🎓 Tesis</div>
+                <div class="doc-title">El romanticismo tardío en la literatura mexicana</div>
+                <p class="success-doc-meta">García Martínez, L. A. · 2022 · 3.2 MB</p>
+                <div class="success-doc-badges">
+                    <span class="badge badge-amber">Tesis</span>
+                    <span class="badge badge-amber">Humanidades</span>
+                    <span class="badge badge-green">Acceso abierto</span>
+                </div>
+            </div>
+
+            <div class="success-actions">
+                <button class="success-btn" onclick="window.location.href='mis-archivos.html'">
+                    <span class="success-btn-icon">🗂️</span>
+                    <span>Ver mis archivos</span>
+                    <span class="success-btn-sub">Ver todos mis documentos</span>
+                </button>
+                <button class="success-btn" onclick="resetForm()">
+                    <span class="success-btn-icon">⬆️</span>
+                    <span>Subir otro archivo</span>
+                    <span class="success-btn-sub">Agregar más documentos</span>
+                </button>
+                <button class="success-btn single" onclick="window.location.href='citas.html'">
+                    <span class="success-btn-icon">❝</span>
+                    <span>Generar cita APA</span>
+                    <span class="success-btn-sub">Para este u otro documento</span>
+                </button>
+            </div>
+
+            <button class="btn btn-outline btn-success-back" onclick="window.location.href='dashboard.html'">
+                Volver al inicio
+            </button>
+        </div>
     </div>
-  </nav>
-
-  <main class="page-content-narrow">
-
-    <div class="page-header">
-      <p>Subir documento</p>
-      <h1>Agrega tesis, artículos o libros a la colección</h1>
-    </div>
-
-    <!-- Tipo de documento -->
-    <div class="type-selector">
-      <div class="type-opt selected" data-type="tesis" onclick="selectType(this)">
-        <div class="type-opt-icon">🎓</div>
-        <div class="type-opt-label">Tesis</div>
-        <div class="type-opt-sub">PDF · DOCX</div>
-      </div>
-      <div class="type-opt" data-type="articulo" onclick="selectType(this)">
-        <div class="type-opt-icon">📄</div>
-        <div class="type-opt-label">Artículo</div>
-        <div class="type-opt-sub">PDF · DOCX</div>
-      </div>
-      <div class="type-opt" data-type="libro" onclick="selectType(this)">
-        <div class="type-opt-icon">📚</div>
-        <div class="type-opt-label">Libro</div>
-        <div class="type-opt-sub">PDF · DOCX</div>
-      </div>
-    </div>
-
-    <!-- Dropzone -->
-    <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
-      <input type="file" id="file-input" accept=".pdf,.docx" style="display:none" onchange="handleFile(this)">
-      <div style="font-size:32px;margin-bottom:10px">⬆️</div>
-      <p style="font-size:15px;font-weight:500;color:var(--text-secondary);margin-bottom:4px">Arrastra tu archivo aquí</p>
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">o selecciónalo desde tu dispositivo</p>
-      <span class="tag" id="file-label">Formatos aceptados PDF · DOCX · Máx. 50 MB</span>
-    </div>
-
-    <div style="height:28px"></div>
-
-    <!-- Form fields -->
-    <div style="display:flex;flex-direction:column;gap:18px">
-
-      <div class="field">
-        <label>Título del documento <span>*</span></label>
-        <input type="text" placeholder="Ej. Análisis comparativo del Romanticismo tardío en México" id="f-titulo">
-      </div>
-
-      <div class="form-grid-2">
-        <div class="field">
-          <label>Autor(es) <span>*</span></label>
-          <input type="text" placeholder="Apellido, Nombre" id="f-autor">
-        </div>
-        <div class="field">
-          <label>Año de publicación <span>*</span></label>
-          <input type="number" placeholder="2024" min="1900" max="2099" id="f-anio">
-        </div>
-      </div>
-
-      <div class="form-grid-2">
-        <div class="field">
-          <label>Institución / Editorial <span>*</span></label>
-          <input type="text" placeholder="Universidad Nacional" id="f-inst">
-        </div>
-        <div class="field">
-          <label>Área del conocimiento <span>*</span></label>
-          <select id="f-area">
-            <option value="" disabled selected>Selecciona área</option>
-            <option>Humanidades</option>
-            <option>Ciencias Sociales</option>
-            <option>Ciencias Exactas</option>
-            <option>Ingeniería y Tecnología</option>
-            <option>Ciencias de la Salud</option>
-            <option>Artes</option>
-            <option>Derecho</option>
-            <option>Economía</option>
-            <option>Educación</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="field" style="max-width:340px">
-        <label>DOI / ISBN <span>*</span></label>
-        <input type="text" placeholder="10.XXXX/... o 978-X-XXX" id="f-doi">
-      </div>
-
-      <div class="field">
-        <label>Palabras clave <span>*</span></label>
-        <div class="tags-input" id="tags-container" onclick="document.getElementById('tag-input').focus()">
-          <span class="tag-removable">Romanticismo <button onclick="removeTag(this)">×</button></span>
-          <span class="tag-removable">Literatura Mexicana <button onclick="removeTag(this)">×</button></span>
-          <input type="text" id="tag-input" placeholder="Agregar etiqueta..." onkeydown="addTag(event)">
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Resumen / Abstract <span>*</span></label>
-        <textarea placeholder="Breve descripción del documento (máx. 500 caracteres)..." id="f-resumen" maxlength="500"></textarea>
-        <span style="font-size:11px;color:var(--text-muted);text-align:right" id="char-count">0 / 500</span>
-      </div>
-
-      <!-- Acceso -->
-      <div>
-        <p style="font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:10px">Acceso</p>
-        <div class="access-options">
-          <div class="access-opt selected" onclick="selectAccess(this)">
-            <div class="access-opt-icon">🌐</div>
-            <div class="access-opt-label">Acceso abierto</div>
-            <div class="access-opt-sub">Disponible para todos</div>
-          </div>
-          <div class="access-opt" onclick="selectAccess(this)">
-            <div class="access-opt-icon">🎓</div>
-            <div class="access-opt-label">Institucional</div>
-            <div class="access-opt-sub">Solo usuarios registrados</div>
-          </div>
-          <div class="access-opt" onclick="selectAccess(this)">
-            <div class="access-opt-icon">🔒</div>
-            <div class="access-opt-label">Restringido</div>
-            <div class="access-opt-sub">Solo yo</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
-        <a href="dashboard.html" class="btn btn-outline" style="width:auto">Cancelar</a>
-        <button class="btn btn-dark" onclick="submitForm()">
-          ⬆️ Subir documento
-        </button>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- Success overlay -->
-  <div class="success-overlay" id="success-overlay">
-    <div class="success-card">
-      <div class="success-check">✓</div>
-      <h2>¡Documento subido con éxito!</h2>
-      <p>Tu archivo ya está disponible en la colección</p>
-
-      <div class="success-doc">
-        <div class="doc-type">🎓 Tesis</div>
-        <div class="doc-title">El romanticismo tardío en la literatura mexicana</div>
-        <p style="font-size:12px;color:var(--text-muted);margin-top:4px">García Martínez, L. A. · 2022 · 3.2 MB</p>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <span class="badge badge-amber">Tesis</span>
-          <span class="badge badge-amber">Humanidades</span>
-          <span class="badge badge-green">Acceso abierto</span>
-        </div>
-      </div>
-
-      <div class="success-actions">
-        <button class="success-btn" onclick="window.location.href='mis-archivos.html'">
-          <span style="font-size:22px">🗂️</span>
-          <span>Ver mis archivos</span>
-          <span style="font-size:11px;opacity:.7">Ver todos mis documentos</span>
-        </button>
-        <button class="success-btn" onclick="resetForm()">
-          <span style="font-size:22px">⬆️</span>
-          <span>Subir otro archivo</span>
-          <span style="font-size:11px;opacity:.7">Agregar más documentos</span>
-        </button>
-        <button class="success-btn single" onclick="window.location.href='citas.html'">
-          <span style="font-size:22px">❝</span>
-          <span>Generar cita APA</span>
-          <span style="font-size:11px;opacity:.7">Para este u otro documento</span>
-        </button>
-      </div>
-
-      <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.3);width:100%" onclick="window.location.href='dashboard.html'">
-        Volver al inicio
-      </button>
-    </div>
-  </div>
-
-  <script>
-    function selectType(el) {
-      document.querySelectorAll('.type-opt').forEach(o => o.classList.remove('selected'));
-      el.classList.add('selected');
-    }
-    function selectAccess(el) {
-      document.querySelectorAll('.access-opt').forEach(o => o.classList.remove('selected'));
-      el.classList.add('selected');
-    }
-    function handleFile(input) {
-      if (input.files[0]) {
-        document.getElementById('file-label').textContent = '✓ ' + input.files[0].name;
-        document.getElementById('dropzone').style.borderColor = 'var(--amber)';
-      }
-    }
-    function addTag(e) {
-      if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        const val = e.target.value.trim();
-        if (!val) return;
-        const span = document.createElement('span');
-        span.className = 'tag-removable';
-        span.innerHTML = val + ' <button onclick="removeTag(this)">×</button>';
-        document.getElementById('tags-container').insertBefore(span, e.target);
-        e.target.value = '';
-      }
-    }
-    function removeTag(btn) { btn.parentElement.remove(); }
-    document.getElementById('f-resumen').addEventListener('input', function() {
-      document.getElementById('char-count').textContent = this.value.length + ' / 500';
-    });
-    const dz = document.getElementById('dropzone');
-    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
-    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
-    dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); });
-    function submitForm() {
-      document.getElementById('success-overlay').classList.add('show');
-    }
-    function resetForm() {
-      document.getElementById('success-overlay').classList.remove('show');
-      document.getElementById('f-titulo').value = '';
-      document.getElementById('file-label').textContent = 'Formatos aceptados PDF · DOCX · Máx. 50 MB';
-      document.getElementById('dropzone').style.borderColor = '';
-    }
-  </script>
 </body>
+
 </html>

@@ -157,6 +157,55 @@
     user-select: none;
 }
 
+.banner-link {
+    color: var(--amber-light);
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.search-section {
+    margin-bottom: 20px;
+}
+
+.search-row {
+    margin-bottom: 12px;
+}
+
+.collections-section {
+    margin-bottom: 36px;
+}
+
+.section-heading-sm {
+    margin-bottom: 4px;
+}
+
+.empty-state-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.empty-state-sub {
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 18px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color .2s, background .2s;
+}
+
+.icon-btn:hover {
+    color: var(--brown-700);
+    background: var(--cream-300);
+}
+
 @media (max-width: 900px) {
     .results-grid {
         grid-template-columns: repeat(2, 1fr);

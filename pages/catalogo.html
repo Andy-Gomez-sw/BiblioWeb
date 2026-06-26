@@ -45,16 +45,15 @@
             <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
         Estás navegando como invitado. Solo puedes consultar el catálogo.
-        Para guardar documentos, <a href="login.html"
-            style="color:var(--amber-light);font-weight:600;margin-left:4px">inicia sesión.</a>
+        Para guardar documentos, <a href="login.html" class="banner-link">inicia sesión.</a>
         <button onclick="document.getElementById('guest-banner').style.display='none'">×</button>
     </div>
 
     <main class="page-content">
 
         <!-- Search -->
-        <div style="margin-bottom:20px">
-            <div class="search-row" style="margin-bottom:12px">
+        <div class="search-section">
+            <div class="search-row">
                 <div class="input-group">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -96,19 +95,21 @@
                         <path
                             d="M288-288h288v-72H288v72Zm0-156h384v-72H288v72Zm0-156h384v-72H288v72Zm-72 456q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h528q29.7 0 50.85 21.15Q816-773.7 816-744v528q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm0-72h528v-528H216v528Zm0-528v528-528Z" />
                     </svg>
-                    Artículo</button>
+                    Artículo
+                </button>
                 <button class="filter-tab" data-filter="libro" onclick="setFilter(this)">
                     <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
                         fill="none">
                         <path
                             d="M288-96q-40 0-68-27.5T192-190v-553q0-34 22-59.5t56-32.5l354-74v626l-338.95 71.13Q277-210 270.5-203.75 264-197.5 264-190q0 10 7.2 16t16.8 6h407.55v-624H768v696H288Zm96-211 168-36v-477l-168 35v478Zm-72 15v-477l-30 6q-8 2-13 7.19T264-743v463q5-2 10.5-3t10.5-3l27-6Zm-48-469v481-481Z" />
                     </svg>
-                    Libros</button>
+                    Libros
+                </button>
             </div>
         </div>
 
         <!-- Collections -->
-        <section style="margin-bottom:36px" id="collections-section">
+        <section class="collections-section" id="collections-section">
             <div class="section-heading">
                 <svg xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960" width="25px"
                     fill="#D4915C">
@@ -158,7 +159,7 @@
         <section>
             <div class="results-header">
                 <div>
-                    <div class="section-heading" style="margin-bottom:4px">
+                    <div class="section-heading section-heading-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
                             fill="#D4915C">
                             <path
@@ -176,14 +177,15 @@
             </div>
 
             <div class="results-grid" id="results-grid"></div>
-            <div class="empty-state" id="empty-state" style="display:none">
+
+            <div class="empty-state" id="empty-state">
                 <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                     stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
                 </svg>
-                <p style="font-size:16px;font-weight:500;color:var(--text-secondary)">No se encontraron documentos</p>
-                <p style="font-size:14px;margin-top:4px">Intenta con otro término o cambia el filtro</p>
+                <p class="empty-state-title">No se encontraron documentos</p>
+                <p class="empty-state-sub">Intenta con otro término o cambia el filtro</p>
             </div>
 
             <!-- Pagination -->
@@ -192,7 +194,7 @@
                 <button class="page-btn active">1</button>
                 <button class="page-btn">2</button>
                 <button class="page-btn">3</button>
-                <span style="color:var(--text-muted);font-size:13px;padding:0 4px">…</span>
+                <span class="page-dots">…</span>
                 <button class="page-btn">12</button>
                 <button class="page-btn arrow">›</button>
             </div>

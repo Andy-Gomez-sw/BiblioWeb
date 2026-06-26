@@ -1,0 +1,256 @@
+/* ── Navbar (en styles.css) ── */
+
+/* ── Header bar ── */
+.header-bar {
+    background: var(--brown-900);
+    color: #fff;
+    padding: 28px 20px 0;
+}
+
+.header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-bottom: 28px;
+}
+
+.header-inner h1 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.header-inner p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, .6);
+}
+
+.header-stats {
+    display: flex;
+    gap: 28px;
+    margin-top: 20px;
+}
+
+.hstat-num {
+    font-size: 24px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1;
+}
+
+.hstat-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, .55);
+}
+
+/* ── Page wrapper ── */
+.page-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 20px;
+}
+
+.page-content-narrow {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 28px 20px;
+}
+
+/* ── Search + actions row ── */
+.search-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.search-bar-sm {
+    background: #fff;
+    border: 1.5px solid var(--cream-300);
+    border-radius: var(--radius-pill);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    max-width: 600px;
+    transition: border-color .2s;
+}
+
+.search-bar-sm:focus-within {
+    border-color: var(--amber);
+}
+
+.search-bar-sm input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--text-primary);
+    padding: 11px 0;
+    width: 100%;
+}
+
+.search-bar-sm input::placeholder {
+    color: var(--text-muted);
+}
+
+.btn-auto {
+    width: auto;
+}
+
+/* ── Files list ── */
+.files-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.file-item {
+    background: var(--cream-200);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background .2s;
+}
+
+.file-item:hover {
+    background: var(--cream-300);
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.file-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.file-status {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.file-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 18px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color .2s, background .2s;
+}
+
+.icon-btn:hover {
+    color: var(--brown-700);
+    background: var(--cream-300);
+}
+
+.icon-btn.danger:hover {
+    color: #c0392b;
+}
+
+/* ── Empty state ── */
+.empty-files-wrapper {
+    display: none;
+}
+
+.empty-state-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.empty-state-sub {
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* ── Back button row ── */
+.back-btn-row {
+    margin-top: 32px;
+    text-align: center;
+}
+
+/* ── Delete modal ── */
+.delete-confirm {
+    position: fixed;
+    inset: 0;
+    background: rgba(59, 31, 26, .5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.delete-confirm.show {
+    display: flex;
+}
+
+.delete-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    text-align: center;
+    max-width: 380px;
+    width: 90%;
+    box-shadow: var(--shadow-md);
+}
+
+.delete-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+}
+
+.delete-card h3 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.delete-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
+.delete-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-flex {
+    flex: 1;
+}
+
+.btn-danger {
+    background: #c0392b;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #a93226;
+}

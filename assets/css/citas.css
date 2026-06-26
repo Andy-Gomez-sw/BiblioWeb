@@ -1,0 +1,268 @@
+.page-header {
+    margin-bottom: 28px;
+}
+
+.page-header p {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.page-header h1 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--text-primary);
+}
+
+.page-header .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+/* Step indicator */
+.steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 36px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    border: 2px solid var(--cream-300);
+    background: #fff;
+    color: var(--text-muted);
+}
+
+.step-dot.active {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: #fff;
+}
+
+.step-dot.done {
+    background: var(--brown-700);
+    border-color: var(--brown-700);
+    color: #fff;
+}
+
+.step-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.step-label.active {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.step-line {
+    flex: 1;
+    height: 1.5px;
+    background: var(--cream-300);
+    min-width: 24px;
+    margin: 0 8px;
+}
+
+.step-line.done {
+    background: var(--brown-700);
+}
+
+/* Warning banner */
+.warn-banner {
+    background: var(--amber);
+    color: var(--brown-900);
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* Doc type tabs */
+.doc-type-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.doc-tab {
+    border: 1.5px solid var(--cream-300);
+    border-radius: var(--radius-pill);
+    background: #fff;
+    padding: 8px 18px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all .2s;
+    color: var(--text-secondary);
+}
+
+.doc-tab.active {
+    background: var(--brown-800);
+    color: #fff;
+    border-color: var(--brown-800);
+}
+
+.doc-tab:hover:not(.active) {
+    border-color: var(--brown-400);
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-stack input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1.5px solid var(--brown-200);
+    border-radius: var(--radius-pill);
+    padding: 13px 16px;
+    gap: 10px;
+    transition: border-color .2s;
+    width: 100%;
+}
+
+.info-DOI {
+    font-size: 11px;
+    color: var(--text-muted)
+}
+
+/* Preview card */
+.preview-section {
+    margin-top: 28px;
+}
+
+.preview-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.apa-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-primary);
+}
+
+.apa-text strong {
+    font-weight: 600;
+}
+
+.apa-preview {
+    background: var(--cream-200);
+    border-radius: var(--radius-md);
+    padding: 18px 20px;
+    border-left: 3px solid var(--amber);
+}
+
+.apa-preview p {
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+.actions-cita {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    flex-wrap: wrap
+}
+
+/* Result state */
+.result-panel {
+    display: none;
+}
+
+.result-panel.show {
+    display: block;
+}
+
+.result-spacer {
+    height: 28px;
+}
+
+.result-card {
+    padding: 28px;
+}
+
+.result-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.apa-preview {
+    margin-bottom: 20px;
+}
+
+.result-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.result-btn {
+    width: auto;
+}
+
+.copy-msg {
+    display: none;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .steps {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
