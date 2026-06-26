@@ -17,7 +17,7 @@
         <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
         <div class="navbar-actions">
             <button class="nav-btn" onclick="window.location.href='dashboard.html'">← Inicio</button>
-            <div class="avatar">M</div>
+            <div class="avatar" id="global-avatar">-</div>
         </div>
     </nav>
 
@@ -28,19 +28,19 @@
             <p>Documentos que has subido a la biblioteca</p>
             <div class="header-stats">
                 <div>
-                    <div class="hstat-num" id="count-total">4</div>
+                    <div class="hstat-num" id="count-total">0</div>
                     <div class="hstat-label">Total</div>
                 </div>
                 <div>
-                    <div class="hstat-num" id="count-tesis">2</div>
+                    <div class="hstat-num" id="count-tesis">0</div>
                     <div class="hstat-label">Tesis</div>
                 </div>
                 <div>
-                    <div class="hstat-num" id="count-art">1</div>
+                    <div class="hstat-num" id="count-art">0</div>
                     <div class="hstat-label">Artículo</div>
                 </div>
                 <div>
-                    <div class="hstat-num" id="count-lib">1</div>
+                    <div class="hstat-num" id="count-lib">0</div>
                     <div class="hstat-label">Libro</div>
                 </div>
             </div>
@@ -67,11 +67,11 @@
         <!-- Files list -->
         <div class="files-list" id="files-list"></div>
 
-        <div id="empty-files" class="empty-files-wrapper">
+        <div id="empty-files" class="empty-files-wrapper" style="display:none;">
             <div class="empty-state">
                 <p>📂</p>
                 <p class="empty-state-title">No hay archivos que coincidan</p>
-                <p class="empty-state-sub">Intenta con otro término</p>
+                <p class="empty-state-sub">Intenta con otro término o sube un documento nuevo.</p>
             </div>
         </div>
 

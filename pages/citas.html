@@ -17,7 +17,7 @@
         <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
         <div class="navbar-actions">
             <a href="dashboard.html" class="nav-btn">← Volver</a>
-            <div class="avatar">M</div>
+            <div class="avatar" id="global-avatar">-</div>
         </div>
     </nav>
 
@@ -26,8 +26,7 @@
         <div class="page-header">
             <p>Generador de citas</p>
             <h1>Cita automática en formato APA 7.ª edición</h1>
-            <p class="subtitle">Sube tu documento y se generará la cita automáticamente, o ingresa los datos
-                manualmente.</p>
+            <p class="subtitle">Genera tu cita de forma dinámica ingresando los datos correspondientes en el formulario.</p>
         </div>
 
         <!-- Steps -->
@@ -48,9 +47,8 @@
             </div>
         </div>
 
-        <!-- Warning: incomplete analysis example -->
         <div class="warn-banner" id="warn-msg">
-            ⚠️ Análisis incompleto — completa los campos faltantes para generar tu cita APA
+            ⚠️ Campos incompletos — completa los campos obligatorios (*) para generar tu cita APA
         </div>
 
         <!-- Document type selector -->
@@ -58,21 +56,19 @@
             <button class="doc-tab active" data-dtype="libro" onclick="setDocType(this)">📚 Libro</button>
             <button class="doc-tab" data-dtype="tesis" onclick="setDocType(this)">🎓 Tesis</button>
             <button class="doc-tab" data-dtype="articulo" onclick="setDocType(this)">📄 Artículo de revista</button>
-            <button class="doc-tab" data-dtype="capitulo" onclick="setDocType(this)">📑 Capítulo de libro</button>
         </div>
 
         <div class="card" style="padding:24px">
 
-            <div class="form-stack" id="form-libro">
+            <div class="form-stack">
                 <div class="field">
-                    <label>Título <span>*</span></label>
-                    <input type="text" id="l-titulo" placeholder="El laberinto de la soledad" oninput="updatePreview()">
+                    <label id="lbl-dinamico-titulo">Título del Libro <span>*</span></label>
+                    <input type="text" id="l-titulo" placeholder="Ej. El laberinto de la soledad" oninput="updatePreview()">
                 </div>
                 <div class="form-grid-2">
                     <div class="field">
                         <label>Autor(es) <span>*</span></label>
-                        <input type="text" id="l-autor" placeholder="Apellido, Inicial. — Ej: Paz, O."
-                            oninput="updatePreview()">
+                        <input type="text" id="l-autor" placeholder="Apellido, Inicial. — Ej: Paz, O." oninput="updatePreview()">
                     </div>
                     <div class="field">
                         <label>Año de publicación <span>*</span></label>
@@ -81,20 +77,18 @@
                 </div>
                 <div class="form-grid-2">
                     <div class="field">
-                        <label>Editorial</label>
-                        <input type="text" id="l-editorial" placeholder="Fondo de Cultura Económica"
-                            oninput="updatePreview()">
+                        <label id="lbl-dinamico-extra1">Editorial</label>
+                        <input type="text" id="l-editorial" placeholder="Ej. Fondo de Cultura Económica" oninput="updatePreview()">
                     </div>
                     <div class="field">
-                        <label>Ciudad</label>
-                        <input type="text" id="l-ciudad" placeholder="Ciudad de México, México"
-                            oninput="updatePreview()">
+                        <label id="lbl-dinamico-extra2">Ciudad / Institución</label>
+                        <input type="text" id="l-ciudad" placeholder="Ej. Ciudad de México, México" oninput="updatePreview()">
                     </div>
                 </div>
                 <div class="field">
-                    <label>DOI / ISBN <span>*</span></label>
-                    <input type="text" id="l-doi" placeholder="10.XXXX/... o 978-X-XXX" oninput="updatePreview()">
-                    <span class="info-DOI">Escribe N/A si el documento no tiene DOI</span>
+                    <label>DOI / ISBN / URL <span>*</span></label>
+                    <input type="text" id="l-doi" placeholder="10.XXXX/... o 978-X-XXX o URL" oninput="updatePreview()">
+                    <span class="info-DOI">Escribe N/A si el documento no tiene un identificador digital</span>
                 </div>
             </div>
 
@@ -126,12 +120,10 @@
                 </div>
                 <div class="result-actions">
                     <button class="btn btn-dark" onclick="copyCita()">📋 Copiar cita</button>
-                    <button class="btn btn-outline result-btn" onclick="window.location.href='subir.html'">Subir otro
-                        documento</button>
-                    <button class="btn btn-outline result-btn" onclick="window.location.href='dashboard.html'">Volver al
-                        inicio</button>
+                    <button class="btn btn-outline result-btn" onclick="window.location.reload()">Generar otra cita</button>
+                    <button class="btn btn-outline result-btn" onclick="window.location.href='dashboard.html'">Volver al inicio</button>
                 </div>
-                <div id="copy-msg" class="copy-msg">
+                <div id="copy-msg" class="copy-msg" style="display:none; margin-top: 15px;">
                     <span class="badge badge-green">✓ Cita copiada al portapapeles</span>
                 </div>
             </div>

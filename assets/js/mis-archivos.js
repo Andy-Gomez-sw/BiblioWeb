@@ -1,184 +1,144 @@
 // ════════════════════════════════════════
-//  mis-archivos.js — Biblioweb
-//  Carga documentos reales desde MySQL
+//  mis-archivos.js — Biblioteca Digital
 // ════════════════════════════════════════
 
-const PHP_ARCHIVOS = 'https://bibliowebb.com.mx/api/mis_archivos.php';
-const PHP_ELIMINAR = 'https://bibliowebb.com.mx/api/eliminar_documento.php';
+const FETCH_URL = 'https://bibliowebb.com.mx/mis_archivos.php';
+const DELETE_URL = 'https://bibliowebb.com.mx/eliminar_documento.php';
 
-let files       = [];
-let deleteTarget = null;
+let localFiles = [];
+let docIdToDelete = null;
 
-// ════════════════════════════════════════
-//  INICIO
-// ════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-    // Avatar
+    // 1. Validar e inyectar datos del avatar de sesión
     const nombre = localStorage.getItem('usuario_nombre');
-    const avatar = document.querySelector('.navbar .avatar');
-    if (avatar) {
-        avatar.textContent = nombre ? nombre.charAt(0).toUpperCase() : '?';
+    const avatar = document.getElementById("global-avatar");
+    if (nombre && avatar) {
+        avatar.textContent = nombre.charAt(0).toUpperCase();
     }
 
-    // Cargar archivos del usuario
-    cargarArchivos();
+    loadUserFiles();
 });
 
-// ════════════════════════════════════════
-//  CARGAR ARCHIVOS DESDE PHP
-// ════════════════════════════════════════
-async function cargarArchivos() {
-    const usuarioId = localStorage.getItem('usuario_id');
-
+async function loadUserFiles() {
+    const usuarioId = localStorage.getItem('usuario_id') || '';
     if (!usuarioId) {
-        mostrarError('No se encontró sesión activa. Por favor inicia sesión.');
+        window.location.href = './login.html';
         return;
     }
 
-    mostrarCargando();
-
     try {
-        const res  = await fetch(`${PHP_ARCHIVOS}?usuario_id=${usuarioId}`);
+        const res = await fetch(`${FETCH_URL}?usuario_id=${usuarioId}`);
         const data = await res.json();
 
         if (data.success) {
-            files = data.documentos.map(d => ({
-                id:     d.id,
-                tipo:   d.tipo,
-                emoji:  { tesis: '🎓', articulo: '📄', libro: '📚' }[d.tipo] || '📄',
-                titulo: d.titulo,
-                autor:  d.autor,
-                anio:   d.anio,
-                size:   d.nombre_archivo ? '' : '',
-                area:   d.area,
-                acceso: d.acceso,
-                url:    d.url_archivo,
-                fecha:  d.fecha_subida?.split(' ')[0] || '',
-            }));
-            renderFiles(files);
+            localFiles = data.documentos || [];
+            renderStats(localFiles);
+            renderFiles(localFiles);
         } else {
-            mostrarError(data.message || 'No se pudieron cargar tus archivos.');
+            console.error("Error devuelto por servidor:", data.message);
+            renderFiles([]);
         }
     } catch (err) {
-        mostrarError('No se pudo conectar con el servidor.');
-        console.error(err);
+        console.error("Fallo de conexión al cargar archivos:", err);
+        renderFiles([]);
     }
 }
 
-// ════════════════════════════════════════
-//  RENDER
-// ════════════════════════════════════════
-function renderFiles(list) {
-    const container = document.getElementById('files-list');
-    const empty     = document.getElementById('empty-files');
+function renderStats(files) {
+    const total = files.length;
+    const tesis = files.filter(f => f.tipo.toLowerCase() === 'tesis').length;
+    const art = files.filter(f => f.tipo.toLowerCase() === 'articulo').length;
+    const lib = files.filter(f => f.tipo.toLowerCase() === 'libro').length;
 
-    if (!list.length) {
-        container.innerHTML = '';
-        empty.style.display = 'block';
-        updateCounts();
+    document.getElementById('count-total').textContent = total;
+    document.getElementById('count-tesis').textContent = tesis;
+    document.getElementById('count-art').textContent = art;
+    document.getElementById('count-lib').textContent = lib;
+}
+
+function renderFiles(files) {
+    const listContainer = document.getElementById('files-list');
+    const emptyWrapper = document.getElementById('empty-files');
+    listContainer.innerHTML = '';
+
+    if (files.length === 0) {
+        emptyWrapper.style.display = 'block';
         return;
     }
-    empty.style.display = 'none';
 
-    container.innerHTML = list.map(f => `
-        <div class="file-item" id="file-${f.id}">
-          <div style="font-size:26px">${f.emoji}</div>
-          <div class="file-info">
-            <div class="file-name">${f.titulo}</div>
-            <div class="file-meta">${f.autor} · ${f.anio} ${f.fecha ? '· Subido: ' + f.fecha : ''}</div>
-            <div class="file-status">
-              <span style="font-size:11px;color:var(--text-muted);text-transform:capitalize">${f.tipo}</span>
-              &nbsp;·&nbsp;
-              <span class="badge badge-green">✓ Publicado</span>
-              &nbsp;·&nbsp;
-              <span style="font-size:11px;color:var(--text-muted)">${f.acceso}</span>
+    emptyWrapper.style.display = 'none';
+
+    files.forEach(doc => {
+        const item = document.createElement('div');
+        item.className = 'file-item';
+        
+        const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
+        const icono = iconos[doc.tipo.toLowerCase()] || '📄';
+
+        item.innerHTML = `
+            <div class="file-info">
+                <div class="file-icon-wrapper">${icono}</div>
+                <div class="file-details">
+                    <h3 class="file-title">${doc.titulo}</h3>
+                    <p class="file-meta">${doc.autor} · ${doc.anio_publicacion} · ${doc.tamano_archivo || 'N/A'}</p>
+                    <div class="file-badges">
+                        <span class="badge badge-amber">${doc.tipo.toUpperCase()}</span>
+                        <span class="badge badge-blue">${doc.area_conocimiento}</span>
+                        <span class="badge ${doc.estado === 'aprobado' ? 'badge-green' : 'badge-gray'}">${doc.estado}</span>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="file-actions">
-            ${f.url ? `
-            <a class="icon-btn" title="Ver documento" href="${f.url}" target="_blank">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-            </a>` : ''}
-            <button class="icon-btn danger" title="Eliminar" onclick="askDelete(${f.id}, '${f.titulo.replace(/'/g, "\\'")}')">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-            </button>
-          </div>
-        </div>`).join('');
-
-    updateCounts();
+            <div class="file-item-actions">
+                <a href="${doc.ruta_pdf}" target="_blank" class="btn-action-view" title="Ver documento">👁️</a>
+                <button class="btn-action-delete" onclick="openDelete(${doc.id}, '${doc.titulo.replace(/'/g, "\\'")}')" title="Eliminar">🗑️</button>
+            </div>
+        `;
+        listContainer.appendChild(item);
+    });
 }
 
-function updateCounts() {
-    document.getElementById('count-total').textContent = files.length;
-    document.getElementById('count-tesis').textContent   = files.filter(f => f.tipo === 'tesis').length;
-    document.getElementById('count-art').textContent     = files.filter(f => f.tipo === 'articulo').length;
-    document.getElementById('count-lib').textContent     = files.filter(f => f.tipo === 'libro').length;
-}
+window.filterFiles = function() {
+    const query = document.getElementById('file-search').value.toLowerCase().trim();
+    const filtered = localFiles.filter(f => 
+        f.titulo.toLowerCase().includes(query) || 
+        f.autor.toLowerCase().includes(query) ||
+        f.area_conocimiento.toLowerCase().includes(query)
+    );
+    renderFiles(filtered);
+};
 
-function filterFiles() {
-    const q = document.getElementById('file-search').value.toLowerCase();
-    renderFiles(files.filter(f =>
-        !q || f.titulo.toLowerCase().includes(q) || f.autor.toLowerCase().includes(q)
-    ));
-}
-
-// ════════════════════════════════════════
-//  ELIMINAR
-// ════════════════════════════════════════
-function askDelete(id, name) {
-    deleteTarget = id;
-    document.getElementById('delete-doc-name').textContent = `"${name}" será eliminado permanentemente.`;
+window.openDelete = function(id, title) {
+    docIdToDelete = id;
+    document.getElementById('delete-doc-name').textContent = `"${title}" \n Esta acción no se puede deshacer.`;
     document.getElementById('delete-modal').classList.add('show');
-}
+};
 
-function closeDelete() {
-    deleteTarget = null;
+window.closeDelete = function() {
     document.getElementById('delete-modal').classList.remove('show');
-}
+    docIdToDelete = null;
+};
 
-async function confirmDelete() {
-    if (deleteTarget === null) return;
-
-    const usuarioId = localStorage.getItem('usuario_id');
+window.confirmDelete = async function() {
+    if (!docIdToDelete) return;
 
     try {
-        const res  = await fetch(PHP_ELIMINAR, {
+        const res = await fetch(DELETE_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: deleteTarget, usuario_id: usuarioId })
+            body: JSON.stringify({ id: docIdToDelete })
         });
         const data = await res.json();
 
         if (data.success) {
-            files = files.filter(f => f.id !== deleteTarget);
+            localFiles = localFiles.filter(f => f.id !== docIdToDelete);
+            renderStats(localFiles);
+            renderFiles(localFiles);
             closeDelete();
-            filterFiles();
         } else {
-            closeDelete();
-            alert('No se pudo eliminar: ' + (data.message || 'Error desconocido'));
+            alert(data.message || "No se pudo eliminar el archivo.");
         }
     } catch (err) {
-        closeDelete();
-        alert('Error de conexión al intentar eliminar.');
-        console.error(err);
+        console.error("Error al procesar eliminación:", err);
+        alert("Fallo de conexión con el servidor.");
     }
-}
-
-// ════════════════════════════════════════
-//  HELPERS
-// ════════════════════════════════════════
-function mostrarCargando() {
-    document.getElementById('files-list').innerHTML = `
-        <div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px">
-            ⏳ Cargando tus documentos...
-        </div>`;
-    document.getElementById('empty-files').style.display = 'none';
-}
-
-function mostrarError(msg) {
-    document.getElementById('files-list').innerHTML = `
-        <div style="text-align:center;padding:40px;color:#c0392b;font-size:14px">
-            ❌ ${msg}
-        </div>`;
-    document.getElementById('empty-files').style.display = 'none';
-}
+};

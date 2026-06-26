@@ -34,9 +34,10 @@ if ($usuario_id <= 0) {
     responder(false, 'Error: Sesión de usuario inválida.');
 }
 
+// Modifica únicamente este segmento en tu subir_documento.php para sincronizar las llaves:
 $campos = ['titulo', 'autor', 'anio', 'institucion', 'area', 'doi', 'resumen', 'tipo', 'acceso'];
 foreach ($campos as $c) {
-    if (empty(trim($_POST[$c] ?? ''))) {
+    if (!isset($_POST[$c]) || trim($_POST[$c]) === '') {
         responder(false, "El campo '$c' es obligatorio.");
     }
 }
@@ -44,7 +45,7 @@ foreach ($campos as $c) {
 $titulo      = trim($_POST['titulo']);
 $autor       = trim($_POST['autor']);
 $anio        = (int) $_POST['anio'];
-$institucion = trim($_POST['institucion']);
+$institucion = trim($_POST['institucion']); // Asegurar que use 'institucion'
 $area        = trim($_POST['area']);
 $doi         = trim($_POST['doi']);
 $resumen     = trim($_POST['resumen']);
