@@ -1,5 +1,5 @@
 // ════════════════════════════════════════
-//  subir.js 
+//  subir.js — Versión Completa Integrada
 // ════════════════════════════════════════
 
 const PHP_URL = 'https://bibliowebb.com.mx/subir_documento.php';
@@ -51,3 +51,174 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ── EXPOSICIÓN GLOBAL DE FUNCIONES SELECTORAS (UI) ──
+
+window.selectType = function(el) {
+    document.querySelectorAll('.type-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+};
+
+window.selectAccess = function(el) {
+    document.querySelectorAll('.access-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+};
+
+window.handleFile = function(input) {
+    if (input.files[0]) {
+        document.getElementById('file-label').textContent = '✓ ' + input.files[0].name;
+        document.getElementById('dropzone').style.borderColor = 'var(--amber)';
+    }
+};
+
+window.addTag = function(e) {
+    if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        const val = e.target.value.trim();
+        if (!val) return;
+        const span = document.createElement('span');
+        span.className = 'tag-removable';
+        span.innerHTML = val + ' <button type="button" onclick="removeTag(this)">×</button>';
+        document.getElementById('tags-container').insertBefore(span, e.target);
+        e.target.value = '';
+    }
+};
+
+window.removeTag = function(btn) { 
+    btn.parentElement.remove(); 
+};
+
+window.getTags = function() {
+    const tags = [];
+    document.querySelectorAll('#tags-container .tag-removable').forEach(t => {
+        tags.push(t.textContent.replace('×', '').trim());
+    });
+    return tags.join(', ');
+};
+
+window.mostrarMsg = function(texto, tipo) {
+    let el = document.getElementById('upload-msg');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'upload-msg';
+        document.querySelector('.form-fields').prepend(el);
+    }
+    el.textContent = texto;
+    el.className = 'upload-msg upload-msg-' + tipo;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+window.ocultarMsg = function() {
+    const el = document.getElementById('upload-msg');
+    if (el) el.style.display = 'none';
+};
+
+// ── PROCESAMIENTO ASÍNCRONO DEL FORMULARIO HACIA PHP ──
+window.submitForm = async function() {
+    const titulo    = document.getElementById('f-titulo').value.trim();
+    const autor     = document.getElementById('f-autor').value.trim();
+    const anio      = document.getElementById('f-anio').value.trim();
+    const inst      = document.getElementById('f-inst').value.trim();
+    const area      = document.getElementById('f-area').value;
+    const doi       = document.getElementById('f-doi').value.trim();
+    const resumen   = document.getElementById('f-resumen').value.trim();
+    const archivo   = document.getElementById('file-input').files[0];
+    const tipo      = document.querySelector('.type-opt.selected')?.dataset.type || 'tesis';
+    
+    const accesoOpt = document.querySelector('.access-opt.selected .access-opt-label');
+    const acceso    = accesoOpt ? accesoOpt.textContent.trim() : 'Acceso abierto';
+    
+    const tags      = window.getTags();
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+
+    // Validaciones obligatorias en el Frontend
+    if (!titulo || !autor || !anio || !inst || !area || !resumen || !doi) {
+        window.mostrarMsg('⚠️ Por favor completa todos los campos obligatorios.', 'error');
+        return;
+    }
+    if (!archivo) {
+        window.mostrarMsg('⚠️ Debes seleccionar un archivo PDF o DOCX.', 'error');
+        return;
+    }
+
+    const btn = document.querySelector('.btn.btn-dark');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Subiendo...';
+    }
+    window.mostrarMsg('Guardando en la base de datos de Hostinger...', 'info');
+
+    const formData = new FormData();
+    formData.append('archivo',      archivo);
+    formData.append('titulo',       titulo);
+    formData.append('autor',        autor);
+    formData.append('anio',         anio);
+    formData.append('institucion',  inst); 
+    formData.append('area',         area);
+    formData.append('doi',          doi);
+    formData.append('resumen',      resumen);
+    formData.append('tipo',         tipo);
+    formData.append('acceso',       acceso);
+    formData.append('palabras_clave', tags);
+    formData.append('usuario_id',   usuarioId);
+
+    try {
+        const res = await fetch(PHP_URL, { method: 'POST', body: formData });
+        
+        if (!res.ok) {
+            const errorTxt = await res.text();
+            throw new Error(`Error en servidor (${res.status}): ${errorTxt}`);
+        }
+
+        const data = await res.json();
+
+        if (data.success) {
+            window.ocultarMsg();
+
+            // ── INYECCIÓN REAL EN LA TARJETA DE ÉXITO ──
+            const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
+            
+            document.querySelector('.success-card .doc-type').textContent =
+                `${iconos[tipo] || '📄'} ${tipo.toUpperCase()}`;
+                
+            document.querySelector('.success-card .doc-title').textContent = titulo;
+            
+            document.querySelector('.success-doc-meta').textContent =
+                `${autor} · ${anio} · ${data.tamano_archivo || 'Archivo Listo'}`;
+
+            const badgesContainer = document.querySelector('.success-doc-badges');
+            if (badgesContainer) {
+                badgesContainer.innerHTML = `
+                    <span class="badge badge-amber">${tipo.toUpperCase()}</span>
+                    <span class="badge badge-amber">${area}</span>
+                    <span class="badge badge-green">${acceso}</span>
+                `;
+            }
+
+            // Mostrar el Overlay únicamente si la inserción fue exitosa
+            document.getElementById('success-overlay').classList.add('show');
+        } else {
+            window.mostrarMsg('❌ Base de datos: ' + data.message, 'error');
+        }
+    } catch (err) {
+        window.mostrarMsg('❌ No se pudo registrar. Revisa que las columnas de tu BD permitan nulos o coincidan.', 'error');
+        console.error("Detalle del fallo:", err);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '⬆️ Subir documento';
+        }
+    }
+};
+
+window.resetForm = function() {
+    document.getElementById('success-overlay').classList.remove('show');
+    ['f-titulo', 'f-autor', 'f-anio', 'f-inst', 'f-doi', 'f-resumen'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+    document.getElementById('char-count').textContent  = '0 / 500';
+    document.getElementById('file-label').textContent  = 'Formatos aceptados PDF · DOCX · Máx. 50 MB';
+    document.getElementById('dropzone').style.borderColor = '';
+    window.ocultarMsg();
+};
