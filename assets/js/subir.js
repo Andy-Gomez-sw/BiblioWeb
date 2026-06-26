@@ -117,7 +117,11 @@ window.submitForm = async function() {
     const resumen   = document.getElementById('f-resumen').value.trim();
     const archivo   = document.getElementById('file-input').files[0];
     const tipo      = document.querySelector('.type-opt.selected')?.dataset.type || 'tesis';
-    const acceso    = document.querySelector('.access-opt.selected .access-opt-label')?.textContent || 'Acceso abierto';
+    
+    // CORRECCIÓN: Obtener el tipo de acceso de forma limpia y segura
+    const accesoOpt = document.querySelector('.access-opt.selected .access-opt-label');
+    const acceso    = accesoOpt ? accesoOpt.textContent.trim() : 'Acceso abierto';
+    
     const tags      = window.getTags();
     const usuarioId = localStorage.getItem('usuario_id') || '';
 
@@ -142,7 +146,7 @@ window.submitForm = async function() {
     formData.append('titulo',       titulo);
     formData.append('autor',        autor);
     formData.append('anio',         anio);
-    formData.append('institucion',  inst);
+    formData.append('institucion',  inst); // Clave idéntica
     formData.append('area',         area);
     formData.append('doi',          doi);
     formData.append('resumen',      resumen);
@@ -170,7 +174,7 @@ window.submitForm = async function() {
             window.mostrarMsg('❌ ' + (data.message || 'Error al procesar la solicitud.'), 'error');
         }
     } catch (err) {
-        window.mostrarMsg('❌ Ocurrió un fallo de conexión con el servidor Hostinger.', 'error');
+        window.mostrarMsg('❌ Ocurrió un fallo de conexión con el servidor Hostinger o respuesta inválida.', 'error');
         console.error(err);
     } finally {
         if (btn) {
