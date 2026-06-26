@@ -7,7 +7,7 @@ const PHP_URL = 'https://bibliowebb.com.mx/api/subir_documento.php';
 // ── Avatar desde localStorage ──
 document.addEventListener('DOMContentLoaded', () => {
     const nombre = localStorage.getItem('usuario_nombre');
-    const avatar = document.querySelector('.avatar');
+    const avatar = document.querySelector(".navbar .avatar");
     if (nombre && avatar) {
         avatar.textContent = nombre.charAt(0).toUpperCase();
     }
