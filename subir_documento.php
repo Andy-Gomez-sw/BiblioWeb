@@ -4,10 +4,10 @@
 //  Usa config.php para la conexión MySQL
 // ════════════════════════════════════════
 
-require_once __DIR__ . '/../config.php'; // Ajusta la ruta si config.php está en otro lugar
+require_once __DIR__ . '/../config.php'; 
 
-// ── CORS ──
-header('Access-Control-Allow-Origin: https://bibliowebb.com.mx');
+// ── CORS (Asegúrate de permitir el origen correcto) ──
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json; charset=utf-8');
@@ -23,23 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// ════════════════════════════════════════
-//  CARPETA DE ARCHIVOS
-// ════════════════════════════════════════
+// ── CARPETA DE ARCHIVOS ──
 define('UPLOAD_DIR', __DIR__ . '/../uploads/documentos/');
 define('UPLOAD_URL', 'https://bibliowebb.com.mx/uploads/documentos/');
 
-// ════════════════════════════════════════
-//  FUNCIÓN RESPUESTA JSON
-// ════════════════════════════════════════
 function responder(bool $ok, string $msg, array $extra = []): void {
     echo json_encode(array_merge(['success' => $ok, 'message' => $msg], $extra));
     exit;
 }
 
-// ════════════════════════════════════════
-//  VALIDAR CAMPOS
-// ════════════════════════════════════════
+// ── VALIDAR CAMPOS OBLIGATORIOS ──
 $campos = ['titulo', 'autor', 'anio', 'institucion', 'area', 'doi', 'resumen', 'tipo', 'acceso'];
 foreach ($campos as $c) {
     if (empty(trim($_POST[$c] ?? ''))) {
@@ -47,21 +40,18 @@ foreach ($campos as $c) {
     }
 }
 
-$titulo         = trim($_POST['titulo']);
-$autor          = trim($_POST['autor']);
-$anio           = (int) $_POST['anio'];
-$institucion    = trim($_POST['institucion']);
-$area           = trim($_POST['area']);
-$doi            = trim($_POST['doi']);
-$resumen        = trim($_POST['resumen']);
-$tipo           = trim($_POST['tipo']);
-$acceso         = trim($_POST['acceso']);
-$palabras_clave = trim($_POST['palabras_clave'] ?? '');
-$usuario_id     = (int) ($_POST['usuario_id'] ?? 0);
+$titulo      = trim($_POST['titulo']);
+$autor       = trim($_POST['autor']);
+$anio        = (int) $_POST['anio'];
+$institucion = trim($_POST['institucion']);
+$area        = trim($_POST['area']);
+$doi         = trim($_POST['doi']);
+$resumen     = trim($_POST['resumen']);
+$tipo        = trim($_POST['tipo']);
+$acceso      = trim($_POST['acceso']);
+$usuario_id  = (int) ($_POST['usuario_id'] ?? 0);
 
-// ════════════════════════════════════════
-//  VALIDAR ARCHIVO
-// ════════════════════════════════════════
+// ── VALIDAR ARCHIVO ──
 if (!isset($_FILES['archivo']) || $_FILES['archivo']['error'] !== UPLOAD_ERR_OK) {
     responder(false, 'Error al recibir el archivo. Intenta de nuevo.');
 }
@@ -83,7 +73,7 @@ if (!is_dir(UPLOAD_DIR)) {
     mkdir(UPLOAD_DIR, 0755, true);
 }
 
-// Nombre único
+// Nombre único para el archivo físico en Hostinger
 $nombreArchivo = uniqid('doc_', true) . '.' . $ext;
 $rutaFinal     = UPLOAD_DIR . $nombreArchivo;
 $urlFinal      = UPLOAD_URL . $nombreArchivo;
@@ -92,39 +82,37 @@ if (!move_uploaded_file($archivo['tmp_name'], $rutaFinal)) {
     responder(false, 'No se pudo guardar el archivo en el servidor.');
 }
 
-// ════════════════════════════════════════
-//  GUARDAR EN MYSQL
-// ════════════════════════════════════════
+// Formatear el tamaño de forma legible
+$tamanoLegible = round($archivo['size'] / (1024 * 1024), 1) . ' MB';
 
-// ── CONEXION A BD ──
+// ── GUARDAR EN MYSQL CON COLUMNAS REALES ──
 $pdo = getDB();
 
 try {
-
+    // Consulta SQL adaptada exactamente a las columnas que proporcionaste
     $sql = "
         INSERT INTO documentos
-            (usuario_id, titulo, autor, anio, institucion, area, doi, resumen,
-             tipo, acceso, palabras_clave, nombre_archivo, url_archivo, fecha_subida)
+            (usuario_id, tipo, titulo, autor, anio_publicacion, institucion_editorial, 
+             area_conocimiento, doi_isbn, resumen, acceso, ruta_pdf, tamano_archivo, estado, creado_en)
         VALUES
-            (:usuario_id, :titulo, :autor, :anio, :institucion, :area, :doi, :resumen,
-             :tipo, :acceso, :palabras_clave, :nombre_archivo, :url_archivo, NOW())
+            (:usuario_id, :tipo, :titulo, :autor, :anio_publicacion, :institucion_editorial, 
+             :area_conocimiento, :doi_isbn, :resumen, :acceso, :ruta_pdf, :tamano_archivo, 'pendiente', NOW())
     ";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        ':usuario_id'     => $usuario_id,
-        ':titulo'         => $titulo,
-        ':autor'          => $autor,
-        ':anio'           => $anio,
-        ':institucion'    => $institucion,
-        ':area'           => $area,
-        ':doi'            => $doi,
-        ':resumen'        => $resumen,
-        ':tipo'           => $tipo,
-        ':acceso'         => $acceso,
-        ':palabras_clave' => $palabras_clave,
-        ':nombre_archivo' => $nombreArchivo,
-        ':url_archivo'    => $urlFinal,
+        ':usuario_id'            => $usuario_id,
+        ':tipo'                  => $tipo,
+        ':titulo'                => $titulo,
+        ':autor'                 => $autor,
+        ':anio_publicacion'      => $anio,
+        ':institucion_editorial' => $institucion,
+        ':area_conocimiento'     => $area,
+        ':doi_isbn'              => $doi,
+        ':resumen'               => $resumen,
+        ':acceso'                => $acceso,
+        ':ruta_pdf'              => $urlFinal,
+        ':tamano_archivo'        => $tamanoLegible
     ]);
 
     responder(true, 'Documento subido correctamente.', [
@@ -134,7 +122,7 @@ try {
     ]);
 
 } catch (PDOException $e) {
-    // Si falla la BD borramos el archivo para no dejar basura
+    // Si la base de datos falla, borramos el archivo físico para no dejar basura en tu Hostinger
     @unlink($rutaFinal);
     responder(false, 'Error al guardar en la base de datos: ' . $e->getMessage());
 }
