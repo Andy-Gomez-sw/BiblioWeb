@@ -1,13 +1,15 @@
 // ════════════════════════════════════════
-//  subir.js — Biblioweb
+//  subir.js — Biblioweb Corregido
 // ════════════════════════════════════════
 
 const PHP_URL = 'https://bibliowebb.com.mx/api/subir_documento.php';
 
-// ── Avatar desde localStorage ──
+// ── Avatar desde localStorage y configuraciones iniciales ──
 document.addEventListener('DOMContentLoaded', () => {
     const nombre = localStorage.getItem('usuario_nombre');
-    const avatar = document.querySelector(".navbar .avatar");
+    // CORRECCIÓN: Apuntar directamente al ID del HTML de subir
+    const avatar = document.getElementById("subir-avatar"); 
+    
     if (nombre && avatar) {
         avatar.textContent = nombre.charAt(0).toUpperCase();
     }
@@ -33,19 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// ── Tipo de documento ──
 function selectType(el) {
     document.querySelectorAll('.type-opt').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
 }
 
-// ── Tipo de acceso ──
 function selectAccess(el) {
     document.querySelectorAll('.access-opt').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
 }
 
-// ── Archivo seleccionado ──
 function handleFile(input) {
     if (input.files[0]) {
         document.getElementById('file-label').textContent = '✓ ' + input.files[0].name;
@@ -53,7 +52,6 @@ function handleFile(input) {
     }
 }
 
-// ── Tags ──
 function addTag(e) {
     if (e.key === 'Enter' || e.key === ',') {
         e.preventDefault();
@@ -68,7 +66,6 @@ function addTag(e) {
 }
 function removeTag(btn) { btn.parentElement.remove(); }
 
-// ── Obtener tags actuales ──
 function getTags() {
     const tags = [];
     document.querySelectorAll('#tags-container .tag-removable').forEach(t => {
@@ -77,7 +74,6 @@ function getTags() {
     return tags.join(', ');
 }
 
-// ── Mostrar / ocultar mensaje ──
 function mostrarMsg(texto, tipo) {
     let el = document.getElementById('upload-msg');
     if (!el) {
@@ -86,33 +82,37 @@ function mostrarMsg(texto, tipo) {
         document.querySelector('.form-fields').prepend(el);
     }
     el.textContent = texto;
-    el.className = 'upload-msg upload-msg-' + tipo; // info | error | success
+    el.className = 'upload-msg upload-msg-' + tipo;
     el.style.display = 'block';
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+
 function ocultarMsg() {
     const el = document.getElementById('upload-msg');
     if (el) el.style.display = 'none';
 }
 
-// ════════════════════════════════════════
-//  ENVÍO AL PHP
-// ════════════════════════════════════════
+// ── ENVÍO AL PHP ──
 async function submitForm() {
-    const titulo        = document.getElementById('f-titulo').value.trim();
-    const autor         = document.getElementById('f-autor').value.trim();
-    const anio          = document.getElementById('f-anio').value.trim();
-    const inst          = document.getElementById('f-inst').value.trim();
-    const area          = document.getElementById('f-area').value;
-    const doi           = document.getElementById('f-doi').value.trim();
-    const resumen       = document.getElementById('f-resumen').value.trim();
-    const archivo       = document.getElementById('file-input').files[0];
-    const tipo          = document.querySelector('.type-opt.selected')?.dataset.type || 'tesis';
-    const acceso        = document.querySelector('.access-opt.selected .access-opt-label')?.textContent || 'Acceso abierto';
-    const tags          = getTags();
-    const usuarioId     = localStorage.getItem('usuario_id') || '';
+    const titulo    = document.getElementById('f-titulo').value.trim();
+    const autor     = document.getElementById('f-autor').value.trim();
+    const anio      = document.getElementById('f-anio').value.trim();
+    const inst      = document.getElementById('f-inst').value.trim();
+    const area      = document.getElementById('f-area').value;
+    const doi       = document.getElementById('f-doi').value.trim();
+    const resumen   = document.getElementById('f-resumen').value.trim();
+    const archivo   = document.getElementById('file-input').files[0];
+    const tipo      = document.querySelector('.type-opt.selected')?.dataset.type || 'tesis';
+    const acceso    = document.querySelector('.access-opt.selected .access-opt-label')?.textContent || 'Acceso abierto';
+    const tags      = getTags();
+    const usuarioId = localStorage.getItem('usuario_id') || '';
 
-    // ── Validación ──
+    // Validación de sesión activa
+    if (!usuarioId) {
+        mostrarMsg('❌ Error: No se detectó un ID de usuario activo. Inicia sesión nuevamente.', 'error');
+        return;
+    }
+
     if (!titulo || !autor || !anio || !inst || !area || !resumen || !doi) {
         mostrarMsg('⚠️ Por favor completa todos los campos obligatorios.', 'error');
         return;
@@ -121,45 +121,39 @@ async function submitForm() {
         mostrarMsg('⚠️ Debes seleccionar un archivo PDF o DOCX.', 'error');
         return;
     }
-    const ext = archivo.name.split('.').pop().toLowerCase();
-    if (!['pdf', 'docx'].includes(ext)) {
-        mostrarMsg('⚠️ Solo se permiten archivos PDF o DOCX.', 'error');
-        return;
-    }
-    if (archivo.size > 50 * 1024 * 1024) {
-        mostrarMsg('⚠️ El archivo supera el límite de 50 MB.', 'error');
-        return;
-    }
 
-    // ── Bloquear botón ──
-    const btn = document.querySelector('.btn.btn-dark');
+    const btn = document.querySelector('.form-actions .btn.btn-dark');
     btn.disabled = true;
     btn.textContent = '⏳ Subiendo...';
     mostrarMsg('Subiendo documento, por favor espera...', 'info');
 
-    // ── FormData ──
     const formData = new FormData();
-    formData.append('archivo',          archivo);
-    formData.append('titulo',           titulo);
-    formData.append('autor',            autor);
-    formData.append('anio',             anio);
-    formData.append('institucion',      inst);
-    formData.append('area',             area);
-    formData.append('doi',              doi);
-    formData.append('resumen',          resumen);
-    formData.append('tipo',             tipo);
-    formData.append('acceso',           acceso);
-    formData.append('palabras_clave',   tags);
-    formData.append('usuario_id',       usuarioId);
+    formData.append('archivo',      archivo);
+    formData.append('titulo',       titulo);
+    formData.append('autor',        autor);
+    formData.append('anio',         anio);
+    formData.append('institucion',  inst);
+    formData.append('area',         area);
+    formData.append('doi',          doi);
+    formData.append('resumen',      resumen);
+    formData.append('tipo',         tipo);
+    formData.append('acceso',       acceso);
+    formData.append('palabras_clave', tags);
+    formData.append('usuario_id',   usuarioId);
 
     try {
         const res  = await fetch(PHP_URL, { method: 'POST', body: formData });
+        
+        // Capturar errores de servidor si no devuelve un JSON válido (Ej: Error 500 de Hostinger)
+        if (!res.ok) {
+            const errorTexto = await res.text();
+            throw new Error(`Servidor respondió con código ${res.status}. Detalles: ${errorTexto}`);
+        }
+
         const data = await res.json();
 
         if (data.success) {
             ocultarMsg();
-
-            // Rellenar tarjeta de éxito con datos reales
             const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
             document.querySelector('.success-card .doc-type').textContent =
                 (iconos[tipo] || '📄') + ' ' + tipo.charAt(0).toUpperCase() + tipo.slice(1);
@@ -172,7 +166,7 @@ async function submitForm() {
             mostrarMsg('❌ ' + (data.message || 'No se pudo subir el documento.'), 'error');
         }
     } catch (err) {
-        mostrarMsg('❌ No se pudo conectar con el servidor. Verifica tu conexión.', 'error');
+        mostrarMsg('❌ Error en el servidor. Revisa la consola o los nombres de las columnas.', 'error');
         console.error(err);
     } finally {
         btn.disabled = false;
@@ -180,7 +174,6 @@ async function submitForm() {
     }
 }
 
-// ── Reset ──
 function resetForm() {
     document.getElementById('success-overlay').classList.remove('show');
     ['f-titulo', 'f-autor', 'f-anio', 'f-inst', 'f-doi', 'f-resumen'].forEach(id => {

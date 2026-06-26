@@ -1,12 +1,10 @@
 <?php
 // ════════════════════════════════════════
-//  subir_documento.php — Biblioweb
-//  Usa config.php para la conexión MySQL
+//  subir_documento.php — Mapeado Limpio
 // ════════════════════════════════════════
 
 require_once __DIR__ . '/../config.php'; 
 
-// ── CORS (Asegúrate de permitir el origen correcto) ──
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -17,13 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// ── Solo POST ──
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Método no permitido.']);
     exit;
 }
 
-// ── CARPETA DE ARCHIVOS ──
 define('UPLOAD_DIR', __DIR__ . '/../uploads/documentos/');
 define('UPLOAD_URL', 'https://bibliowebb.com.mx/uploads/documentos/');
 
@@ -32,7 +28,12 @@ function responder(bool $ok, string $msg, array $extra = []): void {
     exit;
 }
 
-// ── VALIDAR CAMPOS OBLIGATORIOS ──
+// Validar que el ID del usuario no venga vacío
+$usuario_id = isset($_POST['usuario_id']) ? (int)$_POST['usuario_id'] : 0;
+if ($usuario_id <= 0) {
+    responder(false, 'Error: Sesión de usuario inválida.');
+}
+
 $campos = ['titulo', 'autor', 'anio', 'institucion', 'area', 'doi', 'resumen', 'tipo', 'acceso'];
 foreach ($campos as $c) {
     if (empty(trim($_POST[$c] ?? ''))) {
@@ -49,47 +50,40 @@ $doi         = trim($_POST['doi']);
 $resumen     = trim($_POST['resumen']);
 $tipo        = trim($_POST['tipo']);
 $acceso      = trim($_POST['acceso']);
-$usuario_id  = (int) ($_POST['usuario_id'] ?? 0);
 
-// ── VALIDAR ARCHIVO ──
 if (!isset($_FILES['archivo']) || $_FILES['archivo']['error'] !== UPLOAD_ERR_OK) {
-    responder(false, 'Error al recibir el archivo. Intenta de nuevo.');
+    responder(false, 'Archivo no recibido o dañado en la transferencia.');
 }
 
 $archivo    = $_FILES['archivo'];
 $ext        = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
 $permitidos = ['pdf', 'docx'];
-$maxTamano  = 50 * 1024 * 1024; // 50 MB
 
 if (!in_array($ext, $permitidos)) {
-    responder(false, 'Solo se permiten archivos PDF o DOCX.');
+    responder(false, 'Solo se permiten extensiones PDF o DOCX.');
 }
-if ($archivo['size'] > $maxTamano) {
-    responder(false, 'El archivo supera el límite de 50 MB.');
+if ($archivo['size'] > 50 * 1024 * 1024) {
+    responder(false, 'El archivo excede el tamaño máximo de 50 MB.');
 }
 
-// Crear carpeta si no existe
 if (!is_dir(UPLOAD_DIR)) {
     mkdir(UPLOAD_DIR, 0755, true);
 }
 
-// Nombre único para el archivo físico en Hostinger
 $nombreArchivo = uniqid('doc_', true) . '.' . $ext;
 $rutaFinal     = UPLOAD_DIR . $nombreArchivo;
 $urlFinal      = UPLOAD_URL . $nombreArchivo;
 
 if (!move_uploaded_file($archivo['tmp_name'], $rutaFinal)) {
-    responder(false, 'No se pudo guardar el archivo en el servidor.');
+    responder(false, 'Error del sistema de archivos al guardar en Hostinger.');
 }
 
-// Formatear el tamaño de forma legible
 $tamanoLegible = round($archivo['size'] / (1024 * 1024), 1) . ' MB';
 
-// ── GUARDAR EN MYSQL CON COLUMNAS REALES ──
 $pdo = getDB();
 
 try {
-    // Consulta SQL adaptada exactamente a las columnas que proporcionaste
+    // Ajustado exactamente al orden y nombres de tu tabla física de MySQL
     $sql = "
         INSERT INTO documentos
             (usuario_id, tipo, titulo, autor, anio_publicacion, institucion_editorial, 
@@ -122,7 +116,7 @@ try {
     ]);
 
 } catch (PDOException $e) {
-    // Si la base de datos falla, borramos el archivo físico para no dejar basura en tu Hostinger
     @unlink($rutaFinal);
-    responder(false, 'Error al guardar en la base de datos: ' . $e->getMessage());
+    // Esto te dirá exactamente en la consola de JS si alguna columna falló por tipos de datos
+    responder(false, 'Error en Query de Base de Datos: ' . $e->getMessage());
 }
