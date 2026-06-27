@@ -13,9 +13,10 @@ $pdo = getDB();
 $json  = file_get_contents('php://input');
 $datos = json_decode($json, true);
 
-$email  = $datos['email']  ?? null;
-$nombre = $datos['nombre'] ?? null;
-$avatar = $datos['avatar'] ?? null;
+$email       = $datos['email']  ?? null;
+$nombre      = $datos['nombre'] ?? null;
+$avatar      = $datos['avatar'] ?? null;
+$generoInput = $datos['genero'] ?? 'M'; // ← Capturamos el género que predice el JavaScript
 
 if (!$email) {
     echo json_encode(["error" => "Falta el correo electrónico."]);
@@ -23,30 +24,31 @@ if (!$email) {
 }
 
 try {
-    // ── Traemos también el género ──
+    // ── Traemos el registro si ya existe ──
     $stmt = $pdo->prepare("SELECT id, nombre, genero FROM usuarios WHERE email = ?");
     $stmt->execute([$email]);
     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$usuario) {
-        // Usuario nuevo — lo registramos sin género (lo podrá editar en su perfil)
-        $stmt = $pdo->prepare("INSERT INTO usuarios (nombre, genero, email, password, avatar_url, metodo) VALUES (?, '', ?, NULL, ?, 'google')");
-        $stmt->execute([$nombre, $email, $avatar]);
+        // CORRECCIÓN: Agregamos la variable $generoInput y emparejamos los 4 marcadores correspondientes (?, ?, ?, ?)
+        $stmt = $pdo->prepare("INSERT INTO usuarios (nombre, genero, email, password, avatar_url, metodo) VALUES (?, ?, ?, NULL, ?, 'google')");
+        $stmt->execute([$nombre, $generoInput, $email, $avatar]);
 
         $usuario_id     = $pdo->lastInsertId();
         $nombre_usuario = $nombre;
-        $genero         = '';
+        $genero         = $generoInput;
     } else {
         $usuario_id     = $usuario['id'];
         $nombre_usuario = $usuario['nombre'];
-        $genero         = $usuario['genero'];
+        // Si en la base de datos ya tenía un género guardado, respetamos ese
+        $genero         = !empty($usuario['genero']) ? $usuario['genero'] : $generoInput;
     }
 
     echo json_encode([
         "mensaje"    => "Usuario autenticado con éxito",
         "usuario_id" => $usuario_id,
         "nombre"     => $nombre_usuario,
-        "genero"     => $genero   // ← nuevo
+        "genero"     => $genero   
     ]);
     http_response_code(200);
 

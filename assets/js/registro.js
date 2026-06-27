@@ -172,7 +172,7 @@ document.getElementById('btn-register').addEventListener('click', async () => {
                 apellido,
                 email,
                 password,
-                genero      // ← Enviamos el género capturado manualmente por el select
+                genero      
             })
         });
 
@@ -181,7 +181,7 @@ document.getElementById('btn-register').addEventListener('click', async () => {
         if (response.ok) {
             localStorage.setItem('usuario_id',     data.usuario_id);
             localStorage.setItem('usuario_nombre', data.nombre);
-            localStorage.setItem('usuario_genero', data.genero || genero); // ← Guardamos la opción explícita
+            localStorage.setItem('usuario_genero', data.genero || genero);
             localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
 
             const finalGen = data.genero || genero;
