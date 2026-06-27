@@ -33,7 +33,7 @@ modalConfirmar.addEventListener('click', () => {
     window.location.href = './login.html';
 });
 
-// ── Sesión Modificada: Mensaje Neutral ──
+// ── Sesión con Mensaje Neutral ──
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token_jwt');
     const nombreGuardado = localStorage.getItem('usuario_nombre');
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Cambiamos el texto de forma fija a "Te damos la bienvenida," para cualquier usuario
+    // Cambia el texto dinámicamente a neutral para todos los usuarios
     const elBienvenida = document.getElementById('dash-bienvenida') || document.querySelector('.welcome-bar div p');
     if (elBienvenida) {
         elBienvenida.textContent = 'Te damos la bienvenida,';
