@@ -52,8 +52,7 @@ document.getElementById('btn-google').addEventListener('click', async () => {
         if (response.ok) {
             localStorage.setItem('usuario_id',     data.usuario_id);
             localStorage.setItem('usuario_nombre', data.nombre);
-            // CORRECCIÓN: Guardamos la letra estricta que devuelve el back
-            localStorage.setItem('usuario_genero', data.genero || 'M'); 
+            localStorage.setItem('usuario_genero', data.genero || ''); 
             localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
             window.location.href = './dashboard.html';
         } else {
@@ -93,8 +92,7 @@ document.getElementById('btn-login').addEventListener('click', async () => {
         if (response.ok) {
             localStorage.setItem('usuario_id',     data.usuario_id);
             localStorage.setItem('usuario_nombre', data.nombre);
-            // CORRECCIÓN: Guardamos la 'F' o 'M' real recuperada de tu BD
-            localStorage.setItem('usuario_genero', data.genero || 'M'); 
+            localStorage.setItem('usuario_genero', data.genero || ''); 
             localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
             window.location.href = './dashboard.html';
         } else {

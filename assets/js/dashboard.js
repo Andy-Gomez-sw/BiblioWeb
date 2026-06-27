@@ -26,35 +26,27 @@ modalCancelar.addEventListener('click', () => modalLogout.classList.remove('open
 modalLogout.addEventListener('click', e => { if (e.target === modalLogout) modalLogout.classList.remove('open'); });
 
 modalConfirmar.addEventListener('click', () => {
-    // Limpiar datos de sesión completos
     localStorage.removeItem('token_jwt');
     localStorage.removeItem('usuario_nombre');
     localStorage.removeItem('usuario_id');
     localStorage.removeItem('usuario_genero');
-    // Redirigir al login
     window.location.href = './login.html';
 });
 
-// ── Sesión ──
+// ── Sesión Modificada: Mensaje Neutral ──
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token_jwt');
     const nombreGuardado = localStorage.getItem('usuario_nombre');
-    const generoGuardado = localStorage.getItem('usuario_genero'); // Extracción del género persistido en LocalStorage
 
     if (!token) {
         window.location.href = './login.html';
         return;
     }
 
-    // Inyección dinámica estricta de la concordancia según género
-    const elBienvenida = document.getElementById('dash-bienvenida');
+    // Cambiamos el texto de forma fija a "Te damos la bienvenida," para cualquier usuario
+    const elBienvenida = document.getElementById('dash-bienvenida') || document.querySelector('.welcome-bar div p');
     if (elBienvenida) {
-        if (generoGuardado && (generoGuardado.toUpperCase() === 'F' || generoGuardado.toLowerCase() === 'mujer')) {
-            elBienvenida.textContent = 'Bienvenida,';
-        } else {
-            // Caso por defecto para masculinos ('M'/'hombre') o nulos sin romper la interfaz estética
-            elBienvenida.textContent = 'Bienvenido,';
-        }
+        elBienvenida.textContent = 'Te damos la bienvenida,';
     }
 
     if (nombreGuardado) {
