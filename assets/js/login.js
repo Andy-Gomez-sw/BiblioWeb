@@ -29,78 +29,89 @@ function setLoading(id, on, label) {
     }
 }
 
-// ── BOTÓN DE GOOGLE ──
-document.getElementById('btn-google').addEventListener('click', async () => {
-    hideError();
-    setLoading('btn-google', true, 'Continuar con Google');
-    try {
-        const resultado = await signInWithPopup(auth, provider);
-        const user = resultado.user;
+// Envolvemos todo en el evento de carga del DOM para asegurar que los botones existan antes de vincularlos
+document.addEventListener('DOMContentLoaded', () => {
 
-        const response = await fetch(`${API_URL}/login_google.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: user.email,
-                nombre: user.displayName,
-                avatar: user.photoURL
-            })
+    const btnGoogle = document.getElementById('btn-google');
+    const btnLogin = document.getElementById('btn-login');
+
+    // ── BOTÓN DE GOOGLE ──
+    if (btnGoogle) {
+        btnGoogle.addEventListener('click', async () => {
+            hideError();
+            setLoading('btn-google', true, 'Continuar con Google');
+            try {
+                const resultado = await signInWithPopup(auth, provider);
+                const user = resultado.user;
+
+                const response = await fetch(`${API_URL}/login_google.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: user.email,
+                        nombre: user.displayName,
+                        avatar: user.photoURL
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('usuario_id',     data.usuario_id);
+                    localStorage.setItem('usuario_nombre', data.nombre);
+                    localStorage.setItem('usuario_genero', data.genero || 'M'); // Guarda el género de la BD
+                    localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
+                    window.location.href = './dashboard.html';
+                } else {
+                    setLoading('btn-google', false, 'Continuar con Google');
+                    showError(data.error || 'No se pudo sincronizar el perfil con MySQL.');
+                }
+            } catch (err) {
+                setLoading('btn-google', false, 'Continuar con Google');
+                if (err.code !== 'auth/popup-closed-by-user') {
+                    showError('Error con Google: ' + err.message);
+                }
+            }
         });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            localStorage.setItem('usuario_id',     data.usuario_id);
-            localStorage.setItem('usuario_nombre', data.nombre);
-            localStorage.setItem('usuario_genero', data.genero || ''); // ← nuevo
-            localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
-            window.location.href = './dashboard.html';
-        } else {
-            setLoading('btn-google', false, 'Continuar con Google');
-            showError(data.error || 'No se pudo sincronizar el perfil con MySQL.');
-        }
-    } catch (err) {
-        setLoading('btn-google', false, 'Continuar con Google');
-        if (err.code !== 'auth/popup-closed-by-user') {
-            showError('Error con Google: ' + err.message);
-        }
-    }
-});
-
-// ── LOGIN TRADICIONAL ──
-document.getElementById('btn-login').addEventListener('click', async () => {
-    hideError();
-    const email    = document.getElementById('f-email').value.trim();
-    const password = document.getElementById('f-password').value;
-
-    if (!email || !password) {
-        showError('Por favor, ingresa tu correo y contraseña.');
-        return;
     }
 
-    setLoading('btn-login', true, 'Entrar');
+    // ── LOGIN TRADICIONAL ──
+    if (btnLogin) {
+        btnLogin.addEventListener('click', async () => {
+            hideError();
+            const email    = document.getElementById('f-email').value.trim();
+            const password = document.getElementById('f-password').value;
 
-    try {
-        const response = await fetch(`${API_URL}/login_tradicional.php`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: email, password: password })
+            if (!email || !password) {
+                showError('Por favor, ingresa tu correo y contraseña.');
+                return;
+            }
+
+            setLoading('btn-login', true, 'Entrar');
+
+            try {
+                const response = await fetch(`${API_URL}/login_tradicional.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('usuario_id',     data.usuario_id);
+                    localStorage.setItem('usuario_nombre', data.nombre);
+                    localStorage.setItem('usuario_genero', data.genero || 'M'); // Guarda la 'F' o 'M' real de la BD
+                    localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
+                    window.location.href = './dashboard.html';
+                } else {
+                    setLoading('btn-login', false, 'Entrar');
+                    showError(data.error || 'Credenciales incorrectas.');
+                }
+            } catch (err) {
+                setLoading('btn-login', false, 'Entrar');
+                showError('No se pudo conectar con el servidor de Hostinger.');
+            }
         });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            localStorage.setItem('usuario_id',     data.usuario_id);
-            localStorage.setItem('usuario_nombre', data.nombre);
-            localStorage.setItem('usuario_genero', data.genero || ''); // ← nuevo
-            localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
-            window.location.href = './dashboard.html';
-        } else {
-            setLoading('btn-login', false, 'Entrar');
-            showError(data.error || 'Credenciales incorrectas.');
-        }
-    } catch (err) {
-        setLoading('btn-login', false, 'Entrar');
-        showError('No se pudo conectar con el servidor de Hostinger.');
     }
 });
