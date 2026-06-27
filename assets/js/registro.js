@@ -10,9 +10,7 @@ provider.setCustomParameters({ prompt: 'select_account' });
 const API_URL = "https://bibliowebb.com.mx";
 
 // ════════════════════════════════════════
-//  DETECTAR GÉNERO POR NOMBRE
-//  Nombres femeninos comunes en español
-//  que NO terminan en 'a' para evitar errores
+//  DETECTAR GÉNERO POR NOMBRE (Para flujo de Google)
 // ════════════════════════════════════════
 const NOMBRES_FEMENINOS = [
     'isabel','pilar','mercedes','trinidad','luz','sol','flor','mar',
@@ -80,7 +78,7 @@ window.addEventListener('load', async () => {
                     email:     user.email,
                     nombre:    user.displayName,
                     avatar:    user.photoURL,
-                    genero:    genero           // ← enviamos el género detectado
+                    genero:    genero           // ← Enviamos el género detectado automáticamente
                 })
             });
 
@@ -89,10 +87,11 @@ window.addEventListener('load', async () => {
             if (response.ok) {
                 localStorage.setItem('usuario_id',     data.usuario_id);
                 localStorage.setItem('usuario_nombre', data.nombre);
-                localStorage.setItem('usuario_genero', data.genero || genero); // ← guardamos
+                localStorage.setItem('usuario_genero', data.genero || genero); // ← Guardamos con éxito
                 localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
 
-                const saludo = (data.genero || genero) === 'F' ? 'Bienvenida' : 'Bienvenido';
+                const finalGen = data.genero || genero;
+                const saludo = (finalGen === 'F' || finalGen === 'mujer') ? 'Bienvenida' : 'Bienvenido';
                 document.getElementById('success-msg-text').textContent =
                     `¡${saludo}, ${data.nombre}! Tu cuenta ha sido validada con éxito con Google.`;
                 document.getElementById('success-overlay').classList.add('show');
@@ -152,13 +151,15 @@ document.getElementById('btn-register').addEventListener('click', async () => {
     const confirm  = document.getElementById('r-confirm').value;
     const terms    = document.getElementById('r-terms').checked;
 
+    // CAPTURA DEL SELECT MANUAL DEL HTML:
+    const elGenero = document.getElementById('r-genero');
+    const genero   = elGenero ? elGenero.value : 'M';
+
     if (!nombre || !apellido) { showError('Por favor ingresa tu nombre y apellido.'); return; }
     if (!email)               { showError('El correo electrónico es obligatorio.');   return; }
     if (password.length < 8)  { showError('La contraseña debe tener al menos 8 caracteres.'); return; }
-    if (password !== confirm)  { showError('Las contraseñas no coinciden.');           return; }
+    if (password !== confirm) { showError('Las contraseñas no coinciden.');           return; }
     if (!terms)               { showError('Debes aceptar los términos de uso.');       return; }
-
-    const genero = detectarGenero(nombre); // ← detectamos antes de enviar
 
     setLoading('btn-register', true, 'Crear mi cuenta');
 
@@ -171,7 +172,7 @@ document.getElementById('btn-register').addEventListener('click', async () => {
                 apellido,
                 email,
                 password,
-                genero      // ← enviamos al PHP
+                genero      // ← Enviamos el género capturado manualmente por el select
             })
         });
 
@@ -180,10 +181,13 @@ document.getElementById('btn-register').addEventListener('click', async () => {
         if (response.ok) {
             localStorage.setItem('usuario_id',     data.usuario_id);
             localStorage.setItem('usuario_nombre', data.nombre);
-            localStorage.setItem('usuario_genero', data.genero || genero); // ← guardamos
+            localStorage.setItem('usuario_genero', data.genero || genero); // ← Guardamos la opción explícita
             localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
 
-            const saludo = (data.genero || genero) === 'F' ? 'Bienvenida' : 'Bienvenido';
+            const finalGen = data.genero || genero;
+            const saludo = (finalGen === 'F' || finalGen === 'mujer') ? 'Bienvenida' : 'Bienvenido';
+            
+            // Mensaje del modal corregido dinámicamente con concordancia:
             document.getElementById('success-msg-text').textContent =
                 `¡${saludo}, ${data.nombre}! Tu cuenta ha sido registrada en el sistema. Ya puedes explorar la colección.`;
             document.getElementById('success-overlay').classList.add('show');
