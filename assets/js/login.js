@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     localStorage.setItem('usuario_id',     data.usuario_id);
                     localStorage.setItem('usuario_nombre', data.nombre);
-                    localStorage.setItem('usuario_genero', data.genero || 'M'); // Guarda la 'F' o 'M' real de la BD
+                    localStorage.setItem('usuario_genero', data.genero || 'M'); 
                     localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
                     window.location.href = './dashboard.html';
                 } else {
