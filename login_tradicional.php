@@ -1,66 +1,58 @@
 <?php
 require_once '../config.php';
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit(); }
 
-// ── CONEXION A BD ── 
+// ── CONEXION A BD ──
 $pdo = getDB();
 
-// Leer datos del formulario
-$json = file_get_contents('php://input');
+$json  = file_get_contents('php://input');
 $datos = json_decode($json, true);
 
-$nombre   = $datos['nombre'] ?? null;
-$apellido = $datos['apellido'] ?? null;
-$email    = $datos['email'] ?? null;
+$email    = $datos['email']    ?? null;
 $password = $datos['password'] ?? null;
-$genero   = $datos['genero'] ?? 'M'; // ← 1. Recibimos el género ('M' o 'F') que manda JavaScript
 
-if (!$nombre || !$apellido || !$email || !$password) {
-    echo json_encode(["error" => "Todos los campos marcados con * son obligatorios."]);
+if (!$email || !$password) {
+    echo json_encode(["error" => "El correo y la contraseña son obligatorios."]);
     http_response_code(400);
     exit();
 }
 
 try {
-    // 1. Validar si el correo ya existe
-    $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+    // ── Buscar usuario por email ──
+    $stmt = $pdo->prepare("SELECT id, nombre, genero, password, metodo FROM usuarios WHERE email = ?");
     $stmt->execute([$email]);
-    if ($stmt->fetch()) {
-        echo json_encode(["error" => "Este correo electrónico ya está registrado."]);
-        http_response_code(409);
-        exit();
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$usuario) {
+        echo json_encode(["error" => "El correo electrónico no está registrado."]);
+        http_response_code(401); exit();
     }
 
-    // 2. Encriptar la contraseña de forma segura con BCRYPT
-    $password_encriptada = password_hash($password, PASSWORD_BCRYPT);
-    $nombre_completo = trim($nombre . " " . $apellido);
+    if ($usuario['metodo'] === 'google' && empty($usuario['password'])) {
+        echo json_encode(["error" => "Esta cuenta fue registrada con Google. Inicia sesión con el botón de Google."]);
+        http_response_code(400); exit();
+    }
 
-    // 3. CORRECCIÓN: Añadimos la columna 'genero' y un signo de interrogación más '?'
-    $sql = "INSERT INTO usuarios (nombre, genero, email, password, avatar_url, metodo) VALUES (?, ?, ?, ?, NULL, 'email')";
-    $stmt_insert = $pdo->prepare($sql);
-    
-    // Aquí pasamos las variables en orden exacto: nombre, genero, email, password
-    $stmt_insert->execute([$nombre_completo, $genero, $email, $password_encriptada]);
-
-    $usuario_id = $pdo->lastInsertId();
-
-    echo json_encode([
-        "mensaje" => "Usuario registrado con éxito",
-        "usuario_id" => $usuario_id,
-        "nombre" => $nombre_completo,
-        "genero" => $genero // ← Lo devolvemos para que JS lo guarde de inmediato en el LocalStorage
-    ]);
-    http_response_code(201);
+    if (password_verify($password, $usuario['password'])) {
+        echo json_encode([
+            "mensaje"    => "Inicio de sesión exitoso",
+            "usuario_id" => $usuario['id'],
+            "nombre"     => $usuario['nombre'],
+            "genero"     => $usuario['genero'] ?? ''
+        ]);
+        http_response_code(200);
+    } else {
+        echo json_encode(["error" => "La contraseña es incorrecta."]);
+        http_response_code(401);
+    }
 
 } catch (Exception $e) {
-    echo json_encode(["error" => "Error al procesar el registro: " . $e->getMessage()]);
+    echo json_encode(["error" => "Error interno: " . $e->getMessage()]);
     http_response_code(500);
 }
 ?>
