@@ -12,7 +12,6 @@
 
 <body>
 
-    <!-- ══════════ NAVBAR ══════════ -->
     <nav class="navbar">
         <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
         <div class="navbar-actions">
@@ -23,7 +22,6 @@
                     <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
             </button>
-            <!-- BOTÓN CERRAR SESIÓN -->
             <button class="btn-logout" id="btn-cerrar-sesion" title="Cerrar sesión">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -37,11 +35,10 @@
         </div>
     </nav>
 
-    <!-- ══════════ WELCOME BAR ══════════ -->
     <div class="welcome-bar">
         <div class="welcome-inner">
             <div>
-                <p style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px">Bienvenida,</p>
+                <p id="dash-bienvenida" style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px"></p>
                 <h2 class="welcome-name" id="dash-nombre">Cargando...</h2>
             </div>
             <div class="stats-row" style="padding-bottom:6px">
@@ -64,10 +61,8 @@
     <main class="page-content">
         <div class="section-gap">
 
-            <!-- ══════════ SECCIÓN PROPÓSITO ══════════ -->
             <section>
                 <div class="purpose-section">
-                    <!-- Texto -->
                     <div class="purpose-body">
                         <p class="purpose-eyebrow">Sistema de gestión bibliográfica</p>
                         <h1 class="purpose-title">Bienvenido a Biblioweb</h1>
@@ -92,7 +87,6 @@
                             ofreciendo una experiencia intuitiva, eficiente y segura.
                         </p>
                     </div>
-                    <!-- Imagen / ilustración decorativa -->
                     <div class="purpose-img-wrap">
                         <div class="purpose-img-overlay">
                             <div class="purpose-img-icon">📚</div>
@@ -102,10 +96,8 @@
                 </div>
             </section>
 
-            <!-- ══════════ ACCIONES RÁPIDAS ══════════ -->
             <section>
-                <p
-                    style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8b7560;margin-bottom:14px">
+                <p style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8b7560;margin-bottom:14px">
                     Acciones rápidas</p>
                 <div class="quick-actions-grid">
                     <a href="catalogo.html" class="action-card">
@@ -136,7 +128,6 @@
                 </div>
             </section>
 
-            <!-- ══════════ BUSCADOR ══════════ -->
             <section>
                 <div class="search-row" style="margin-bottom:12px">
                     <div class="input-group">
@@ -164,7 +155,6 @@
                 </div>
             </section>
 
-            <!-- ══════════ RECOMENDADOS ══════════ -->
             <section>
                 <div class="section-heading">
                     <span style="font-size:18px">☆</span>
@@ -219,7 +209,6 @@
                 </div>
             </section>
 
-            <!-- ══════════ VISTOS RECIENTEMENTE ══════════ -->
             <section>
                 <div class="section-heading">
                     <span style="font-size:18px">🕐</span>
@@ -256,7 +245,6 @@
         </div>
     </main>
 
-    <!-- ══════════ MODAL CONFIRMAR CIERRE DE SESIÓN ══════════ -->
     <div class="modal-overlay" id="modal-logout">
         <div class="modal-box">
             <div class="modal-icon">🔐</div>
