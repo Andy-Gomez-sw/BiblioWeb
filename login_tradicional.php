@@ -13,47 +13,43 @@ $pdo = getDB();
 $json  = file_get_contents('php://input');
 $datos = json_decode($json, true);
 
-$nombre   = trim($datos['nombre']   ?? '');
-$apellido = trim($datos['apellido'] ?? '');
-$email    = trim($datos['email']    ?? '');
-$password = $datos['password']      ?? '';
-$genero   = $datos['genero']        ?? ''; // ← viene del JS (detectarGenero)
+$email    = $datos['email']    ?? null;
+$password = $datos['password'] ?? null;
 
-if (!$nombre || !$apellido || !$email || !$password) {
-    echo json_encode(["error" => "Todos los campos son obligatorios."]);
+if (!$email || !$password) {
+    echo json_encode(["error" => "El correo y la contraseña son obligatorios."]);
     http_response_code(400);
     exit();
 }
 
 try {
-    // ── Verificar si el correo ya existe ──
-    $stmt = $pdo->prepare("SELECT id FROM usuarios WHERE email = ?");
+    // ── Buscar usuario por email ──
+    $stmt = $pdo->prepare("SELECT id, nombre, genero, password, metodo FROM usuarios WHERE email = ?");
     $stmt->execute([$email]);
-    if ($stmt->fetch()) {
-        echo json_encode(["error" => "Este correo electrónico ya está registrado."]);
-        http_response_code(409);
-        exit();
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$usuario) {
+        echo json_encode(["error" => "El correo electrónico no está registrado."]);
+        http_response_code(401); exit();
     }
 
-    // ── Crear el usuario nuevo ──
-    $nombre_completo  = $nombre . ' ' . $apellido;
-    $password_hash    = password_hash($password, PASSWORD_DEFAULT);
+    if ($usuario['metodo'] === 'google' && empty($usuario['password'])) {
+        echo json_encode(["error" => "Esta cuenta fue registrada con Google. Por favor, inicia sesión con el botón de Google."]);
+        http_response_code(400); exit();
+    }
 
-    $stmt = $pdo->prepare("
-        INSERT INTO usuarios (nombre, genero, email, password, metodo)
-        VALUES (?, ?, ?, ?, 'tradicional')
-    ");
-    $stmt->execute([$nombre_completo, $genero, $email, $password_hash]);
-
-    $nuevo_id = $pdo->lastInsertId();
-
-    echo json_encode([
-        "mensaje"    => "Cuenta creada exitosamente.",
-        "usuario_id" => $nuevo_id,
-        "nombre"     => $nombre_completo,
-        "genero"     => $genero   
-    ]);
-    http_response_code(201);
+    if (password_verify($password, $usuario['password'])) {
+        echo json_encode([
+            "mensaje"    => "Inicio de sesión exitoso",
+            "usuario_id" => $usuario['id'],
+            "nombre"     => $usuario['nombre'],
+            "genero"     => $usuario['genero'] ?? ''
+        ]);
+        http_response_code(200);
+    } else {
+        echo json_encode(["error" => "La contraseña es incorrecta."]);
+        http_response_code(401);
+    }
 
 } catch (Exception $e) {
     echo json_encode(["error" => "Error interno: " . $e->getMessage()]);
