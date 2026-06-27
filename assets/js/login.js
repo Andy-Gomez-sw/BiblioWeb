@@ -1,9 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// Tu inicialización original intacta para que no se congele el script
-const app      = initializeApp(firebaseConfig);
-const auth     = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 provider.setCustomParameters({ prompt: 'select_account' });
@@ -21,6 +20,7 @@ function hideError() {
     const el = document.getElementById('error-msg');
     if (el) el.style.display = 'none';
 }
+
 function setLoading(id, on, label) {
     const btn = document.getElementById(id);
     if (btn) {
@@ -29,19 +29,19 @@ function setLoading(id, on, label) {
     }
 }
 
-// ── Botón Google ──
+// ── BOTÓN DE GOOGLE ──
 document.getElementById('btn-google').addEventListener('click', async () => {
     hideError();
     setLoading('btn-google', true, 'Continuar con Google');
     try {
         const resultado = await signInWithPopup(auth, provider);
-        const user      = resultado.user;
+        const user = resultado.user;
 
         const response = await fetch(`${API_URL}/login_google.php`, {
-            method:  'POST',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({
-                email:  user.email,
+            body: JSON.stringify({
+                email: user.email,
                 nombre: user.displayName,
                 avatar: user.photoURL
             })
@@ -52,7 +52,8 @@ document.getElementById('btn-google').addEventListener('click', async () => {
         if (response.ok) {
             localStorage.setItem('usuario_id',     data.usuario_id);
             localStorage.setItem('usuario_nombre', data.nombre);
-            localStorage.setItem('usuario_genero', data.genero || ''); // Mantiene tu flujo de Google
+            // CORRECCIÓN: Guardamos la letra estricta que devuelve el back
+            localStorage.setItem('usuario_genero', data.genero || 'M'); 
             localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
             window.location.href = './dashboard.html';
         } else {
@@ -67,7 +68,7 @@ document.getElementById('btn-google').addEventListener('click', async () => {
     }
 });
 
-// ── Botón Tradicional ──
+// ── LOGIN TRADICIONAL ──
 document.getElementById('btn-login').addEventListener('click', async () => {
     hideError();
     const email    = document.getElementById('f-email').value.trim();
@@ -82,9 +83,9 @@ document.getElementById('btn-login').addEventListener('click', async () => {
 
     try {
         const response = await fetch(`${API_URL}/login_tradicional.php`, {
-            method:  'POST',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ email: email, password: password })
+            body: JSON.stringify({ email: email, password: password })
         });
 
         const data = await response.json();
@@ -92,12 +93,8 @@ document.getElementById('btn-login').addEventListener('click', async () => {
         if (response.ok) {
             localStorage.setItem('usuario_id',     data.usuario_id);
             localStorage.setItem('usuario_nombre', data.nombre);
-            
-            // LA ÚNICA MODIFICACIÓN REAL QUE NECESITÁBAMOS:
-            // Tu código original decía: data.genero || ''
-            // Lo cambiamos para que si viene 'F' o 'M' de tu BD se guarde directamente esa letra
-            localStorage.setItem('usuario_genero', data.genero); 
-            
+            // CORRECCIÓN: Guardamos la 'F' o 'M' real recuperada de tu BD
+            localStorage.setItem('usuario_genero', data.genero || 'M'); 
             localStorage.setItem('token_jwt',      'sesion_activa_php_' + data.usuario_id);
             window.location.href = './dashboard.html';
         } else {
