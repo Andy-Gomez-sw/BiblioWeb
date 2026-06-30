@@ -1,10 +1,6 @@
-let files = [
-    { id: 1, tipo: 'tesis', emoji: '🎓', titulo: 'El romanticismo tardío en la literatura mexicana', autor: 'García Martínez, L. A.', anio: 2022, size: '3.2 MB', estado: 'pendiente', nuevo: true },
-    { id: 2, tipo: 'tesis', emoji: '🎓', titulo: 'Análisis socioeconómico del desarrollo rural en Oaxaca', autor: 'Ramírez López, C.', anio: 2024, size: '2.1 MB', estado: 'publicado', nuevo: false },
-    { id: 3, tipo: 'articulo', emoji: '📄', titulo: 'IA aplicada a la catalogación de acervos bibliotecarios', autor: 'Hernández Ruiz, P.', anio: 2023, size: '1.8 MB', estado: 'publicado', nuevo: false },
-    { id: 4, tipo: 'libro', emoji: '📚', titulo: 'El laberinto de la soledad', autor: 'Paz, O.', anio: 1993, size: '2.4 MB', estado: 'publicado', nuevo: false },
-];
+const PHP_URL_GET = 'https://bibliowebb.com.mx/obtener_documentos.php';
 
+let files = [];
 let deleteTarget = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,11 +10,57 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nombreGuardado && avatar) {
         avatar.textContent = nombreGuardado.charAt(0).toUpperCase();
     }
-    window.renderFiles(files);
+
+    cargarDocumentos();
 });
 
+// ── CARGA REAL DESDE LA BASE DE DATOS ──
+window.cargarDocumentos = async function() {
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+
+    if (!usuarioId) {
+        console.error('No hay usuario_id en localStorage.');
+        window.renderFiles([]);
+        return;
+    }
+
+    const container = document.getElementById('files-list');
+    if (container) container.innerHTML = '<p style="padding:20px;text-align:center;color:var(--text-muted)">Cargando documentos...</p>';
+
+    try {
+        const res = await fetch(`${PHP_URL_GET}?usuario_id=${encodeURIComponent(usuarioId)}`);
+        const data = await res.json();
+
+        if (!data.success) {
+            console.error('Error del servidor:', data.message);
+            if (container) container.innerHTML = `<p style="padding:20px;text-align:center;color:#c0392b">${data.message}</p>`;
+            return;
+        }
+
+        // Mapear los nombres de columnas de MySQL a lo que espera el render
+        const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
+        files = data.documentos.map(d => ({
+            id: d.id,
+            tipo: d.tipo,
+            emoji: iconos[d.tipo] || '📄',
+            titulo: d.titulo,
+            autor: d.autor,
+            anio: d.anio_publicacion,
+            size: d.tamano_archivo,
+            estado: d.estado,
+            nuevo: d.estado === 'pendiente'
+        }));
+
+        window.renderFiles(files);
+
+    } catch (err) {
+        console.error('Error de red al cargar documentos:', err);
+        if (container) container.innerHTML = '<p style="padding:20px;text-align:center;color:#c0392b">❌ No se pudo conectar con el servidor.</p>';
+    }
+};
+
 window.statusBadge = function(f) {
-    if (f.nuevo && f.estado === 'pendiente')
+    if (f.estado === 'pendiente')
         return `<span class="badge badge-amber">⏳ Pendiente aprobación</span>`;
     if (f.estado === 'publicado')
         return `<span class="badge badge-green">✓ Publicado</span>`;
@@ -29,10 +71,11 @@ window.renderFiles = function(list) {
     const container = document.getElementById('files-list');
     const empty = document.getElementById('empty-files');
 
-    if (!list.length) { 
-        if (container) container.innerHTML = ''; 
-        if (empty) empty.style.display = 'block'; 
-        return; 
+    if (!list.length) {
+        if (container) container.innerHTML = '';
+        if (empty) empty.style.display = 'block';
+        window.updateCounts(list);
+        return;
     }
     if (empty) empty.style.display = 'none';
 
@@ -92,6 +135,7 @@ window.closeDelete = function() {
 
 window.confirmDelete = function() {
     if (deleteTarget === null) return;
+    // ⚠️ Esto solo borra de la vista local, NO de la base de datos todavía
     files = files.filter(f => f.id !== deleteTarget);
     window.closeDelete();
     window.filterFiles();
