@@ -1,6 +1,6 @@
 <?php
 // ════════════════════════════════════════
-//  obtener_documentos.php
+//  obtener_documento.php (uno solo, por ID)
 // ════════════════════════════════════════
 
 require_once __DIR__ . '/../config.php';
@@ -20,28 +20,30 @@ function responder(bool $ok, string $msg, array $extra = []): void {
     exit;
 }
 
-$usuario_id = isset($_GET['usuario_id']) ? (int) $_GET['usuario_id'] : 0;
-if ($usuario_id <= 0) {
-    responder(false, 'Error: Sesión de usuario inválida.');
+$doc_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+if ($doc_id <= 0) {
+    responder(false, 'ID de documento inválido.');
 }
 
 $pdo = getDB();
 
 try {
     $sql = "
-        SELECT id, tipo, titulo, autor, anio_publicacion, institucion_editorial,
+        SELECT id, usuario_id, tipo, titulo, autor, anio_publicacion, institucion_editorial,
                area_conocimiento, doi_isbn, resumen, acceso, ruta_pdf,
                tamano_archivo, estado, creado_en
         FROM documentos
-        WHERE usuario_id = :usuario_id
-        ORDER BY creado_en DESC
+        WHERE id = :id
     ";
-
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':usuario_id' => $usuario_id]);
-    $documentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute([':id' => $doc_id]);
+    $documento = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    responder(true, 'OK', ['documentos' => $documentos]);
+    if (!$documento) {
+        responder(false, 'Documento no encontrado.');
+    }
+
+    responder(true, 'OK', ['documento' => $documento]);
 
 } catch (PDOException $e) {
     responder(false, 'Error en Query de Base de Datos: ' . $e->getMessage());
