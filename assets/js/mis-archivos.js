@@ -48,7 +48,8 @@ window.cargarDocumentos = async function() {
             anio: d.anio_publicacion,
             size: d.tamano_archivo,
             estado: d.estado,
-            nuevo: d.estado === 'pendiente'
+            nuevo: d.estado === 'pendiente',
+            ruta_pdf: d.ruta_pdf 
         }));
 
         window.renderFiles(files);
@@ -119,7 +120,7 @@ window.filterFiles = function() {
 };
 
 window.previewDoc = function(id) {
-    window.location.href = 'citas.html';
+    window.location.href = `visor.html?id=${id}`;
 };
 
 window.askDelete = function(id, name) {
@@ -133,10 +134,30 @@ window.closeDelete = function() {
     document.getElementById('delete-modal').classList.remove('show');
 };
 
-window.confirmDelete = function() {
+window.confirmDelete = async function() {
     if (deleteTarget === null) return;
-    // ⚠️ Esto solo borra de la vista local, NO de la base de datos todavía
-    files = files.filter(f => f.id !== deleteTarget);
-    window.closeDelete();
-    window.filterFiles();
+
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+    const PHP_URL_DELETE = 'https://bibliowebb.com.mx/eliminar_documento.php';
+
+    try {
+        const formData = new FormData();
+        formData.append('id', deleteTarget);
+        formData.append('usuario_id', usuarioId);
+
+        const res = await fetch(PHP_URL_DELETE, { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.success) {
+            files = files.filter(f => f.id !== deleteTarget);
+            window.filterFiles();
+        } else {
+            alert('❌ ' + data.message);
+        }
+    } catch (err) {
+        console.error('Error al eliminar:', err);
+        alert('❌ Error de conexión al intentar eliminar el documento.');
+    } finally {
+        window.closeDelete();
+    }
 };

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver documento — Biblioteca Digital</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/visor.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
+        <div class="navbar-actions">
+            <button class="nav-btn" onclick="window.location.href='mis-archivos.html'">← Mis archivos</button>
+            <div class="avatar" id="global-avatar">-</div>
+        </div>
+    </nav>
+
+    <main class="page-content-narrow">
+
+        <div id="visor-loading" style="text-align:center;padding:60px 0;color:var(--text-muted)">
+            Cargando documento...
+        </div>
+
+        <div id="visor-error" style="display:none;text-align:center;padding:60px 0;color:#c0392b">
+            ❌ No se pudo cargar el documento.
+        </div>
+
+        <div id="visor-content" style="display:none">
+
+            <div class="visor-header">
+                <span class="tag" id="visor-tipo">Tesis</span>
+                <h1 id="visor-titulo">Título del documento</h1>
+                <p class="visor-meta" id="visor-meta">Autor · Año · Institución</p>
+
+                <div class="visor-badges">
+                    <span class="badge badge-amber" id="visor-area">Área</span>
+                    <span class="badge badge-green" id="visor-acceso">Acceso</span>
+                </div>
+
+                <p class="visor-resumen" id="visor-resumen"></p>
+
+                <div class="visor-actions">
+                    <a id="visor-descargar" class="btn btn-dark btn-auto" target="_blank">
+                        ⬇️ Descargar / Abrir original
+                    </a>
+                </div>
+            </div>
+
+            <div class="visor-frame-wrap" id="visor-frame-wrap">
+                <!-- Aquí se inyecta el iframe del PDF o del visor de Office -->
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        const PHP_URL_GET_ONE = 'https://bibliowebb.com.mx/obtener_documento.php';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const nombreGuardado = localStorage.getItem('usuario_nombre');
+            const avatar = document.getElementById("global-avatar");
+            if (nombreGuardado && avatar) {
+                avatar.textContent = nombreGuardado.charAt(0).toUpperCase();
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                mostrarError();
+                return;
+            }
+
+            try {
+                const res = await fetch(`${PHP_URL_GET_ONE}?id=${encodeURIComponent(id)}`);
+                const data = await res.json();
+
+                if (!data.success) {
+                    mostrarError();
+                    return;
+                }
+
+                pintarDocumento(data.documento);
+
+            } catch (err) {
+                console.error('Error cargando documento:', err);
+                mostrarError();
+            }
+        });
+
+        function mostrarError() {
+            document.getElementById('visor-loading').style.display = 'none';
+            document.getElementById('visor-error').style.display = 'block';
+        }
+
+        function pintarDocumento(doc) {
+            const iconos = { tesis: '🎓 Tesis', articulo: '📄 Artículo', libro: '📚 Libro' };
+
+            document.getElementById('visor-tipo').textContent = iconos[doc.tipo] || doc.tipo;
+            document.getElementById('visor-titulo').textContent = doc.titulo;
+            document.getElementById('visor-meta').textContent =
+                `${doc.autor} · ${doc.anio_publicacion} · ${doc.institucion_editorial}`;
+            document.getElementById('visor-area').textContent = doc.area_conocimiento;
+            document.getElementById('visor-acceso').textContent = doc.acceso;
+            document.getElementById('visor-resumen').textContent = doc.resumen;
+            document.getElementById('visor-descargar').href = doc.ruta_pdf;
+
+            // Detectar tipo de archivo por la extensión
+            const ext = doc.ruta_pdf.split('.').pop().toLowerCase();
+            const frameWrap = document.getElementById('visor-frame-wrap');
+
+            if (ext === 'pdf') {
+                // Los PDF los puede mostrar el navegador directamente
+                frameWrap.innerHTML = `
+                    <iframe src="${doc.ruta_pdf}" class="visor-iframe" title="${doc.titulo}"></iframe>
+                `;
+            } else if (ext === 'docx') {
+                // Los DOCX se muestran con el visor de Microsoft Office Online
+                const urlVisor = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(doc.ruta_pdf)}`;
+                frameWrap.innerHTML = `
+                    <iframe src="${urlVisor}" class="visor-iframe" title="${doc.titulo}"></iframe>
+                    <p style="font-size:12px;color:var(--text-muted);margin-top:8px;text-align:center">
+                        Si la vista previa no carga, usa el botón "Descargar / Abrir original" de arriba.
+                    </p>
+                `;
+            } else {
+                frameWrap.innerHTML = `<p style="text-align:center;color:var(--text-muted)">Formato no compatible con vista previa.</p>`;
+            }
+
+            document.getElementById('visor-loading').style.display = 'none';
+            document.getElementById('visor-content').style.display = 'block';
+        }
+    </script>
+
+</body>
+
+</html>
