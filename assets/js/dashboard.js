@@ -56,4 +56,24 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('dash-nombre').textContent = 'Usuario Conectado';
         document.getElementById('dash-avatar').textContent = 'U';
     }
+
+    cargarEstadisticas();
 });
+
+// ── CARGAR ESTADÍSTICAS REALES DESDE LA BASE DE DATOS ──
+async function cargarEstadisticas() {
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+    if (!usuarioId) return;
+
+    try {
+        const res = await fetch(`https://bibliowebb.com.mx/obtener_documentos.php?usuario_id=${encodeURIComponent(usuarioId)}`);
+        const data = await res.json();
+
+        if (data.success) {
+            const subidosEl = document.getElementById('dash-subidos');
+            if (subidosEl) subidosEl.textContent = data.documentos.length;
+        }
+    } catch (err) {
+        console.error('Error cargando estadísticas:', err);
+    }
+}
