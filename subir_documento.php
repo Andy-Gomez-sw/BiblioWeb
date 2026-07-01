@@ -34,7 +34,7 @@ if ($usuario_id <= 0) {
     responder(false, 'Error: Sesión de usuario inválida.');
 }
 
-// Modifica únicamente este segmento en tu subir_documento.php para sincronizar las llaves:
+// Validar campos obligatorios
 $campos = ['titulo', 'autor', 'anio', 'institucion', 'area', 'doi', 'resumen', 'tipo', 'acceso'];
 foreach ($campos as $c) {
     if (!isset($_POST[$c]) || trim($_POST[$c]) === '') {
@@ -110,24 +110,27 @@ try {
         ':tamano_archivo'        => $tamanoLegible
     ]);
 
+    // ID del documento recién insertado — lo necesitamos para las palabras clave
+    $documento_id = (int) $pdo->lastInsertId();
+
     // ── GUARDAR PALABRAS CLAVE (tabla separada) ──
     if (isset($_POST['palabras_clave']) && trim($_POST['palabras_clave']) !== '') {
-        $tagsRaw = $_POST['palabras_clave'];
+        $tagsRaw   = $_POST['palabras_clave'];
         $tagsArray = array_map('trim', explode(',', $tagsRaw));
         $tagsArray = array_filter($tagsArray, fn($t) => $t !== '');
 
         $stmtTag = $pdo->prepare("INSERT INTO palabras_clave (documento_id, palabra) VALUES (:documento_id, :palabra)");
 
-    foreach ($tagsArray as $palabra) {
-        $stmtTag->execute([
-            ':documento_id' => $documento_id,
-            ':palabra'      => $palabra
-        ]);
+        foreach ($tagsArray as $palabra) {
+            $stmtTag->execute([
+                ':documento_id' => $documento_id,
+                ':palabra'      => $palabra
+            ]);
         }
     }
 
     responder(true, 'Documento subido correctamente.', [
-        'id'          => (int) $pdo->lastInsertId(),
+        'id'          => $documento_id,
         'url_archivo' => $urlFinal,
         'titulo'      => $titulo,
     ]);
