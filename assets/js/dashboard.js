@@ -6,15 +6,6 @@ document.querySelectorAll('.filter-tab').forEach(tab => {
     });
 });
 
-// ── Favoritos ──
-document.querySelectorAll('.fav-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-        e.stopPropagation();
-        btn.textContent = btn.textContent === '♡' ? '♥' : '♡';
-        btn.style.color = btn.textContent === '♥' ? '#c8933a' : '';
-    });
-});
-
 // ── Modal cerrar sesión ──
 const modalLogout = document.getElementById('modal-logout');
 const btnCerrar = document.getElementById('btn-cerrar-sesion');
@@ -66,12 +57,17 @@ async function cargarEstadisticas() {
     if (!usuarioId) return;
 
     try {
-        const res = await fetch(`https://bibliowebb.com.mx/obtener_documentos.php?usuario_id=${encodeURIComponent(usuarioId)}`);
+        const res = await fetch(`https://bibliowebb.com.mx/obtener_estadisticas.php?usuario_id=${encodeURIComponent(usuarioId)}`);
         const data = await res.json();
 
         if (data.success) {
             const subidosEl = document.getElementById('dash-subidos');
-            if (subidosEl) subidosEl.textContent = data.documentos.length;
+            const favoritosEl = document.getElementById('dash-favoritos');
+            const consultadosEl = document.getElementById('dash-consultados');
+
+            if (subidosEl) subidosEl.textContent = data.subidos;
+            if (favoritosEl) favoritosEl.textContent = data.favoritos;
+            if (consultadosEl) consultadosEl.textContent = data.consultados;
         }
     } catch (err) {
         console.error('Error cargando estadísticas:', err);

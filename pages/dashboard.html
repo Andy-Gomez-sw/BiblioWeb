@@ -160,52 +160,10 @@
                     <span style="font-size:18px">☆</span>
                     <h2>Recomendados</h2>
                 </div>
-                <div class="grid-3">
-                    <div class="card-doc" onclick="window.location.href='citas.html'">
-                        <div class="doc-type">🎓 Tesis</div>
-                        <div class="doc-title">El romanticismo tardío en la literatura mexicana del siglo XIX</div>
-                        <div class="doc-meta">García Martínez, L. A.</div>
-                        <div class="doc-footer">
-                            <span class="doc-year">2022</span>
-                            <button class="icon-btn" title="Vista previa">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-doc" onclick="window.location.href='citas.html'">
-                        <div class="doc-type">📄 Artículo</div>
-                        <div class="doc-title">IA aplicada a la catalogación de acervos bibliotecarios</div>
-                        <div class="doc-meta">Hernández Ruiz, P. &amp; Torres, M.</div>
-                        <div class="doc-footer">
-                            <span class="doc-year">2023</span>
-                            <button class="icon-btn" title="Vista previa">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-doc" onclick="window.location.href='citas.html'">
-                        <div class="doc-type">📚 Libro</div>
-                        <div class="doc-title">El laberinto de la soledad</div>
-                        <div class="doc-meta">Paz, O.</div>
-                        <div class="doc-footer">
-                            <span class="doc-year">1993</span>
-                            <button class="icon-btn" title="Vista previa">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                    <circle cx="12" cy="12" r="3" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
+                <div class="grid-3" id="dash-recomendados">
+                    <p style="color:#8b7560;font-size:13px;grid-column:1/-1">
+                        Aún no hay recomendaciones disponibles. Explora el catálogo para descubrir documentos.
+                    </p>
                 </div>
             </section>
 
@@ -214,31 +172,10 @@
                     <span style="font-size:18px">🕐</span>
                     <h2>Vistos recientemente</h2>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:10px">
-                    <div class="recent-item">
-                        <div style="flex:1">
-                            <div class="recent-title">Cambio climático and biodiversidad en ecosistemas mexicanos</div>
-                            <div class="recent-meta">Gutiérrez, A. &amp; Soto, R. · 2023 · Rev. Ecología</div>
-                        </div>
-                        <span class="tag">Artículo</span>
-                        <button class="fav-btn" title="Guardar">♡</button>
-                    </div>
-                    <div class="recent-item">
-                        <div style="flex:1">
-                            <div class="recent-title">Filosofía del derecho en el México posrevolucionario</div>
-                            <div class="recent-meta">Morales Vega, J. · 2021 · UNAM</div>
-                        </div>
-                        <span class="tag">Tesis</span>
-                        <button class="fav-btn" title="Guardar">♡</button>
-                    </div>
-                    <div class="recent-item">
-                        <div style="flex:1">
-                            <div class="recent-title">Matemáticas avanzadas para ingeniería — Vol. II</div>
-                            <div class="recent-meta">Flores Mendoza, E. · 2019 · Ed. Trillas</div>
-                        </div>
-                        <span class="tag">Libro</span>
-                        <button class="fav-btn" title="Guardar">♡</button>
-                    </div>
+                <div style="display:flex;flex-direction:column;gap:10px" id="dash-recientes">
+                    <p style="color:#8b7560;font-size:13px">
+                        Todavía no has consultado ningún documento.
+                    </p>
                 </div>
             </section>
 
