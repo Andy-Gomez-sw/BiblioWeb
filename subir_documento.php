@@ -110,6 +110,22 @@ try {
         ':tamano_archivo'        => $tamanoLegible
     ]);
 
+    // ── GUARDAR PALABRAS CLAVE (tabla separada) ──
+    if (isset($_POST['palabras_clave']) && trim($_POST['palabras_clave']) !== '') {
+        $tagsRaw = $_POST['palabras_clave'];
+        $tagsArray = array_map('trim', explode(',', $tagsRaw));
+        $tagsArray = array_filter($tagsArray, fn($t) => $t !== '');
+
+        $stmtTag = $pdo->prepare("INSERT INTO palabras_clave (documento_id, palabra) VALUES (:documento_id, :palabra)");
+
+    foreach ($tagsArray as $palabra) {
+        $stmtTag->execute([
+            ':documento_id' => $documento_id,
+            ':palabra'      => $palabra
+        ]);
+        }
+    }
+
     responder(true, 'Documento subido correctamente.', [
         'id'          => (int) $pdo->lastInsertId(),
         'url_archivo' => $urlFinal,
