@@ -123,11 +123,11 @@
                         <div class="action-label">Mis favoritos</div>
                         <div class="action-sublabel" id="card-sub-favs">0 guardados</div>
                     </a>
-                    <a href="mis-archivos.html" class="action-card">
+                    <a href="historial.html" class="action-card">
                         <div class="action-icon">🕐</div>
                         <div class="action-label">Historial</div>
-                        <div class="action-sublabel" id="card-sub-historial">0 acciones</div>
-                    </a>
+                        <div class="action-sublabel" id="card-sub-hist">0 consultados</div>
+                    </a>    
                 </div>
             </section>
 
@@ -136,12 +136,12 @@
                     <div class="input-group">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8" />
-                            <path d="m21 21-4.35-4.35" />
-                        </svg>
-                        <input type="text" placeholder="Buscar por título, autor, año...">
-                    </div>
-                    <button class="btn btn-dark">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" placeholder="Buscar por título, autor, año..." id="dash-search-input" onkeydown="if(event.key==='Enter') buscarEnCatalogo()">
+                </div>
+                <button class="btn btn-dark" onclick="buscarEnCatalogo()">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8" />

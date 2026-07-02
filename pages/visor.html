@@ -13,11 +13,22 @@
 
     <nav class="navbar">
         <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
-        <div class="navbar-actions">
-            <button class="nav-btn" onclick="window.location.href='mis-archivos.html'">← Mis archivos</button>
+        <div class="navbar-actions" id="visor-navbar-actions">
+            <button class="nav-btn" id="btn-volver" onclick="window.location.href='mis-archivos.html'">← Mis archivos</button>
             <div class="avatar" id="global-avatar">-</div>
         </div>
     </nav>
+
+    <div class="alert-banner" id="guest-banner-visor" style="display:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        Estás navegando como invitado. Puedes consultar este documento libremente.
+        Para guardarlo en favoritos, <a href="login.html" class="banner-link">inicia sesión.</a>
+    </div>
 
     <main class="page-content-narrow">
 
@@ -65,13 +76,10 @@
         const PHP_URL_GET_ONE = 'https://bibliowebb.com.mx/obtener_documento.php';
         const PHP_URL_FAVS_VISOR = 'https://bibliowebb.com.mx/obtener_favoritos.php';
         const PHP_URL_FAV_TOGGLE_VISOR = 'https://bibliowebb.com.mx/toggle_favorito.php';
+        const PHP_URL_REGISTRAR_CONSULTA = 'https://bibliowebb.com.mx/registrar_consulta.php';
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const nombreGuardado = localStorage.getItem('usuario_nombre');
-            const avatar = document.getElementById("global-avatar");
-            if (nombreGuardado && avatar) {
-                avatar.textContent = nombreGuardado.charAt(0).toUpperCase();
-            }
+            ajustarModoInvitadoVisor();
 
             const params = new URLSearchParams(window.location.search);
             const id = params.get('id');
@@ -98,6 +106,32 @@
             }
         });
 
+        // ── Ajustar navbar según si es invitado o usuario registrado ──
+        function ajustarModoInvitadoVisor() {
+            const usuarioId = localStorage.getItem('usuario_id') || '';
+            const nombreGuardado = localStorage.getItem('usuario_nombre');
+            const avatar = document.getElementById('global-avatar');
+            const btnVolver = document.getElementById('btn-volver');
+            const banner = document.getElementById('guest-banner-visor');
+            const btnFav = document.getElementById('btn-fav-visor');
+
+            if (usuarioId) {
+                // Usuario registrado: comportamiento normal
+                if (nombreGuardado && avatar) {
+                    avatar.textContent = nombreGuardado.charAt(0).toUpperCase();
+                }
+            } else {
+                // Invitado: sin avatar de cuenta, sin favoritos, banner visible
+                if (avatar) avatar.style.display = 'none';
+                if (btnVolver) {
+                    btnVolver.textContent = '← Catálogo';
+                    btnVolver.onclick = () => window.location.href = 'catalogo.html';
+                }
+                if (banner) banner.style.display = 'flex';
+                if (btnFav) btnFav.style.display = 'none';
+            }
+        }
+
         function mostrarError() {
             document.getElementById('visor-loading').style.display = 'none';
             document.getElementById('visor-error').style.display = 'block';
@@ -120,12 +154,10 @@
             const frameWrap = document.getElementById('visor-frame-wrap');
 
             if (ext === 'pdf') {
-                // Los PDF los puede mostrar el navegador directamente
                 frameWrap.innerHTML = `
                     <iframe src="${doc.ruta_pdf}" class="visor-iframe" title="${doc.titulo}"></iframe>
                 `;
             } else if (ext === 'docx') {
-                // Los DOCX se muestran con el visor de Microsoft Office Online
                 const urlVisor = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(doc.ruta_pdf)}`;
                 frameWrap.innerHTML = `
                     <iframe src="${urlVisor}" class="visor-iframe" title="${doc.titulo}"></iframe>
@@ -140,9 +172,13 @@
             document.getElementById('visor-loading').style.display = 'none';
             document.getElementById('visor-content').style.display = 'block';
 
-            // Guardar el ID actual y revisar si ya es favorito
             window.documentoActualId = doc.id;
-            verificarFavoritoVisor(doc.id);
+
+            // Solo verificar favorito y registrar consulta si hay sesión activa
+            if (localStorage.getItem('usuario_id')) {
+                verificarFavoritoVisor(doc.id);
+                registrarConsulta(doc.id);
+            }
         }
 
         async function verificarFavoritoVisor(docId) {
@@ -186,9 +222,24 @@
                 console.error('Error al marcar favorito:', err);
             }
         };
+
+        async function registrarConsulta(docId) {
+            const usuarioId = localStorage.getItem('usuario_id') || '';
+            if (!usuarioId) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('usuario_id', usuarioId);
+                formData.append('documento_id', docId);
+
+                await fetch(PHP_URL_REGISTRAR_CONSULTA, { method: 'POST', body: formData });
+            } catch (err) {
+                console.error('Error registrando consulta:', err);
+            }
+        }
     </script>
 
-    <!-- Modal de cuenta -->
+    <!-- Modal de cuenta (solo aplica si hay sesión, cuenta.js ya no encuentra .avatar visible en modo invitado) -->
     <div class="cuenta-overlay" id="cuenta-overlay">
         <div class="cuenta-box">
             <div class="cuenta-avatar-lg" id="cuenta-avatar-lg">-</div>

@@ -1,7 +1,6 @@
 <?php
 // ════════════════════════════════════════
-//  obtener_documentos_publico.php
-//  Listado público, sin sesión de usuario
+//  obtener_catalogo.php
 // ════════════════════════════════════════
 
 require_once __DIR__ . '/../config.php';
@@ -29,14 +28,26 @@ try {
                area_conocimiento, doi_isbn, resumen, acceso, ruta_pdf,
                tamano_archivo, estado, creado_en
         FROM documentos
-        WHERE estado = 'publicado'
+        -- WHERE estado = 'aprobado'
         ORDER BY creado_en DESC
     ";
-
     $stmt = $pdo->query($sql);
     $documentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    responder(true, 'OK', ['documentos' => $documentos]);
+    // Conteo por tipo,
+    $conteo = ['tesis' => 0, 'articulo' => 0, 'libro' => 0];
+    $sqlConteo = "SELECT tipo, COUNT(*) AS total FROM documentos GROUP BY tipo";
+    $stmtConteo = $pdo->query($sqlConteo);
+    foreach ($stmtConteo->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        if (isset($conteo[$row['tipo']])) {
+            $conteo[$row['tipo']] = (int) $row['total'];
+        }
+    }
+
+    responder(true, 'OK', [
+        'documentos' => $documentos,
+        'conteo' => $conteo
+    ]);
 
 } catch (PDOException $e) {
     responder(false, 'Error en Query de Base de Datos: ' . $e->getMessage());

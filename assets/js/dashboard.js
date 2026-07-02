@@ -73,3 +73,13 @@ async function cargarEstadisticas() {
         console.error('Error cargando estadísticas:', err);
     }
 }
+
+// ── Buscar desde el dashboard, redirige al catálogo con el término ──
+window.buscarEnCatalogo = function() {
+    const termino = document.getElementById('dash-search-input').value.trim();
+    if (termino) {
+        window.location.href = `catalogo.html?q=${encodeURIComponent(termino)}`;
+    } else {
+        window.location.href = 'catalogo.html';
+    }
+};
