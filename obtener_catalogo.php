@@ -36,7 +36,7 @@ try {
 
     // Conteo por tipo,
     $conteo = ['tesis' => 0, 'articulo' => 0, 'libro' => 0];
-    $sqlConteo = "SELECT tipo, COUNT(*) AS total FROM documentos GROUP BY tipo";
+    $sqlConteo = "SELECT tipo, COUNT(*) AS total FROM documentos WHERE estado = 'publicado' GROUP BY tipo";
     $stmtConteo = $pdo->query($sqlConteo);
     foreach ($stmtConteo->fetchAll(PDO::FETCH_ASSOC) as $row) {
         if (isset($conteo[$row['tipo']])) {

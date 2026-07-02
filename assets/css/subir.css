@@ -60,6 +60,28 @@
     background: var(--cream-100);
 }
 
+.file-input {
+    display: none;
+}
+
+.dropzone-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.dropzone-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+
+.dropzone-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
 /* ── Form field ── */
 .field {
     display: flex;
@@ -298,28 +320,6 @@
 
 .success-btn.single {
     grid-column: 1/-1;
-}
-
-.file-input {
-    display: none;
-}
-
-.dropzone-icon {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-
-.dropzone-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-}
-
-.dropzone-sub {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 12px;
 }
 
 .form-spacer {
