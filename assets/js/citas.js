@@ -196,11 +196,12 @@ window.copyCita = function () {
 };
 
 window.guardarCitaEnBD = async function (citaFormateada) {
-    const usuarioId = localStorage.getItem('usuario_id'); // ver nota abajo
+    const usuarioId = localStorage.getItem('usuario_id');
     if (!usuarioId) {
         console.warn('No hay usuario_id; la cita no se guardará en el historial.');
         return;
     }
+    
 
     const payload = {
         usuario_id: usuarioId,
@@ -216,8 +217,10 @@ window.guardarCitaEnBD = async function (citaFormateada) {
         extension: document.getElementById('file-input')?.files[0]?.name.split('.').pop() || null,
     };
 
+    const url = `${GUARDAR_CITA_URL}?usuario_id=${encodeURIComponent(usuarioId)}`;
+
     try {
-        const res = await fetch(GUARDAR_CITA_URL, {
+        const res = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
