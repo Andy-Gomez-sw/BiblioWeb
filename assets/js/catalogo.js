@@ -162,12 +162,7 @@ function renderPage() {
 
 // ── Al abrir un documento: si hay sesión, va al visor; si es invitado, lo manda a iniciar sesión ──
 window.abrirDocumento = function(id) {
-    const usuarioId = localStorage.getItem('usuario_id') || '';
-    if (usuarioId) {
-        window.location.href = `visor.html?id=${id}`;
-    } else {
-        window.location.href = 'login.html';
-    }
+    window.location.href = `visor.html?id=${id}`;
 };
 
 function renderPagination(total) {
