@@ -1,7 +1,10 @@
 const PHP_URL_GET = 'https://bibliowebb.com.mx/obtener_documentos.php';
+const PHP_URL_FAVS = 'https://bibliowebb.com.mx/obtener_favoritos.php';
+const PHP_URL_FAVORITO = 'https://bibliowebb.com.mx/toggle_favorito.php';
 
 let files = [];
 let deleteTarget = null;
+let favoritosIds = new Set();
 
 document.addEventListener('DOMContentLoaded', () => {
     // Sincronizar Avatar con el flujo del localStorage
@@ -11,8 +14,24 @@ document.addEventListener('DOMContentLoaded', () => {
         avatar.textContent = nombreGuardado.charAt(0).toUpperCase();
     }
 
-    cargarDocumentos();
+    cargarFavoritosIds().then(() => cargarDocumentos());
 });
+
+// ── CARGAR IDs DE FAVORITOS PRIMERO, PARA PINTAR CORAZONES LLENOS ──
+async function cargarFavoritosIds() {
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+    if (!usuarioId) return;
+
+    try {
+        const res = await fetch(`${PHP_URL_FAVS}?usuario_id=${encodeURIComponent(usuarioId)}`);
+        const data = await res.json();
+        if (data.success) {
+            favoritosIds = new Set(data.documentos.map(d => d.id));
+        }
+    } catch (err) {
+        console.error('Error cargando favoritos:', err);
+    }
+}
 
 // ── CARGA REAL DESDE LA BASE DE DATOS ──
 window.cargarDocumentos = async function() {
@@ -81,7 +100,9 @@ window.renderFiles = function(list) {
     if (empty) empty.style.display = 'none';
 
     if (container) {
-        container.innerHTML = list.map(f => `
+        container.innerHTML = list.map(f => {
+            const esFav = favoritosIds.has(f.id);
+            return `
             <div class="file-item" id="file-${f.id}">
               <div style="font-size:26px">${f.emoji}</div>
               <div class="file-info">
@@ -94,6 +115,9 @@ window.renderFiles = function(list) {
                 </div>
               </div>
               <div class="file-actions">
+                <button class="icon-btn" title="Favorito" onclick="toggleFavorito(${f.id}, this)" style="color:${esFav ? '#c8933a' : ''};font-size:16px">
+                  ${esFav ? '♥' : '♡'}
+                </button>
                 <button class="icon-btn" title="Vista previa" onclick="previewDoc(${f.id})">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
@@ -101,10 +125,40 @@ window.renderFiles = function(list) {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                 </button>
               </div>
-            </div>`).join('');
+            </div>`;
+        }).join('');
     }
 
     window.updateCounts(list);
+};
+
+// ── MARCAR / DESMARCAR FAVORITO ──
+window.toggleFavorito = async function(documentoId, btnEl) {
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+    if (!usuarioId) return;
+
+    try {
+        const formData = new FormData();
+        formData.append('usuario_id', usuarioId);
+        formData.append('documento_id', documentoId);
+
+        const res = await fetch(PHP_URL_FAVORITO, { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.success) {
+            if (data.es_favorito) {
+                favoritosIds.add(documentoId);
+                btnEl.textContent = '♥';
+                btnEl.style.color = '#c8933a';
+            } else {
+                favoritosIds.delete(documentoId);
+                btnEl.textContent = '♡';
+                btnEl.style.color = '';
+            }
+        }
+    } catch (err) {
+        console.error('Error al marcar favorito:', err);
+    }
 };
 
 window.updateCounts = function(list) {

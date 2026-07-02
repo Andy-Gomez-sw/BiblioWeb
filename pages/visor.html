@@ -43,10 +43,11 @@
 
                 <p class="visor-resumen" id="visor-resumen"></p>
 
-                <div class="visor-actions">
+                <div class="visor-actions" style="display:flex;gap:10px;align-items:center">
                     <a id="visor-descargar" class="btn btn-dark btn-auto" target="_blank">
                         ⬇️ Descargar / Abrir original
                     </a>
+                    <button class="icon-btn" id="btn-fav-visor" title="Favorito" onclick="toggleFavoritoVisor()" style="font-size:20px">♡</button>
                 </div>
             </div>
 
@@ -62,6 +63,8 @@
 
     <script>
         const PHP_URL_GET_ONE = 'https://bibliowebb.com.mx/obtener_documento.php';
+        const PHP_URL_FAVS_VISOR = 'https://bibliowebb.com.mx/obtener_favoritos.php';
+        const PHP_URL_FAV_TOGGLE_VISOR = 'https://bibliowebb.com.mx/toggle_favorito.php';
 
         document.addEventListener('DOMContentLoaded', async () => {
             const nombreGuardado = localStorage.getItem('usuario_nombre');
@@ -136,7 +139,53 @@
 
             document.getElementById('visor-loading').style.display = 'none';
             document.getElementById('visor-content').style.display = 'block';
+
+            // Guardar el ID actual y revisar si ya es favorito
+            window.documentoActualId = doc.id;
+            verificarFavoritoVisor(doc.id);
         }
+
+        async function verificarFavoritoVisor(docId) {
+            const usuarioId = localStorage.getItem('usuario_id') || '';
+            if (!usuarioId) return;
+
+            try {
+                const res = await fetch(`${PHP_URL_FAVS_VISOR}?usuario_id=${encodeURIComponent(usuarioId)}`);
+                const data = await res.json();
+                if (data.success) {
+                    const esFav = data.documentos.some(d => d.id == docId);
+                    const btn = document.getElementById('btn-fav-visor');
+                    if (btn) {
+                        btn.textContent = esFav ? '♥' : '♡';
+                        btn.style.color = esFav ? '#c8933a' : '';
+                    }
+                }
+            } catch (err) {
+                console.error('Error verificando favorito:', err);
+            }
+        }
+
+        window.toggleFavoritoVisor = async function() {
+            const usuarioId = localStorage.getItem('usuario_id') || '';
+            if (!usuarioId || !window.documentoActualId) return;
+
+            try {
+                const formData = new FormData();
+                formData.append('usuario_id', usuarioId);
+                formData.append('documento_id', window.documentoActualId);
+
+                const res = await fetch(PHP_URL_FAV_TOGGLE_VISOR, { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (data.success) {
+                    const btn = document.getElementById('btn-fav-visor');
+                    btn.textContent = data.es_favorito ? '♥' : '♡';
+                    btn.style.color = data.es_favorito ? '#c8933a' : '';
+                }
+            } catch (err) {
+                console.error('Error al marcar favorito:', err);
+            }
+        };
     </script>
 
     <!-- Modal de cuenta -->
@@ -147,26 +196,50 @@
 
             <div class="cuenta-msg" id="cuenta-msg"></div>
 
-            <div class="cuenta-field">
-                <label>Nombre</label>
-                <input type="text" id="cuenta-nombre">
-            </div>
-            <div class="cuenta-field">
-                <label>Correo electrónico</label>
-                <input type="email" id="cuenta-email">
-            </div>
-            <div class="cuenta-field">
-                <label>Género</label>
-                <select id="cuenta-genero">
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
-                    <option value="O">Otro</option>
-                </select>
+            <!-- MODO LECTURA -->
+            <div id="cuenta-vista">
+                <div class="cuenta-dato">
+                    <span class="cuenta-dato-label">Nombre</span>
+                    <span class="cuenta-dato-valor" id="ver-nombre">—</span>
+                </div>
+                <div class="cuenta-dato">
+                    <span class="cuenta-dato-label">Correo electrónico</span>
+                    <span class="cuenta-dato-valor" id="ver-email">—</span>
+                </div>
+                <div class="cuenta-dato">
+                    <span class="cuenta-dato-label">Género</span>
+                    <span class="cuenta-dato-valor" id="ver-genero">—</span>
+                </div>
+
+                <div class="cuenta-actions">
+                    <button class="btn btn-outline btn-flex" onclick="cerrarModalCuenta()">Cerrar</button>
+                    <button class="btn btn-dark btn-flex" onclick="activarEdicion()">✏️ Editar</button>
+                </div>
             </div>
 
-            <div class="cuenta-actions">
-                <button class="btn btn-outline btn-flex" onclick="cerrarModalCuenta()">Cancelar</button>
-                <button class="btn btn-dark btn-flex" onclick="guardarCuenta()">Guardar cambios</button>
+            <!-- MODO EDICIÓN (oculto por defecto) -->
+            <div id="cuenta-edicion" style="display:none">
+                <div class="cuenta-field">
+                    <label>Nombre</label>
+                    <input type="text" id="cuenta-nombre">
+                </div>
+                <div class="cuenta-field">
+                    <label>Correo electrónico</label>
+                    <input type="email" id="cuenta-email">
+                </div>
+                <div class="cuenta-field">
+                    <label>Género</label>
+                    <select id="cuenta-genero">
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                        <option value="O">Otro</option>
+                    </select>
+                </div>
+
+                <div class="cuenta-actions">
+                    <button class="btn btn-outline btn-flex" onclick="cancelarEdicion()">Cancelar</button>
+                    <button class="btn btn-dark btn-flex" onclick="guardarCuenta()">Guardar cambios</button>
+                </div>
             </div>
         </div>
     </div>
