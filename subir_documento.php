@@ -137,6 +137,6 @@ try {
 
 } catch (PDOException $e) {
     @unlink($rutaFinal);
-    // Esto te dirá exactamente en la consola de JS si alguna columna falló por tipos de datos
+    
     responder(false, 'Error en Query de Base de Datos: ' . $e->getMessage());
 }

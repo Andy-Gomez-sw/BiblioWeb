@@ -1,0 +1,80 @@
+/* ── Modal de cuenta ── */
+.cuenta-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+.cuenta-overlay.open { display: flex; }
+
+.cuenta-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.25);
+}
+
+.cuenta-avatar-lg {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--amber, #c8933a);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 auto 14px;
+}
+
+.cuenta-box h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.cuenta-field {
+    margin-bottom: 14px;
+}
+.cuenta-field label {
+    display: block;
+    font-size: 12px;
+    color: #8b7560;
+    margin-bottom: 4px;
+}
+.cuenta-field input,
+.cuenta-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e5d9c8;
+    border-radius: 8px;
+    font-size: 14px;
+}
+.cuenta-field input:disabled {
+    background: #f5f0e8;
+    color: #8b7560;
+}
+
+.cuenta-msg {
+    font-size: 13px;
+    margin-bottom: 12px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    display: none;
+}
+.cuenta-msg-error { background: #fdecea; color: #c0392b; }
+.cuenta-msg-success { background: #e8f5e9; color: #2e7d32; }
+
+.cuenta-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+.cuenta-actions button {
+    flex: 1;
+}
