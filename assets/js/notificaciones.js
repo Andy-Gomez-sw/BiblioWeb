@@ -4,7 +4,7 @@
 
 const PHP_URL_REVISAR = 'https://bibliowebb.com.mx/revisar_documentos.php';
 const PHP_URL_NOTIF = 'https://bibliowebb.com.mx/obtener_notificaciones.php';
-const PHP_URL_MARCAR = 'https://bibliowebb.com.mx/marcar_notificaciones_leidas.php';
+const PHP_URL_MARCAR = 'https://bibliowebb.com.mx/notificaciones_leidas.php';
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnNotif = document.getElementById('btn-notificaciones');
@@ -101,6 +101,14 @@ window.cerrarModalNotif = function() {
 };
 
 function formatearFecha(fechaSQL) {
-    const f = new Date(fechaSQL.replace(' ', 'T'));
-    return f.toLocaleDateString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    // MySQL guarda en UTC; le indicamos explícitamente con 'Z' para que
+    // el navegador la convierta correctamente a la hora local de México
+    const f = new Date(fechaSQL.replace(' ', 'T') + 'Z');
+    return f.toLocaleDateString('es-MX', {
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'America/Mexico_City'
+    });
 }
