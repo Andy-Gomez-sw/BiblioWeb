@@ -1,17 +1,45 @@
-const docs = [ //Esto vienen de back
-    { tipo: 'tesis', icon: '🎓', titulo: 'El romanticismo tardío en la literatura mexicana del siglo XIX', autor: 'García Martínez, L. A.', anio: 2022 },
-    { tipo: 'articulo', icon: '📄', titulo: 'IA aplicada a la catalogación de acervos bibliotecarios', autor: 'Hernández Ruiz, P. & Torres, M.', anio: 2023 },
-    { tipo: 'libro', icon: '📚', titulo: 'El laberinto de la soledad', autor: 'Paz, O.', anio: 1993 },
-    { tipo: 'tesis', icon: '🎓', titulo: 'Análisis socioeconómico del desarrollo rural en Oaxaca', autor: 'Ramírez López, C.', anio: 2024 },
-    { tipo: 'articulo', icon: '📄', titulo: 'Cambio climático y biodiversidad en ecosistemas mexicanos', autor: 'Gutiérrez, A. & Soto, R.', anio: 2023 },
-    { tipo: 'tesis', icon: '🎓', titulo: 'Filosofía del derecho en el México posrevolucionario', autor: 'Morales Vega, J.', anio: 2021 },
-    { tipo: 'libro', icon: '📚', titulo: 'Matemáticas avanzadas para ingeniería — Vol. II', autor: 'Flores Mendoza, E.', anio: 2019 },
-    { tipo: 'articulo', icon: '📄', titulo: 'Neurociencia cognitiva y procesos de aprendizaje en adolescentes', autor: 'Reyes Castillo, M.', anio: 2022 },
-    { tipo: 'libro', icon: '📚', titulo: 'Historia económica de México, siglo XX', autor: 'Domínguez Ortiz, A.', anio: 2015 },
-    { tipo: 'tesis', icon: '🎓', titulo: 'Gestión de residuos sólidos urbanos en zonas metropolitanas', autor: 'Vargas Ríos, P.', anio: 2023 },
-    { tipo: 'articulo', icon: '📄', titulo: 'Derecho constitucional comparado en América Latina', autor: 'Salinas Cruz, J.', anio: 2020 },
-    { tipo: 'libro', icon: '📚', titulo: 'Química orgánica: fundamentos y aplicaciones', autor: 'López Rueda, F.', anio: 2018 },
-];
+const PHP_URL_GET = '.https://bibliowebb.com.mx/obtener_documentos_publico.php';
+
+let docs = [];
+
+window.cargarDocumentos = async function () {
+    const container = document.getElementById('results-grid');
+    if (container) container.innerHTML = '<p style="padding:20px;text-align:center;color:var(--text-muted)">Cargando documentos...</p>';
+
+    try {
+        const res = await fetch(PHP_URL_GET);
+        const data = await res.json();
+
+        if (!data.success) {
+            console.error('Error del servidor:', data.message);
+            if (container) container.innerHTML = `<p style="padding:20px;text-align:center;color:#c0392b">${data.message}</p>`;
+            return;
+        }
+
+        const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
+
+        // Mapeo a la forma que espera filterDocs/renderDocs
+        docs = data.documentos.map(d => ({
+            id: d.id,
+            tipo: d.tipo,
+            icon: iconos[d.tipo] || '📄',
+            titulo: d.titulo,
+            autor: d.autor,
+            anio: d.anio_publicacion,
+            size: d.tamano_archivo,
+            estado: d.estado,
+            ruta_pdf: d.ruta_pdf
+        }));
+
+        filterDocs();
+
+    } catch (err) {
+        console.error('Error de red al cargar documentos:', err);
+        if (container) container.innerHTML = '<p style="padding:20px;text-align:center;color:#c0392b">❌ No se pudo conectar con el servidor.</p>';
+    }
+};
+
+document.addEventListener('DOMContentLoaded', window.cargarDocumentos);
 
 let activeFilter = 'todo';
 const DOCS_PER_PAGE = 12;
@@ -41,8 +69,8 @@ function filterDocs() {
 
     filtered.sort((a, b) => {
         if (sortVal === 'reciente') return b.anio - a.anio;
-        if (sortVal === 'antiguo')  return a.anio - b.anio;
-        if (sortVal === 'titulo')   return a.titulo.localeCompare(b.titulo, 'es');
+        if (sortVal === 'antiguo') return a.anio - b.anio;
+        if (sortVal === 'titulo') return a.titulo.localeCompare(b.titulo, 'es');
         return 0;
     });
     renderDocs(filtered);
@@ -178,6 +206,3 @@ function goToPage(page) {
 }
 
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-// Init
-filterDocs();
