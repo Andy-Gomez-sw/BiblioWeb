@@ -58,6 +58,8 @@
 
     </main>
 
+    <script src="../assets/js/cuenta.js" defer></script>
+
     <script>
         const PHP_URL_GET_ONE = 'https://bibliowebb.com.mx/obtener_documento.php';
 
@@ -137,6 +139,37 @@
         }
     </script>
 
+    <!-- Modal de cuenta -->
+    <div class="cuenta-overlay" id="cuenta-overlay">
+        <div class="cuenta-box">
+            <div class="cuenta-avatar-lg" id="cuenta-avatar-lg">-</div>
+            <h3>Mi cuenta</h3>
+
+            <div class="cuenta-msg" id="cuenta-msg"></div>
+
+            <div class="cuenta-field">
+                <label>Nombre</label>
+                <input type="text" id="cuenta-nombre">
+            </div>
+            <div class="cuenta-field">
+                <label>Correo electrónico</label>
+                <input type="email" id="cuenta-email">
+            </div>
+            <div class="cuenta-field">
+                <label>Género</label>
+                <select id="cuenta-genero">
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="O">Otro</option>
+                </select>
+            </div>
+
+            <div class="cuenta-actions">
+                <button class="btn btn-outline btn-flex" onclick="cerrarModalCuenta()">Cancelar</button>
+                <button class="btn btn-dark btn-flex" onclick="guardarCuenta()">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
