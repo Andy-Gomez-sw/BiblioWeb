@@ -1,5 +1,6 @@
 let currentType = 'libro';
-const PHP_URL = 'https://bibliowebb.com.mx/citas.php';
+const GEN_CITAS_URL = 'https://bibliowebb.com.mx/citas.php';
+const GUARDAR_CITA_URL = 'https://bibliowebb.com.mx/guardar_cita.php'
 
 document.addEventListener('DOMContentLoaded', () => {
     // Mantener la sesión activa en el avatar
@@ -70,7 +71,7 @@ window.analyzeDocument = async function () {
     formData.append('tipo', currentType);
 
     try {
-        const res = await fetch(PHP_URL, { method: 'POST', body: formData });
+        const res = await fetch(GEN_CITAS_URL, { method: 'POST', body: formData });
         const data = await res.json();
 
         if (data.success) {
@@ -157,16 +158,75 @@ window.generateCita = function () {
 
     const cita = document.getElementById('apa-preview-text').innerHTML;
     document.getElementById('apa-result-text').innerHTML = cita;
-    const panel = document.getElementById('result-panel');
-    panel.classList.add('show');
-    panel.scrollIntoView({ behavior: 'smooth' });
+    const { parentetica, narrativa } = window.buildShortCitations(
+        window.getVal('l-autor'),
+        window.getVal('l-anio')
+    );
+    document.getElementById('cita-parentetica').textContent = parentetica;
+    document.getElementById('cita-narrativa').textContent = narrativa;
+
+    window.openCitaModal();
+
+    window.guardarCitaEnBD(cita);
+};
+
+window.buildShortCitations = function (autorFull, anio) {
+    const apellido = (autorFull.split(',')[0] || autorFull).trim();
+    return {
+        parentetica: `(${apellido}, ${anio})`,
+        narrativa: `${apellido} (${anio})`
+    };
+};
+
+window.openCitaModal = function () {
+    document.getElementById('cita-modal').classList.add('show');
+};
+
+window.closeCitaModal = function () {
+    document.getElementById('cita-modal').classList.remove('show');
 };
 
 window.copyCita = function () {
     const text = document.getElementById('apa-result-text').innerText;
     navigator.clipboard.writeText(text).then(() => {
         const msg = document.getElementById('copy-msg');
-        msg.style.display = 'block';
-        setTimeout(() => msg.style.display = 'none', 3000);
+        msg.classList.add('show');
+        setTimeout(() => msg.classList.remove('show'), 3000);
     }).catch(() => { });
+};
+
+window.guardarCitaEnBD = async function (citaFormateada) {
+    const usuarioId = localStorage.getItem('usuario_id'); // ver nota abajo
+    if (!usuarioId) {
+        console.warn('No hay usuario_id; la cita no se guardará en el historial.');
+        return;
+    }
+
+    const payload = {
+        usuario_id: usuarioId,
+        tipo: currentType,
+        titulo: window.getVal('l-titulo'),
+        autor: window.getVal('l-autor'),
+        anio: window.getVal('l-anio'),
+        editorial: window.getVal('l-editorial'),
+        ciudad: window.getVal('l-ciudad'),
+        doi: window.getVal('l-doi'),
+        cita_formateada: citaFormateada,
+        nombre_archivo: document.getElementById('file-input')?.files[0]?.name || null,
+        extension: document.getElementById('file-input')?.files[0]?.name.split('.').pop() || null,
+    };
+
+    try {
+        const res = await fetch(GUARDAR_CITA_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!data.success) {
+            console.error('No se pudo guardar la cita:', data.message);
+        }
+    } catch (err) {
+        console.error('Error de conexión al guardar la cita:', err);
+    }
 };

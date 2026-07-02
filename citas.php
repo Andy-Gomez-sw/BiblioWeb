@@ -26,7 +26,7 @@ if ($archivo['size'] > 50 * 1024 * 1024) {
     exit;
 }
 
-require __DIR__ . '/vendor/autoload.php'; // Composer: smalot/pdfparser
+require __DIR__ . '/vendor/autoload.php';
 
 // ── EXTRAER TEXTO SEGÚN EL TIPO DE ARCHIVO ──
 function extraerTextoPDF($path) {
@@ -63,7 +63,7 @@ $textoCompleto = $extension === 'pdf' ? extraerTextoPDF($tmpPath) : extraerTexto
 if (trim($textoCompleto) === '') {
     echo json_encode([
         'success' => false,
-        'message' => 'No se pudo extraer texto del documento (¿es un escaneo sin OCR?).'
+        'message' => 'No se pudo extraer texto del documento, ingresa los datos manualmente.'
     ]);
     exit;
 }
@@ -125,7 +125,7 @@ function detectarAutor($lineas) {
 }
 
 function detectarEditorial($texto) {
-    // Lista corta de editoriales comunes en habla hispana; amplíala según tu público
+    // Lista corta de editoriales comunes
     $conocidas = [
         'Fondo de Cultura Económica', 'Siglo XXI', 'Alianza Editorial',
         'Planeta', 'Anagrama', 'Tusquets', 'Debate', 'Paidós',
@@ -155,7 +155,6 @@ function consultarCrossRef($doi) {
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT        => 6,
-        // CrossRef pide un User-Agent identificable + mailto para la "polite pool" (respuestas más rápidas)
         CURLOPT_HTTPHEADER     => ['User-Agent: BiblioWebb/1.0 (mailto:contacto@bibliowebb.com.mx)'],
     ]);
     $respuesta = curl_exec($ch);
@@ -193,7 +192,6 @@ function consultarCrossRef($doi) {
 }
 
 // ── ARMAR RESPUESTA ──
-// 1. Heurísticas locales como base (siempre disponibles, no dependen de red)
 $campos = [
     'titulo'    => detectarTitulo($lineas),
     'autor'     => detectarAutor($lineas),
@@ -203,8 +201,7 @@ $campos = [
     'doi'       => detectarDOI($textoCompleto) ?? detectarISBN($textoCompleto),
 ];
 
-// 2. Si detectamos un DOI real (no ISBN), consultamos CrossRef y
-//    sobreescribimos con los datos oficiales cuando existan
+// 2. Si detectamos un DOI real (no ISBN), consultamos CrossRef y sobreescribimos con los datos oficiales cuando existan
 if ($campos['doi'] && preg_match('/^10\.\d{4,9}\//', $campos['doi'])) {
     $crossref = consultarCrossRef($campos['doi']);
     if ($crossref) {

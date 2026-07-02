@@ -122,21 +122,41 @@
             </button>
         </div>
 
-        <div class="result-panel" id="result-panel">
-            <div class="result-spacer"></div>
-            <div class="card result-card">
-                <p class="result-label">Cita APA generada</p>
-                <div class="apa-preview">
+        <div class="modal-overlay" id="cita-modal">
+            <div class="modal-box">
+                <button class="modal-close" onclick="closeCitaModal()" aria-label="Cerrar">✕</button>
+
+                <div class="title-modal">Cita generada</div>
+
+                <div class="modal-card">
+                    <p class="modal-card-label">Referencia completa — APA 7.ª edición</p>
                     <p class="apa-text" id="apa-result-text"></p>
                 </div>
+
+                <div class="modal-grid">
+                    <div class="modal-card modal-card-sm">
+                        <p class="modal-card-label">Cita en texto</p>
+                        <p class="modal-cita-corta" id="cita-parentetica"></p>
+                    </div>
+                    <div class="modal-card modal-card-sm">
+                        <p class="modal-card-label">Cita narrativa</p>
+                        <p class="modal-cita-corta" id="cita-narrativa"></p>
+                    </div>
+                </div>
+
                 <div class="result-actions">
                     <button class="btn btn-dark" onclick="copyCita()">📋 Copiar cita</button>
-                    <button class="btn btn-outline result-btn" onclick="window.location.href='subir.html'">Subir otro
-                        documento</button>
-                    <button class="btn btn-outline result-btn" onclick="window.location.href='dashboard.html'">Volver al
-                        inicio</button>
+                    <div class="result-grid-2">
+                        <button class="btn btn-outline result-btn" onclick="window.location.href='citas.html'">Generar
+                            otra
+                            cita</button>
+                        <button class="btn btn-outline result-btn"
+                            onclick="window.location.href='dashboard.html'">Volver al
+                            inicio</button>
+                    </div>
                 </div>
-                <div id="copy-msg" class="copy-msg" style="display: none;">
+
+                <div id="copy-msg" class="copy-msg">
                     <span class="badge badge-green">✓ Cita copiada al portapapeles</span>
                 </div>
             </div>
