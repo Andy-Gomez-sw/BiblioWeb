@@ -1,18 +1,18 @@
 // ════════════════════════════════════════
-//  cuenta.js — Modal de cuenta de usuario
+//  cuenta.js 
 // ════════════════════════════════════════
 
 const PHP_URL_USUARIO = 'https://bibliowebb.com.mx/obtener_usuario.php';
 const PHP_URL_ACTUALIZAR = 'https://bibliowebb.com.mx/actualizar_usuario.php';
 
+let datosUsuarioActual = null;
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Cualquier elemento con la clase "avatar" abre el modal al hacer clic
     document.querySelectorAll('.avatar').forEach(av => {
         av.style.cursor = 'pointer';
         av.addEventListener('click', abrirModalCuenta);
     });
 
-    // Cerrar el modal si se hace clic fuera de la tarjeta
     const overlay = document.getElementById('cuenta-overlay');
     if (overlay) {
         overlay.addEventListener('click', e => {
@@ -26,6 +26,7 @@ window.abrirModalCuenta = async function() {
     if (!overlay) return;
 
     overlay.classList.add('open');
+    mostrarVistaLectura();
     mostrarMsgCuenta('Cargando datos...', 'success');
 
     const usuarioId = localStorage.getItem('usuario_id') || '';
@@ -43,12 +44,8 @@ window.abrirModalCuenta = async function() {
             return;
         }
 
-        const u = data.usuario;
-        document.getElementById('cuenta-nombre').value = u.nombre || '';
-        document.getElementById('cuenta-email').value = u.email || '';
-        document.getElementById('cuenta-genero').value = u.genero || 'M';
-        document.getElementById('cuenta-avatar-lg').textContent = (u.nombre || 'U').charAt(0).toUpperCase();
-
+        datosUsuarioActual = data.usuario;
+        pintarVistaLectura(datosUsuarioActual);
         ocultarMsgCuenta();
 
     } catch (err) {
@@ -56,6 +53,37 @@ window.abrirModalCuenta = async function() {
         mostrarMsgCuenta('Error de conexión con el servidor.', 'error');
     }
 };
+
+function pintarVistaLectura(u) {
+    const generoTexto = { M: 'Masculino', F: 'Femenino', O: 'Otro' };
+
+    document.getElementById('cuenta-avatar-lg').textContent = (u.nombre || 'U').charAt(0).toUpperCase();
+    document.getElementById('ver-nombre').textContent = u.nombre || '—';
+    document.getElementById('ver-email').textContent = u.email || '—';
+    document.getElementById('ver-genero').textContent = generoTexto[u.genero] || '—';
+}
+
+window.activarEdicion = function() {
+    if (!datosUsuarioActual) return;
+
+    document.getElementById('cuenta-nombre').value = datosUsuarioActual.nombre || '';
+    document.getElementById('cuenta-email').value = datosUsuarioActual.email || '';
+    document.getElementById('cuenta-genero').value = datosUsuarioActual.genero || 'M';
+
+    document.getElementById('cuenta-vista').style.display = 'none';
+    document.getElementById('cuenta-edicion').style.display = 'block';
+    ocultarMsgCuenta();
+};
+
+window.cancelarEdicion = function() {
+    mostrarVistaLectura();
+};
+
+function mostrarVistaLectura() {
+    document.getElementById('cuenta-vista').style.display = 'block';
+    document.getElementById('cuenta-edicion').style.display = 'none';
+    ocultarMsgCuenta();
+}
 
 window.cerrarModalCuenta = function() {
     const overlay = document.getElementById('cuenta-overlay');
@@ -86,7 +114,9 @@ window.guardarCuenta = async function() {
         if (data.success) {
             mostrarMsgCuenta('¡Datos actualizados con éxito!', 'success');
 
-            // Actualizar localStorage y los avatares/nombre visibles en pantalla
+            datosUsuarioActual = { ...datosUsuarioActual, nombre, email, genero };
+            pintarVistaLectura(datosUsuarioActual);
+
             localStorage.setItem('usuario_nombre', nombre);
             document.querySelectorAll('.avatar').forEach(av => {
                 av.textContent = nombre.charAt(0).toUpperCase();
@@ -94,7 +124,7 @@ window.guardarCuenta = async function() {
             const nombreEl = document.getElementById('dash-nombre');
             if (nombreEl) nombreEl.textContent = nombre;
 
-            setTimeout(() => cerrarModalCuenta(), 1200);
+            setTimeout(() => mostrarVistaLectura(), 1000);
         } else {
             mostrarMsgCuenta(data.message, 'error');
         }

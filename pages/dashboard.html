@@ -203,26 +203,50 @@
 
             <div class="cuenta-msg" id="cuenta-msg"></div>
 
-            <div class="cuenta-field">
-                <label>Nombre</label>
-                <input type="text" id="cuenta-nombre">
-            </div>
-            <div class="cuenta-field">
-                <label>Correo electrónico</label>
-                <input type="email" id="cuenta-email">
-            </div>
-            <div class="cuenta-field">
-                <label>Género</label>
-                <select id="cuenta-genero">
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
-                    <option value="O">Otro</option>
-            </select>
-        </div>
+            <!-- MODO LECTURA -->
+            <div id="cuenta-vista">
+                <div class="cuenta-dato">
+                    <span class="cuenta-dato-label">Nombre</span>
+                    <span class="cuenta-dato-valor" id="ver-nombre">—</span>
+                </div>
+                <div class="cuenta-dato">
+                    <span class="cuenta-dato-label">Correo electrónico</span>
+                    <span class="cuenta-dato-valor" id="ver-email">—</span>
+                </div>
+                <div class="cuenta-dato">
+                    <span class="cuenta-dato-label">Género</span>
+                    <span class="cuenta-dato-valor" id="ver-genero">—</span>
+                </div>
 
-            <div class="cuenta-actions">
-                <button class="btn btn-outline btn-flex" onclick="cerrarModalCuenta()">Cancelar</button>
-                <button class="btn btn-dark btn-flex" onclick="guardarCuenta()">Guardar cambios</button>
+                <div class="cuenta-actions">
+                    <button class="btn btn-outline btn-flex" onclick="cerrarModalCuenta()">Cerrar</button>
+                    <button class="btn btn-dark btn-flex" onclick="activarEdicion()">✏️ Editar</button>
+                </div>
+            </div>
+
+            <!-- MODO EDICIÓN (oculto por defecto) -->
+            <div id="cuenta-edicion" style="display:none">
+                <div class="cuenta-field">
+                    <label>Nombre</label>
+                    <input type="text" id="cuenta-nombre">
+                </div>
+                <div class="cuenta-field">
+                    <label>Correo electrónico</label>
+                    <input type="email" id="cuenta-email">
+                </div>
+                <div class="cuenta-field">
+                    <label>Género</label>
+                    <select id="cuenta-genero">
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                        <option value="O">Otro</option>
+                    </select>
+                </div>
+
+                <div class="cuenta-actions">
+                    <button class="btn btn-outline btn-flex" onclick="cancelarEdicion()">Cancelar</button>
+                    <button class="btn btn-dark btn-flex" onclick="guardarCuenta()">Guardar cambios</button>
+                </div>
             </div>
         </div>
     </div>

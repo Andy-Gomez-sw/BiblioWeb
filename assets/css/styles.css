@@ -881,3 +881,20 @@ h3 {
 .cuenta-actions button {
     flex: 1;
 }
+
+.cuenta-dato {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0e6d8;
+}
+.cuenta-dato-label {
+    font-size: 12px;
+    color: #8b7560;
+}
+.cuenta-dato-valor {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2b1a14;
+}
