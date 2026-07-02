@@ -898,3 +898,22 @@ h3 {
     font-weight: 500;
     color: #2b1a14;
 }
+
+.notif-item {
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #faf5ec;
+    border: 1px solid #f0e6d8;
+    font-size: 13px;
+    line-height: 1.4;
+}
+.notif-item.no-leida {
+    background: #fff6e8;
+    border-color: #e8c88a;
+}
+.notif-fecha {
+    display: block;
+    font-size: 11px;
+    color: #8b7560;
+    margin-top: 4px;
+}
