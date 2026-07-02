@@ -1,22 +1,83 @@
-const docs = [ //Esto vienen de back
-    { tipo: 'tesis', icon: '🎓', titulo: 'El romanticismo tardío en la literatura mexicana del siglo XIX', autor: 'García Martínez, L. A.', anio: 2022 },
-    { tipo: 'articulo', icon: '📄', titulo: 'IA aplicada a la catalogación de acervos bibliotecarios', autor: 'Hernández Ruiz, P. & Torres, M.', anio: 2023 },
-    { tipo: 'libro', icon: '📚', titulo: 'El laberinto de la soledad', autor: 'Paz, O.', anio: 1993 },
-    { tipo: 'tesis', icon: '🎓', titulo: 'Análisis socioeconómico del desarrollo rural en Oaxaca', autor: 'Ramírez López, C.', anio: 2024 },
-    { tipo: 'articulo', icon: '📄', titulo: 'Cambio climático y biodiversidad en ecosistemas mexicanos', autor: 'Gutiérrez, A. & Soto, R.', anio: 2023 },
-    { tipo: 'tesis', icon: '🎓', titulo: 'Filosofía del derecho en el México posrevolucionario', autor: 'Morales Vega, J.', anio: 2021 },
-    { tipo: 'libro', icon: '📚', titulo: 'Matemáticas avanzadas para ingeniería — Vol. II', autor: 'Flores Mendoza, E.', anio: 2019 },
-    { tipo: 'articulo', icon: '📄', titulo: 'Neurociencia cognitiva y procesos de aprendizaje en adolescentes', autor: 'Reyes Castillo, M.', anio: 2022 },
-    { tipo: 'libro', icon: '📚', titulo: 'Historia económica de México, siglo XX', autor: 'Domínguez Ortiz, A.', anio: 2015 },
-    { tipo: 'tesis', icon: '🎓', titulo: 'Gestión de residuos sólidos urbanos en zonas metropolitanas', autor: 'Vargas Ríos, P.', anio: 2023 },
-    { tipo: 'articulo', icon: '📄', titulo: 'Derecho constitucional comparado en América Latina', autor: 'Salinas Cruz, J.', anio: 2020 },
-    { tipo: 'libro', icon: '📚', titulo: 'Química orgánica: fundamentos y aplicaciones', autor: 'López Rueda, F.', anio: 2018 },
-];
+const PHP_URL_CATALOGO = 'https://bibliowebb.com.mx/obtener_catalogo.php';
 
+let docs = [];
 let activeFilter = 'todo';
 const DOCS_PER_PAGE = 12;
 let currentPage = 1;
 let currentList = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    ajustarNavbarSegunSesion();
+    cargarCatalogo();
+});
+
+// ── Ajustar navbar/banner según si hay sesión o es invitado ──
+function ajustarNavbarSegunSesion() {
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+    const nombreGuardado = localStorage.getItem('usuario_nombre');
+    const navbarActions = document.getElementById('navbar-actions');
+    const guestBanner = document.getElementById('guest-banner');
+
+    if (usuarioId) {
+        // Usuario registrado: ocultar banner de invitado y cambiar el navbar
+        if (guestBanner) guestBanner.style.display = 'none';
+        if (navbarActions) {
+            navbarActions.innerHTML = `
+                <button class="nav-btn" onclick="window.location.href='dashboard.html'">← Inicio</button>
+                <div class="avatar" id="global-avatar">${(nombreGuardado || 'U').charAt(0).toUpperCase()}</div>
+            `;
+        }
+    }
+    // Si no hay usuario_id, se queda tal cual (modo explorador + banner visible)
+}
+
+// ── CARGA REAL DESDE LA BASE DE DATOS ──
+async function cargarCatalogo() {
+    const grid = document.getElementById('results-grid');
+    if (grid) grid.innerHTML = '<p style="padding:20px;text-align:center;color:var(--text-muted)">Cargando catálogo...</p>';
+
+    try {
+        const res = await fetch(PHP_URL_CATALOGO);
+        const data = await res.json();
+
+        if (!data.success) {
+            if (grid) grid.innerHTML = `<p style="padding:20px;text-align:center;color:#c0392b">${data.message}</p>`;
+            return;
+        }
+
+        const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
+        docs = data.documentos.map(d => ({
+            id: d.id,
+            tipo: d.tipo,
+            icon: iconos[d.tipo] || '📄',
+            titulo: d.titulo,
+            autor: d.autor,
+            anio: d.anio_publicacion
+        }));
+
+        // Actualizar contadores reales de "Colecciones disponibles"
+        const c = data.conteo;
+        const elTesis = document.getElementById('count-tesis');
+        const elArt = document.getElementById('count-articulo');
+        const elLib = document.getElementById('count-libro');
+        if (elTesis) elTesis.textContent = c.tesis + ' documentos';
+        if (elArt) elArt.textContent = c.articulo + ' publicaciones';
+        if (elLib) elLib.textContent = c.libro + ' títulos';
+
+        // Si venimos de una búsqueda desde el dashboard (?q=...), precargar el término
+        const params = new URLSearchParams(window.location.search);
+        const q = params.get('q');
+        if (q) {
+            document.getElementById('search-input').value = q;
+        }
+
+        filterDocs();
+
+    } catch (err) {
+        console.error('Error cargando catálogo:', err);
+        if (grid) grid.innerHTML = '<p style="padding:20px;text-align:center;color:#c0392b">❌ No se pudo conectar con el servidor.</p>';
+    }
+}
 
 function setFilter(btn) {
     document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
@@ -32,7 +93,9 @@ function setFilterById(type) {
 
 function filterDocs() {
     const q = document.getElementById('search-input').value.toLowerCase();
-    const sortVal = document.querySelector('.sort-select').value;
+    const sortSelect = document.querySelector('.sort-select');
+    const sortVal = sortSelect ? sortSelect.value : 'reciente';
+
     let filtered = docs.filter(d => {
         const matchFilter = activeFilter === 'todo' || d.tipo === activeFilter;
         const matchSearch = !q || d.titulo.toLowerCase().includes(q) || d.autor.toLowerCase().includes(q) || String(d.anio).includes(q);
@@ -59,10 +122,9 @@ function renderDocs(list) {
     const title = document.getElementById('section-title');
     const q = document.getElementById('search-input').value.trim();
 
-    title.textContent = q ? 'Resultados de búsqueda' : 'Vistos recientemente';
+    title.textContent = q ? 'Resultados de búsqueda' : 'Documentos recientes';
     count.textContent = list.length + ' documento' + (list.length !== 1 ? 's' : '');
 
-    // Empty state
     if (!list.length) {
         grid.innerHTML = '';
         empty.style.display = 'block';
@@ -80,15 +142,16 @@ function renderPage() {
     const grid = document.getElementById('results-grid');
     const start = (currentPage - 1) * DOCS_PER_PAGE;
     const paginated = currentList.slice(start, start + DOCS_PER_PAGE);
+    const usuarioId = localStorage.getItem('usuario_id') || '';
 
     grid.innerHTML = paginated.map(d => `
-        <div class="card-doc-list" onclick="window.location.href='login.html'">
+        <div class="card-doc-list" onclick="abrirDocumento(${d.id})">
           <div class="doc-type">${d.icon} ${capitalize(d.tipo)}</div>
           <div class="doc-title">${d.titulo}</div>
           <div class="doc-meta">${d.autor}</div>
           <div class="doc-footer">
             <span class="doc-year">${d.anio}</span>
-            <button class="icon-btn" title="Vista previa" onclick="event.stopPropagation()">
+            <button class="icon-btn" title="Vista previa" onclick="event.stopPropagation(); abrirDocumento(${d.id})">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
@@ -96,6 +159,16 @@ function renderPage() {
 
     renderPagination(currentList.length);
 }
+
+// ── Al abrir un documento: si hay sesión, va al visor; si es invitado, lo manda a iniciar sesión ──
+window.abrirDocumento = function(id) {
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+    if (usuarioId) {
+        window.location.href = `visor.html?id=${id}`;
+    } else {
+        window.location.href = 'login.html';
+    }
+};
 
 function renderPagination(total) {
     const container = document.getElementById('pagination');
@@ -122,27 +195,20 @@ function renderPagination(total) {
     let pages = '';
 
     if (totalPages <= 5) {
-        // Pocas páginas: mostrar todas
         for (let i = 1; i <= totalPages; i++) pages += pageBtn(i, i === currentPage);
-
     } else if (currentPage <= 3) {
-        // Inicio: 1 2 3 ... 12
         pages += pageBtn(1, currentPage === 1);
         pages += pageBtn(2, currentPage === 2);
         pages += pageBtn(3, currentPage === 3);
         pages += `<span class="page-dots">…</span>`;
         pages += pageBtn(totalPages, currentPage === totalPages);
-
     } else if (currentPage >= totalPages - 2) {
-        // Final: 1 ... 10 11 12
         pages += pageBtn(1, currentPage === 1);
         pages += `<span class="page-dots">…</span>`;
         pages += pageBtn(totalPages - 2, currentPage === totalPages - 2);
         pages += pageBtn(totalPages - 1, currentPage === totalPages - 1);
         pages += pageBtn(totalPages, currentPage === totalPages);
-
     } else {
-        // Medio: 1 ... 4 5 6 ... 12
         pages += pageBtn(1, false);
         pages += `<span class="page-dots">…</span>`;
         pages += pageBtn(currentPage - 1, false);
@@ -161,14 +227,6 @@ function renderPagination(total) {
 
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
-// Pagination buttons
-document.querySelectorAll('.page-btn:not(.arrow)').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.page-btn:not(.arrow)').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    });
-});
-
 function goToPage(page) {
     const totalPages = Math.ceil(currentList.length / DOCS_PER_PAGE);
     if (page < 1 || page > totalPages) return;
@@ -176,8 +234,3 @@ function goToPage(page) {
     renderPage();
     document.getElementById('results-grid').scrollIntoView({ behavior: 'smooth' });
 }
-
-function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-// Init
-filterDocs();
