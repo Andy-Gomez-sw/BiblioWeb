@@ -28,7 +28,7 @@ try {
                area_conocimiento, doi_isbn, resumen, acceso, ruta_pdf,
                tamano_archivo, estado, creado_en
         FROM documentos
-        -- WHERE estado = 'aprobado'
+        WHERE estado = 'publicado'
         ORDER BY creado_en DESC
     ";
     $stmt = $pdo->query($sql);
