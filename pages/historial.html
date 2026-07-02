@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial — Biblioteca Digital</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/mis-archivos.css">
+    <script src="../assets/js/historial.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
+        <div class="navbar-actions">
+            <button class="nav-btn" onclick="window.location.href='dashboard.html'">← Inicio</button>
+            <div class="avatar" id="global-avatar">-</div>
+        </div>
+    </nav>
+
+    <div class="header-bar">
+        <div class="header-inner">
+            <h1>Historial</h1>
+            <p>Documentos que has consultado recientemente</p>
+        </div>
+    </div>
+
+    <main class="page-content">
+
+        <div class="search-actions-row">
+            <div class="search-bar-sm">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+                <input type="text" placeholder="Buscar en mi historial" id="file-search" oninput="filterFiles()">
+            </div>
+        </div>
+
+        <div class="files-list" id="files-list"></div>
+
+        <div id="empty-files" class="empty-files-wrapper" style="display:none">
+            <div class="empty-state">
+                <p>🕐</p>
+                <p class="empty-state-title">Aún no has consultado documentos</p>
+                <p class="empty-state-sub">Los documentos que abras aparecerán aquí</p>
+            </div>
+        </div>
+
+        <div class="back-btn-row">
+            <a href="dashboard.html" class="btn btn-outline btn-auto">
+                ← Volver al inicio
+            </a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
