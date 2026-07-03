@@ -1,79 +1,12 @@
-/* ── Navbar ── */
-.navbar {
-    background: var(--brown-900);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    height: 56px;
-}
-
-.navbar-brand {
-    font-family: 'Crimson Pro', serif;
-    color: var(--white);
-    font-size: 13px;
-    line-height: 1.4;
-    letter-spacing: .04em;
-}
-
-.navbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.nav-btn {
-    background: none;
-    border: none;
-    color: rgba(var(--white-rgb), .7);
-    cursor: pointer;
-    padding: 6px;
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color .15s, background .15s;
-}
-
-.nav-btn:hover {
-    color: var(--white);
-    background: rgba(var(--white-rgb), .08);
-}
-
-/* Botón cerrar sesión */
-.btn-logout {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(var(--white-rgb), .08);
-    border: 1px solid rgba(var(--white-rgb), .15);
-    color: rgba(var(--white-rgb), .85);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: .03em;
-    padding: 6px 13px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: background .15s, color .15s, border-color .15s;
-}
-
-.btn-logout:hover {
-    background: rgba(var(--red-rgb), .18);
-    border-color: rgba(var(--red-rgb), .45);
-    color: var(--red-light);
-}
+/* ── Navbar: ver styles.css (global) ── */
+/* .navbar, .navbar-brand, .navbar-actions, .nav-btn, .btn-logout ya están
+   definidos globalmente en styles.css. Solo se sobreescribe el avatar,
+   que en el dashboard usa una variante más sutil. */
 
 .avatar {
     width: 32px;
     height: 32px;
-    border-radius: 50%;
     background: rgba(var(--white-rgb), .15);
-    color: var(--white);
-    font-size: 14px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* ── Welcome bar ── */
@@ -332,20 +265,10 @@
     }
 }
 
-/* ── Layout ── */
-.section-gap {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-}
+/* ── Layout: .section-gap, .page-content, .grid-3, .section-heading,
+   .search-row, .filter-tabs, .btn-dark:hover ya están en styles.css. ── */
 
-.page-content {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 20px;
-}
-
-/* Generic resets for cards / tags / buttons if styles.css absent */
+/* Generic resets for cards / tags / botones específicos del dashboard */
 .action-card {
     display: flex;
     flex-direction: column;
@@ -430,45 +353,6 @@
     color: var(--text-muted);
 }
 
-.icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-muted);
-    padding: 4px;
-    border-radius: 5px;
-}
-
-.icon-btn:hover {
-    color: var(--brown-900);
-}
-
-.grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-}
-
-@media (max-width: 700px) {
-    .grid-3 {
-        grid-template-columns: 1fr;
-    }
-}
-
-.section-heading {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 14px;
-}
-
-.section-heading h2 {
-    font-family: 'Crimson Pro', serif;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
 .recent-item {
     display: flex;
     align-items: center;
@@ -514,11 +398,6 @@
     color: var(--amber);
 }
 
-.search-row {
-    display: flex;
-    gap: 10px;
-}
-
 .input-group {
     flex: 1;
     display: flex;
@@ -551,21 +430,6 @@
     font-weight: 500;
 }
 
-.btn-dark {
-    background: var(--brown-900);
-    color: var(--white);
-}
-
-.btn-dark:hover {
-    background: var(--brown-800);
-}
-
-.filter-tabs {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
 .filter-tab {
     background: var(--cream-200);
     border: none;
@@ -582,7 +446,7 @@
     color: var(--white);
 }
 
-/* Modal cerrar sesión */
+/* ── Modal cerrar sesión (exclusivo del dashboard) ── */
 .modal-overlay {
     display: none;
     position: fixed;

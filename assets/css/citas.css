@@ -54,20 +54,20 @@
     font-weight: 600;
     flex-shrink: 0;
     border: 2px solid var(--cream-300);
-    background: #fff;
+    background: var(--white);
     color: var(--text-muted);
 }
 
 .step-dot.active {
     background: var(--amber);
     border-color: var(--amber);
-    color: #fff;
+    color: var(--white);
 }
 
 .step-dot.done {
     background: var(--brown-700);
     border-color: var(--brown-700);
-    color: #fff;
+    color: var(--white);
 }
 
 .step-label {
@@ -157,7 +157,7 @@
 .doc-tab {
     border: 1.5px solid var(--cream-300);
     border-radius: var(--radius-pill);
-    background: #fff;
+    background: var(--white);
     padding: 8px 18px;
     font-size: 13px;
     cursor: pointer;
@@ -170,7 +170,7 @@
 
 .doc-tab.active {
     background: var(--brown-800);
-    color: #fff;
+    color: var(--white);
     border-color: var(--brown-800);
 }
 
@@ -199,7 +199,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: #fff;
+    background: var(--white);
     border: 1.5px solid var(--brown-200);
     border-radius: var(--radius-pill);
     padding: 13px 16px;
@@ -364,7 +364,7 @@
     display: none;
     margin-top: 3px;
     font-size: 15px;
-    background-color: #9CB080;
+    background-color: var(--sage);
     padding: .6em 0;
     border-radius: var(--radius-lg);
 }

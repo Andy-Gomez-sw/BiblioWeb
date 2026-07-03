@@ -89,15 +89,7 @@
     gap: 5px;
 }
 
-.field label {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-.field label span {
-    color: var(--amber);
-}
+/* .field label y .field label span ya están en styles.css */
 
 .field input,
 .field textarea,

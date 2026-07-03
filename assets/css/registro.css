@@ -10,7 +10,7 @@
 
 .hero-register {
     background: var(--brown-900);
-    color: #fff;
+    color: var(--white);
     display: grid;
     grid-template-columns: 1fr 1fr;
     flex: 1;
@@ -45,7 +45,7 @@
     font-weight: 400;
     line-height: 1.1;
     margin-bottom: 14px;
-    color: #fff;
+    color: var(--white);
 }
 
 .hero-cover-content-register h1 em {
@@ -126,7 +126,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    background: #fff;
+    background: var(--white);
     border: 1.5px solid var(--brown-200);
     border-radius: var(--radius-pill);
     padding: 13px 16px;
@@ -146,7 +146,7 @@
     font-weight: 500;
     cursor: pointer;
     border: 1.5px solid var(--cream-300);
-    background: #fff;
+    background: var(--white);
     color: var(--text-primary);
     transition: all .2s;
     width: 100%;
@@ -199,7 +199,7 @@
 }
 
 .success-card-register {
-    background: #fff;
+    background: var(--white);
     border-radius: var(--radius-lg);
     padding: 44px 40px;
     text-align: center;
@@ -267,7 +267,7 @@
 
 .error-msg {
     display: none;
-    color: #e74c3c;
+    color: var(--red);
     margin-bottom: 10px;
     font-size: 14px;
 }

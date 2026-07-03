@@ -42,11 +42,11 @@
     font-weight: 400;
     line-height: 1.1;
     margin-bottom: 14px;
-    color: #fff;
+    color: var(--white);
 }
 
 .hero-cover-content-login h1 em {
-    color: #D4915C;
+    color: var(--amber);
     font-style: italic;
 }
 
@@ -59,7 +59,7 @@
 }
 
 .hero-form-login {
-    background: #68432d;
+    background: var(--login-brown);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -70,7 +70,7 @@
     font-family: 'Crimson Pro', serif;
     font-size: 34px;
     font-weight: 400;
-    color: #fff;
+    color: var(--white);
     margin-bottom: 2px;
 }
 
@@ -91,19 +91,19 @@
     align-items: center;
     gap: 12px;
     background: rgba(255, 255, 255, 0.08);
-    border: 1.5px solid #C4896E;
+    border: 1.5px solid var(--brown-400);
     border-radius: 999px;
     padding: 13px 20px;
     transition: border-color .2s, background .2s;
 }
 
 .login-custom-input:focus-within {
-    border-color: #D4915C;
+    border-color: var(--amber);
     background: rgba(255, 255, 255, 0.13);
 }
 
 .login-custom-input svg {
-    color: #C4896E;
+    color: var(--brown-400);
     flex-shrink: 0;
 }
 
@@ -111,7 +111,7 @@
     border: none;
     outline: none;
     background: transparent;
-    color: #fff;
+    color: var(--white);
     font-size: 14px;
     width: 100%;
 }
@@ -121,8 +121,8 @@
 }
 
 .btn-entrar-login {
-    background: #C4896E;
-    color: #fff;
+    background: var(--brown-400);
+    color: var(--white);
     border: none;
     border-radius: 999px;
     padding: 14px 24px;
@@ -134,7 +134,7 @@
 }
 
 .btn-entrar-login:hover {
-    background: #D4915C;
+    background: var(--amber);
 }
 
 .btn-login-outline-custom {
@@ -143,8 +143,8 @@
     justify-content: center;
     gap: 10px;
     background: transparent;
-    border: 1.5px solid #C4896E;
-    color: #C4896E;
+    border: 1.5px solid var(--brown-400);
+    color: var(--brown-400);
     border-radius: 999px;
     padding: 12px 24px;
     font-size: 14px;
@@ -157,8 +157,8 @@
 
 .btn-login-outline-custom:hover {
     background: rgba(196, 137, 110, .12);
-    color: #D4915C;
-    border-color: #D4915C;
+    color: var(--amber);
+    border-color: var(--amber);
 }
 
 .btn-login-outline-custom svg {
@@ -193,11 +193,11 @@
 }
 
 .forgot-link-login:hover {
-    color: #D4915C;
+    color: var(--amber);
 }
 
 .login-footer {
-    background: #3B1F1A;
+    background: var(--brown-900);
     color: rgba(255, 255, 255, .4);
     padding: 20px 32px;
     display: flex;
@@ -224,7 +224,7 @@
 }
 
 .login-footer nav a:hover {
-    color: #C4896E;
+    color: var(--brown-400);
 }
 
 @media (max-width: 768px) {

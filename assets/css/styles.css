@@ -31,6 +31,10 @@
     --red-light: #FF8A8A;
     --red-rgb: 220, 53, 53;
     --brown-900-rgb: 59, 31, 26;
+    --green: #2E7D32;
+    --green-bg: #E8F5E9;
+    --sage: #9CB080;
+    --login-brown: #68432D;
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
@@ -52,11 +56,13 @@ h3 {
     font-family: 'Crimson Pro', serif;
 }
 
-/* ── Navbar Base y Global ── */
+/* ==========================================================
+   ── Navbar (global, todas las páginas) ──
+   ========================================================== */
 .navbar {
     background: var(--brown-900);
-    color: #fff;
-    padding: 0 24px;
+    color: var(--white);
+    padding: 0 20px;
     height: 56px;
     display: flex;
     align-items: center;
@@ -64,12 +70,11 @@ h3 {
 }
 
 .navbar-brand {
-    font-family: 'Inter', sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    opacity: .85;
+    font-family: 'Crimson Pro', serif;
+    color: var(--white);
+    font-size: 13px;
     line-height: 1.4;
+    letter-spacing: .04em;
 }
 
 .navbar-actions {
@@ -78,36 +83,83 @@ h3 {
     gap: 10px;
 }
 
+/* Botón de navbar minimalista (usado en la mayoría de páginas: "← Volver", "← Inicio", notificaciones...) */
 .nav-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    padding: 6px 14px;
-    border-radius: var(--radius-pill);
-    font-size: 13px;
+    background: none;
+    border: none;
+    color: rgba(var(--white-rgb), .7);
     cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
     text-decoration: none;
-    transition: background .2s;
+    transition: color .15s, background .15s;
 }
 
 .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.18);
+    color: var(--white);
+    background: rgba(var(--white-rgb), .08);
 }
 
 .nav-btn:disabled {
     background: none;
+    opacity: .5;
+    cursor: not-allowed;
 }
 
-.nav-btn.primary {
+/*
+  Variante píldora (con fondo y borde), SOLO para catalogo.html.
+  Antes compartía el nombre ".nav-btn" con el estilo minimalista de arriba
+  y, por orden de cascada, siempre perdía — por eso "Modo explorador" e
+  "Inicia sesión" se veían planos. Se separó en su propia clase modificadora:
+  usar class="nav-btn nav-btn-pill" (o "... nav-btn-pill primary").
+*/
+.nav-btn-pill {
+    background: rgba(var(--white-rgb), .1);
+    border: 1px solid rgba(var(--white-rgb), .2);
+    color: var(--white);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+}
+
+.nav-btn-pill:hover {
+    background: rgba(var(--white-rgb), .18);
+    color: var(--white);
+}
+
+.nav-btn-pill.primary {
     background: var(--amber);
     border-color: var(--amber);
 }
 
-.nav-btn.primary:hover {
+.nav-btn-pill.primary:hover {
     background: var(--amber-light);
+}
+
+.btn-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(var(--white-rgb), .08);
+    border: 1px solid rgba(var(--white-rgb), .15);
+    color: rgba(var(--white-rgb), .85);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .03em;
+    padding: 6px 13px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+}
+
+.btn-logout:hover {
+    background: rgba(var(--red-rgb), .18);
+    border-color: rgba(var(--red-rgb), .45);
+    color: var(--red-light);
 }
 
 .avatar {
@@ -120,7 +172,7 @@ h3 {
     justify-content: center;
     font-weight: 600;
     font-size: 15px;
-    color: #fff;
+    color: var(--white);
     cursor: pointer;
 }
 
@@ -150,7 +202,7 @@ h3 {
     position: relative;
     display: flex;
     align-items: center;
-    background: #fff;
+    background: var(--white);
     border: 1.5px solid var(--brown-200);
     border-radius: var(--radius-pill);
     padding: 0 16px;
@@ -199,7 +251,7 @@ h3 {
 
 .btn-primary {
     background: var(--amber);
-    color: #fff;
+    color: var(--white);
 }
 
 .btn-primary:hover {
@@ -208,7 +260,7 @@ h3 {
 
 .btn-dark {
     background: var(--brown-900);
-    color: #fff;
+    color: var(--white);
 }
 
 .btn-dark:hover {
@@ -230,9 +282,18 @@ h3 {
     width: 100%;
 }
 
+.btn-danger {
+    background: var(--red);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background: var(--red-dark);
+}
+
 /* ── Tarjetas de Contenido (Cards) ── */
 .card {
-    background: #fff;
+    background: var(--white);
     border-radius: var(--radius-md);
     border: 1px solid var(--cream-300);
     box-shadow: var(--shadow-sm);
@@ -240,7 +301,7 @@ h3 {
 }
 
 .card-doc {
-    background: #fff;
+    background: var(--white);
     border-radius: var(--radius-md);
     border: 1px solid var(--cream-300);
     padding: 16px;
@@ -293,6 +354,26 @@ h3 {
     margin-top: 10px;
 }
 
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 18px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color .2s, background .2s;
+}
+
+.icon-btn:hover {
+    color: var(--brown-700);
+    background: var(--cream-300);
+}
+
+.icon-btn.danger:hover {
+    color: var(--red);
+}
+
 /* ── Etiquetas / Tags / Pills ── */
 .tag {
     display: inline-flex;
@@ -340,7 +421,7 @@ h3 {
     padding: 8px 16px;
     border-radius: var(--radius-pill);
     border: 1.5px solid var(--cream-300);
-    background: #fff;
+    background: var(--white);
     font-size: 13px;
     cursor: pointer;
     transition: all .2s;
@@ -349,7 +430,7 @@ h3 {
 
 .filter-tab.active {
     background: var(--brown-800);
-    color: #fff;
+    color: var(--white);
     border-color: var(--brown-800);
 }
 
@@ -363,7 +444,7 @@ h3 {
 }
 
 .filter-tab.active svg {
-    fill: #fff;
+    fill: var(--white);
     flex-shrink: 0;
 }
 
@@ -414,337 +495,7 @@ h3 {
     background: var(--cream-300);
 }
 
-/* ==========================================================================
-   ── SECCIÓN ADICIONAL: COMPONENTES INTEGRADOS DEL DASHBOARD (BIBLIOWEB) ──
-   ========================================================================== */
-
-/* ── Ajustes Navbar Locales ── */
-.navbar {
-    padding: 0 20px;
-}
-
-.navbar-brand {
-    font-family: 'Crimson Pro', serif;
-    color: #fff;
-    font-size: 13px;
-    line-height: 1.4;
-    letter-spacing: .04em;
-}
-
-.nav-btn {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, .7);
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color .15s, background .15s;
-}
-
-.nav-btn:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, .08);
-}
-
-/* Botón Cerrar Sesión con Variantes de Alerta */
-.btn-logout {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255, 255, 255, .08);
-    border: 1px solid rgba(255, 255, 255, .15);
-    color: rgba(255, 255, 255, .85);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: .03em;
-    padding: 6px 13px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background .15s, color .15s, border-color .15s;
-}
-
-.btn-logout:hover {
-    background: rgba(220, 53, 53, .18);
-    border-color: rgba(220, 53, 53, .45);
-    color: #ff8a8a;
-}
-
-/* ── Welcome Bar (Contenedor de Identidad de Firebase) ── */
-.welcome-bar {
-    background: #3B1F1A !important;
-    /* Preserva de forma explícita tu paleta de color principal */
-    color: #fff !important;
-    padding: 24px 20px 0;
-    display: block;
-}
-
-.welcome-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding-bottom: 24px;
-}
-
-.welcome-name {
-    font-family: 'Crimson Pro', serif;
-    font-size: 32px;
-    font-weight: 400;
-    color: #fff !important;
-}
-
-.welcome-bar .stats-row {
-    display: flex;
-    gap: 24px;
-}
-
-.welcome-bar .stat-num {
-    font-size: 22px;
-    font-weight: 600;
-    color: #fff !important;
-    line-height: 1;
-}
-
-.welcome-bar .stat-lbl {
-    font-size: 11px;
-    color: rgba(255, 255, 255, .6) !important;
-}
-
-/* ── Sección de Propósito e Introducción ── */
-.purpose-section {
-    background: #faf7f3;
-    border: 1px solid #e8e0d5;
-    border-radius: 14px;
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 1fr 260px;
-    gap: 0;
-}
-
-.purpose-body {
-    padding: 32px 36px;
-}
-
-.purpose-eyebrow {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: #8b6340;
-    margin-bottom: 6px;
-}
-
-.purpose-title {
-    font-family: 'Crimson Pro', serif;
-    font-size: 26px;
-    font-weight: 600;
-    color: #1c1008;
-    margin-bottom: 10px;
-    line-height: 1.25;
-}
-
-.purpose-desc {
-    font-size: 14px;
-    line-height: 1.7;
-    color: #4a3828;
-    margin-bottom: 20px;
-    max-width: 560px;
-}
-
-.purpose-list-title {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: #8b6340;
-    margin-bottom: 10px;
-}
-
-.purpose-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.purpose-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 9px;
-    font-size: 13.5px;
-    color: #3a2a1a;
-    line-height: 1.5;
-}
-
-.purpose-list li::before {
-    content: '✦';
-    color: #c8933a;
-    font-size: 9px;
-    margin-top: 4px;
-    flex-shrink: 0;
-}
-
-.purpose-footer-note {
-    margin-top: 18px;
-    font-size: 12px;
-    color: #8b7560;
-    line-height: 1.55;
-    border-top: 1px solid #e0d5c8;
-    padding-top: 14px;
-}
-
-.purpose-img-wrap {
-    position: relative;
-    background: linear-gradient(135deg, #2c1a0e 0%, #5c3a1e 60%, #8b6340 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 260px;
-    overflow: hidden;
-}
-
-.purpose-img-wrap::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=520&q=80') center/cover no-repeat;
-    opacity: .45;
-}
-
-.purpose-img-overlay {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 24px;
-}
-
-.purpose-img-icon {
-    font-size: 56px;
-    line-height: 1;
-    margin-bottom: 10px;
-}
-
-.purpose-img-label {
-    font-family: 'Crimson Pro', serif;
-    font-size: 18px;
-    color: #fff;
-    opacity: .9;
-    letter-spacing: .02em;
-}
-
-/* ── Acciones Rápidas (Estructura Horizontal de 5 Columnas) ── */
-.quick-actions-grid {
-    display: grid !important;
-    grid-template-columns: repeat(5, 1fr) !important;
-    gap: 12px !important;
-    margin-bottom: 32px;
-}
-
-/* ── Modal Flotante de Cierre de Sesión ── */
-.modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    background: rgba(0, 0, 0, .45);
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-overlay.open {
-    display: flex;
-}
-
-.modal-box {
-    background: #fff;
-    border-radius: 14px;
-    padding: 32px 28px;
-    max-width: 360px;
-    width: 90%;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
-}
-
-.modal-icon {
-    font-size: 40px;
-    margin-bottom: 12px;
-}
-
-.modal-title {
-    font-family: 'Crimson Pro', serif;
-    font-size: 22px;
-    color: #1c1008;
-    margin-bottom: 8px;
-}
-
-.modal-msg {
-    font-size: 14px;
-    color: #6b5540;
-    line-height: 1.55;
-    margin-bottom: 24px;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-.btn-cancel {
-    background: #f0e8dc;
-    border: none;
-    color: #4a3828;
-    padding: 10px 22px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.btn-confirm-logout {
-    background: #c0392b;
-    border: none;
-    color: #fff;
-    padding: 10px 22px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.btn-confirm-logout:hover {
-    background: #a93226;
-}
-
-/* ── Estructura Grid Maquetada de Vistas Recientes ── */
-.recent-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: 8px;
-    background: #fff;
-    border: 1px solid #e8e0d5;
-}
-
-.recent-title {
-    font-size: 13.5px;
-    font-weight: 500;
-    color: #1c1008;
-    margin-bottom: 3px;
-}
-
-.recent-meta {
-    font-size: 11.5px;
-    color: #8b7560;
-}
-
+/* ── Layout genérico compartido por varias páginas ── */
 .section-gap {
     display: flex;
     flex-direction: column;
@@ -763,7 +514,6 @@ h3 {
     padding: 28px 20px;
 }
 
-/*Letras field, standar*/
 .field label {
     font-size: 13px;
     font-weight: 500;
@@ -774,13 +524,6 @@ h3 {
     color: var(--amber);
 }
 
-/* ── Media Queries Media y Mobile de Adaptabilidad ── */
-@media (max-width: 900px) {
-    .quick-actions-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-}
-
 @media (max-width: 768px) {
 
     .grid-3,
@@ -789,26 +532,15 @@ h3 {
         grid-template-columns: 1fr;
     }
 
-    .purpose-section {
-        grid-template-columns: 1fr !important;
-    }
-
-    .purpose-img-wrap {
-        display: none !important;
-    }
-
     .search-row {
         flex-direction: column;
     }
 }
 
-@media (max-width: 600px) {
-    .quick-actions-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-}
-
-/* ── Modal de cuenta ── */
+/* ==========================================================
+   ── Modal de cuenta y notificaciones (global) ──
+   Usado en dashboard.html, mis-archivos.html, subir.html y visor.html.
+   ========================================================== */
 .cuenta-overlay {
     position: fixed;
     inset: 0;
@@ -824,7 +556,7 @@ h3 {
 }
 
 .cuenta-box {
-    background: #fff;
+    background: var(--white);
     border-radius: 14px;
     padding: 28px;
     width: 100%;
@@ -836,8 +568,8 @@ h3 {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: var(--amber, #c8933a);
-    color: #fff;
+    background: var(--amber);
+    color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -858,7 +590,7 @@ h3 {
 .cuenta-field label {
     display: block;
     font-size: 12px;
-    color: #8b7560;
+    color: var(--text-muted);
     margin-bottom: 4px;
 }
 
@@ -866,14 +598,14 @@ h3 {
 .cuenta-field select {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #e5d9c8;
+    border: 1px solid var(--cream-300);
     border-radius: 8px;
     font-size: 14px;
 }
 
 .cuenta-field input:disabled {
-    background: #f5f0e8;
-    color: #8b7560;
+    background: var(--cream-200);
+    color: var(--text-muted);
 }
 
 .cuenta-msg {
@@ -885,13 +617,13 @@ h3 {
 }
 
 .cuenta-msg-error {
-    background: #fdecea;
-    color: #c0392b;
+    background: rgba(var(--red-rgb), .1);
+    color: var(--red-dark);
 }
 
 .cuenta-msg-success {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: var(--green-bg);
+    color: var(--green);
 }
 
 .cuenta-actions {
@@ -909,37 +641,37 @@ h3 {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    border-bottom: 1px solid #f0e6d8;
+    border-bottom: 1px solid var(--cream-200);
 }
 
 .cuenta-dato-label {
     font-size: 12px;
-    color: #8b7560;
+    color: var(--text-muted);
 }
 
 .cuenta-dato-valor {
     font-size: 14px;
     font-weight: 500;
-    color: #2b1a14;
+    color: var(--text-primary);
 }
 
 .notif-item {
     padding: 10px 12px;
     border-radius: 8px;
-    background: #faf5ec;
-    border: 1px solid #f0e6d8;
+    background: var(--cream-100);
+    border: 1px solid var(--cream-200);
     font-size: 13px;
     line-height: 1.4;
 }
 
 .notif-item.no-leida {
-    background: #fff6e8;
-    border-color: #e8c88a;
+    background: var(--brown-100);
+    border-color: var(--amber-light);
 }
 
 .notif-fecha {
     display: block;
     font-size: 11px;
-    color: #8b7560;
+    color: var(--text-muted);
     margin-top: 4px;
 }
