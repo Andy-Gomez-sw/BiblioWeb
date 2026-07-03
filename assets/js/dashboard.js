@@ -48,6 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('dash-avatar').textContent = 'U';
     }
 
+    const genero = localStorage.getItem('usuario_genero') || '';
+    const purposeTitle = document.querySelector('.purpose-title');
+    if (purposeTitle) {
+        purposeTitle.textContent = genero === 'F'
+            ? 'Bienvenida a Biblioweb'
+            : 'Bienvenido a Biblioweb';
+    }
+
     expandiblePurpose();
     cargarEstadisticas();
 });

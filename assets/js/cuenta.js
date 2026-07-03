@@ -118,11 +118,19 @@ window.guardarCuenta = async function() {
             pintarVistaLectura(datosUsuarioActual);
 
             localStorage.setItem('usuario_nombre', nombre);
+            localStorage.setItem('usuario_genero', genero);
             document.querySelectorAll('.avatar').forEach(av => {
                 av.textContent = nombre.charAt(0).toUpperCase();
             });
             const nombreEl = document.getElementById('dash-nombre');
             if (nombreEl) nombreEl.textContent = nombre;
+
+            const purposeTitle = document.querySelector('.purpose-title');
+            if (purposeTitle) {
+                purposeTitle.textContent = genero === 'F'
+                    ? 'Bienvenida a Biblioweb'
+                    : 'Bienvenido a Biblioweb';
+            }
 
             setTimeout(() => mostrarVistaLectura(), 1000);
         } else {
