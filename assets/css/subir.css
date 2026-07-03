@@ -11,7 +11,7 @@
     padding: 20px 14px;
     text-align: center;
     cursor: pointer;
-    background: #fff;
+    background: var(--white);
     transition: all .2s;
 }
 
@@ -108,7 +108,7 @@
     font-size: 14px;
     font-family: 'Inter', sans-serif;
     color: var(--text-primary);
-    background: #fff;
+    background: var(--white);
     transition: border-color .2s;
     outline: none;
 }
@@ -134,7 +134,7 @@
     border: 1.5px solid var(--cream-300);
     border-radius: var(--radius-sm);
     padding: 8px 12px;
-    background: #fff;
+    background: var(--white);
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
@@ -161,7 +161,7 @@
     align-items: center;
     gap: 4px;
     background: var(--amber);
-    color: #fff;
+    color: var(--white);
     border-radius: var(--radius-pill);
     padding: 3px 10px;
     font-size: 12px;
@@ -171,7 +171,7 @@
 .tag-removable button {
     background: none;
     border: none;
-    color: #fff;
+    color: var(--white);
     cursor: pointer;
     font-size: 14px;
     line-height: 1;
@@ -238,7 +238,7 @@
 .success-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(59, 31, 26, .5);
+    background: rgba(var(--brown-900-rgb), .5);
     display: none;
     align-items: center;
     justify-content: center;
@@ -256,7 +256,7 @@
     text-align: center;
     max-width: 500px;
     width: 90%;
-    color: #fff;
+    color: var(--white);
 }
 
 .success-check {
@@ -279,12 +279,12 @@
 
 .success-card p {
     font-size: 14px;
-    color: rgba(255, 255, 255, .7);
+    color: rgba(var(--white-rgb), .7);
     margin-bottom: 28px;
 }
 
 .success-doc {
-    background: #fff;
+    background: var(--white);
     border-radius: var(--radius-md);
     padding: 16px;
     text-align: left;
@@ -299,10 +299,10 @@
 }
 
 .success-btn {
-    background: rgba(255, 255, 255, .12);
-    border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(var(--white-rgb), .12);
+    border: 1px solid rgba(var(--white-rgb), .2);
     border-radius: var(--radius-md);
-    color: #fff;
+    color: var(--white);
     padding: 16px 12px;
     cursor: pointer;
     font-size: 13px;
@@ -315,7 +315,7 @@
 }
 
 .success-btn:hover {
-    background: rgba(255, 255, 255, .22);
+    background: rgba(var(--white-rgb), .22);
 }
 
 .success-btn.single {
@@ -387,8 +387,8 @@
 }
 
 .btn-success-back {
-    color: #fff;
-    border-color: rgba(255, 255, 255, .3);
+    color: var(--white);
+    border-color: rgba(var(--white-rgb), .3);
     width: 100%;
 }
 

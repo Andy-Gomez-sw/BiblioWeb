@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('dash-avatar').textContent = 'U';
     }
 
+    expandiblePurpose();
     cargarEstadisticas();
 });
 
@@ -75,7 +76,7 @@ async function cargarEstadisticas() {
 }
 
 // ── Buscar desde el dashboard, redirige al catálogo con el término ──
-window.buscarEnCatalogo = function() {
+window.buscarEnCatalogo = function () {
     const termino = document.getElementById('dash-search-input').value.trim();
     if (termino) {
         window.location.href = `catalogo.html?q=${encodeURIComponent(termino)}`;
@@ -83,3 +84,11 @@ window.buscarEnCatalogo = function() {
         window.location.href = 'catalogo.html';
     }
 };
+
+window.expandiblePurpose = function () {
+    var btn = document.getElementById('faq-purpose-btn');
+    btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+    });
+}

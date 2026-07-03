@@ -24,6 +24,13 @@
     --text-primary: #2A1A14;
     --text-secondary: #6B4438;
     --text-muted: #9B7A6E;
+    --white: #FFFFFF;
+    --white-rgb: 255, 255, 255;
+    --red: #DC3535;
+    --red-dark: #B82E2E;
+    --red-light: #FF8A8A;
+    --red-rgb: 220, 53, 53;
+    --brown-900-rgb: 59, 31, 26;
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
@@ -805,13 +812,16 @@ h3 {
 .cuenta-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,.5);
+    background: rgba(0, 0, 0, .5);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 999;
 }
-.cuenta-overlay.open { display: flex; }
+
+.cuenta-overlay.open {
+    display: flex;
+}
 
 .cuenta-box {
     background: #fff;
@@ -819,7 +829,7 @@ h3 {
     padding: 28px;
     width: 100%;
     max-width: 380px;
-    box-shadow: 0 10px 40px rgba(0,0,0,.25);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .25);
 }
 
 .cuenta-avatar-lg {
@@ -844,12 +854,14 @@ h3 {
 .cuenta-field {
     margin-bottom: 14px;
 }
+
 .cuenta-field label {
     display: block;
     font-size: 12px;
     color: #8b7560;
     margin-bottom: 4px;
 }
+
 .cuenta-field input,
 .cuenta-field select {
     width: 100%;
@@ -858,6 +870,7 @@ h3 {
     border-radius: 8px;
     font-size: 14px;
 }
+
 .cuenta-field input:disabled {
     background: #f5f0e8;
     color: #8b7560;
@@ -870,14 +883,23 @@ h3 {
     border-radius: 6px;
     display: none;
 }
-.cuenta-msg-error { background: #fdecea; color: #c0392b; }
-.cuenta-msg-success { background: #e8f5e9; color: #2e7d32; }
+
+.cuenta-msg-error {
+    background: #fdecea;
+    color: #c0392b;
+}
+
+.cuenta-msg-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
 
 .cuenta-actions {
     display: flex;
     gap: 10px;
     margin-top: 18px;
 }
+
 .cuenta-actions button {
     flex: 1;
 }
@@ -889,10 +911,12 @@ h3 {
     padding: 10px 0;
     border-bottom: 1px solid #f0e6d8;
 }
+
 .cuenta-dato-label {
     font-size: 12px;
     color: #8b7560;
 }
+
 .cuenta-dato-valor {
     font-size: 14px;
     font-weight: 500;
@@ -907,10 +931,12 @@ h3 {
     font-size: 13px;
     line-height: 1.4;
 }
+
 .notif-item.no-leida {
     background: #fff6e8;
     border-color: #e8c88a;
 }
+
 .notif-fecha {
     display: block;
     font-size: 11px;

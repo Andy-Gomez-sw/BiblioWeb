@@ -201,7 +201,6 @@ window.guardarCitaEnBD = async function (citaFormateada) {
         console.warn('No hay usuario_id; la cita no se guardará en el historial.');
         return;
     }
-    
 
     const payload = {
         usuario_id: usuarioId,
