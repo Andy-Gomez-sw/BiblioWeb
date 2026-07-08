@@ -2,7 +2,7 @@
 //  historial.js
 // ════════════════════════════════════════
 
-const PHP_URL_HISTORIAL = 'https://bibliowebb.com.mx/obtener_historial.php';
+const PHP_URL_HISTORIAL = 'https://bibliowebb.com.mx/assets/php/obtener_historial.php';
 
 let files = [];
 

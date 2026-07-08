@@ -2,7 +2,7 @@
 //  subir.js — Solución de Contador y Tarjeta
 // ════════════════════════════════════════
 
-const PHP_URL = 'https://bibliowebb.com.mx/subir_documento.php';
+const PHP_URL = 'https://bibliowebb.com.mx/assets/php/subir_documento.php';
 
 // Configurar elementos tan pronto como el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {

@@ -4,7 +4,7 @@
 //  Devuelve los documentos del usuario
 // ════════════════════════════════════════
 
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../../config.php';
 
 header('Access-Control-Allow-Origin: https://bibliowebb.com.mx');
 header('Content-Type: application/json; charset=utf-8');

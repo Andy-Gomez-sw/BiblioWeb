@@ -1,12 +1,12 @@
 <?php
 // ════════════════════════════════════════
-//  obtener_usuario.php
+//  marcar_notificaciones_leidas.php
 // ════════════════════════════════════════
 
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../../config.php';
 
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/json; charset=utf-8');
 
@@ -20,7 +20,7 @@ function responder(bool $ok, string $msg, array $extra = []): void {
     exit;
 }
 
-$usuario_id = isset($_GET['usuario_id']) ? (int) $_GET['usuario_id'] : 0;
+$usuario_id = isset($_POST['usuario_id']) ? (int) $_POST['usuario_id'] : 0;
 if ($usuario_id <= 0) {
     responder(false, 'Error: Sesión de usuario inválida.');
 }
@@ -28,17 +28,10 @@ if ($usuario_id <= 0) {
 $pdo = getDB();
 
 try {
-    // Nunca devolvemos la columna password por seguridad
-    $sql = "SELECT id, nombre, genero, email, avatar_url, metodo, creado_en FROM usuarios WHERE id = :id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':id' => $usuario_id]);
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $pdo->prepare("UPDATE notificaciones SET leida = 1 WHERE usuario_id = :uid AND leida = 0");
+    $stmt->execute([':uid' => $usuario_id]);
 
-    if (!$usuario) {
-        responder(false, 'Usuario no encontrado.');
-    }
-
-    responder(true, 'OK', ['usuario' => $usuario]);
+    responder(true, 'Notificaciones marcadas como leídas.');
 
 } catch (PDOException $e) {
     responder(false, 'Error en Query de Base de Datos: ' . $e->getMessage());

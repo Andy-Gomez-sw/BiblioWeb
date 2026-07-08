@@ -1,4 +1,4 @@
-const PHP_URL_CATALOGO = 'https://bibliowebb.com.mx/obtener_catalogo.php';
+const PHP_URL_CATALOGO = 'https://bibliowebb.com.mx/assets/php/obtener_catalogo.php';
 
 let docs = [];
 

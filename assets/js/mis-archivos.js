@@ -1,6 +1,6 @@
-const PHP_URL_GET = 'https://bibliowebb.com.mx/obtener_documentos.php';
-const PHP_URL_FAVS = 'https://bibliowebb.com.mx/obtener_favoritos.php';
-const PHP_URL_FAVORITO = 'https://bibliowebb.com.mx/toggle_favorito.php';
+const PHP_URL_GET = 'https://bibliowebb.com.mx/assets/php/obtener_documentos.php';
+const PHP_URL_FAVS = 'https://bibliowebb.com.mx/assets/php/obtener_favoritos.php';
+const PHP_URL_FAVORITO = 'https://bibliowebb.com.mx/assets/php/toggle_favorito.php';
 
 let files = [];
 let deleteTarget = null;

@@ -1,6 +1,6 @@
 let currentType = 'libro';
-const GEN_CITAS_URL = 'https://bibliowebb.com.mx/citas.php';
-const GUARDAR_CITA_URL = 'https://bibliowebb.com.mx/guardar_cita.php'
+const GEN_CITAS_URL = 'https://bibliowebb.com.mx/assets/php/citas.php';
+const GUARDAR_CITA_URL = 'https://bibliowebb.com.mx/assets/php/guardar_cita.php'
 
 document.addEventListener('DOMContentLoaded', () => {
     // Mantener la sesión activa en el avatar

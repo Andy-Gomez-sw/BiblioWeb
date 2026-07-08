@@ -1,9 +1,9 @@
 <?php
 // ════════════════════════════════════════
-//  obtener_notificaciones.php
+//  obtener_documentos.php
 // ════════════════════════════════════════
 
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../../config.php';
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
@@ -28,22 +28,20 @@ if ($usuario_id <= 0) {
 $pdo = getDB();
 
 try {
-    $stmt = $pdo->prepare("
-        SELECT id, documento_id, mensaje, leida, creado_en
-        FROM notificaciones
-        WHERE usuario_id = :uid
+    $sql = "
+        SELECT id, tipo, titulo, autor, anio_publicacion, institucion_editorial,
+               area_conocimiento, doi_isbn, resumen, acceso, ruta_pdf,
+               tamano_archivo, estado, creado_en
+        FROM documentos
+        WHERE usuario_id = :usuario_id
         ORDER BY creado_en DESC
-        LIMIT 20
-    ");
-    $stmt->execute([':uid' => $usuario_id]);
-    $notificaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ";
 
-    $noLeidas = count(array_filter($notificaciones, fn($n) => (int)$n['leida'] === 0));
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':usuario_id' => $usuario_id]);
+    $documentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    responder(true, 'OK', [
-        'notificaciones' => $notificaciones,
-        'no_leidas' => $noLeidas
-    ]);
+    responder(true, 'OK', ['documentos' => $documentos]);
 
 } catch (PDOException $e) {
     responder(false, 'Error en Query de Base de Datos: ' . $e->getMessage());

@@ -2,9 +2,9 @@
 //  notificaciones.js
 // ════════════════════════════════════════
 
-const PHP_URL_REVISAR = 'https://bibliowebb.com.mx/revisar_documentos.php';
-const PHP_URL_NOTIF = 'https://bibliowebb.com.mx/obtener_notificaciones.php';
-const PHP_URL_MARCAR = 'https://bibliowebb.com.mx/notificaciones_leidas.php';
+const PHP_URL_REVISAR = 'https://bibliowebb.com.mx/assets/php/revisar_documentos.php';
+const PHP_URL_NOTIF = 'https://bibliowebb.com.mx/assets/php/obtener_notificaciones.php';
+const PHP_URL_MARCAR = 'https://bibliowebb.com.mx/assets/php/notificaciones_leidas.php';
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnNotif = document.getElementById('btn-notificaciones');

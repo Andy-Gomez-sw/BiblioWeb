@@ -1,9 +1,9 @@
 <?php
 // ════════════════════════════════════════
-//  obtener_documento.php (uno solo, por ID)
+//  obtener_usuario.php
 // ════════════════════════════════════════
 
-require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../../config.php';
 
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
@@ -20,30 +20,25 @@ function responder(bool $ok, string $msg, array $extra = []): void {
     exit;
 }
 
-$doc_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-if ($doc_id <= 0) {
-    responder(false, 'ID de documento inválido.');
+$usuario_id = isset($_GET['usuario_id']) ? (int) $_GET['usuario_id'] : 0;
+if ($usuario_id <= 0) {
+    responder(false, 'Error: Sesión de usuario inválida.');
 }
 
 $pdo = getDB();
 
 try {
-    $sql = "
-        SELECT id, usuario_id, tipo, titulo, autor, anio_publicacion, institucion_editorial,
-               area_conocimiento, doi_isbn, resumen, acceso, ruta_pdf,
-               tamano_archivo, estado, creado_en
-        FROM documentos
-        WHERE id = :id
-    ";
+    // Nunca devolvemos la columna password por seguridad
+    $sql = "SELECT id, nombre, genero, email, avatar_url, metodo, creado_en FROM usuarios WHERE id = :id";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([':id' => $doc_id]);
-    $documento = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute([':id' => $usuario_id]);
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$documento) {
-        responder(false, 'Documento no encontrado.');
+    if (!$usuario) {
+        responder(false, 'Usuario no encontrado.');
     }
 
-    responder(true, 'OK', ['documento' => $documento]);
+    responder(true, 'OK', ['usuario' => $usuario]);
 
 } catch (PDOException $e) {
     responder(false, 'Error en Query de Base de Datos: ' . $e->getMessage());

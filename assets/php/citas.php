@@ -26,7 +26,7 @@ if ($archivo['size'] > 50 * 1024 * 1024) {
     exit;
 }
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '../../vendor/autoload.php';
 
 // ── EXTRAER TEXTO SEGÚN EL TIPO DE ARCHIVO ──
 function extraerTextoPDF($path) {

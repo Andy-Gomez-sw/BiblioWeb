@@ -2,8 +2,8 @@
 //  cuenta.js 
 // ════════════════════════════════════════
 
-const PHP_URL_USUARIO = 'https://bibliowebb.com.mx/obtener_usuario.php';
-const PHP_URL_ACTUALIZAR = 'https://bibliowebb.com.mx/actualizar_usuario.php';
+const PHP_URL_USUARIO = 'https://bibliowebb.com.mx/assets/php/obtener_usuario.php';
+const PHP_URL_ACTUALIZAR = 'https://bibliowebb.com.mx/assets/php/actualizar_usuario.php';
 
 let datosUsuarioActual = null;
 
