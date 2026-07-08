@@ -30,23 +30,28 @@
         </div>
 
         <!-- Tipo de documento -->
-        <div class="type-selector">
-            <div class="type-opt selected" data-type="tesis" onclick="selectType(this)">
-                <div class="type-opt-icon">🎓</div>
-                <div class="type-opt-label">Tesis</div>
-                <div class="type-opt-sub">PDF · DOCX</div>
-            </div>
-            <div class="type-opt" data-type="articulo" onclick="selectType(this)">
-                <div class="type-opt-icon">📄</div>
-                <div class="type-opt-label">Artículo</div>
-                <div class="type-opt-sub">PDF · DOCX</div>
-            </div>
-            <div class="type-opt" data-type="libro" onclick="selectType(this)">
-                <div class="type-opt-icon">📚</div>
-                <div class="type-opt-label">Libro</div>
-                <div class="type-opt-sub">PDF · DOCX</div>
-            </div>
+    <div class="type-selector">
+        <div class="type-opt selected" data-type="tesis" onclick="selectType(this)">
+            <div class="type-opt-icon">🎓</div>
+            <div class="type-opt-label">Tesis</div>
+            <div class="type-opt-sub">PDF · DOCX</div>
         </div>
+        <div class="type-opt" data-type="articulo" onclick="selectType(this)">
+            <div class="type-opt-icon">📄</div>
+            <div class="type-opt-label">Artículo</div>
+            <div class="type-opt-sub">PDF · DOCX</div>
+        </div>
+        <div class="type-opt" data-type="libro" onclick="selectType(this)">
+            <div class="type-opt-icon">📚</div>
+            <div class="type-opt-label">Libro</div>
+            <div class="type-opt-sub">PDF · DOCX</div>
+        </div>
+        <div class="type-opt" data-type="otro" onclick="selectType(this)">
+            <div class="type-opt-icon">📁</div>
+            <div class="type-opt-label">Otro</div>
+            <div class="type-opt-sub">PDF · DOCX</div>
+        </div>
+    </div>
 
         <!-- Dropzone -->
         <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
