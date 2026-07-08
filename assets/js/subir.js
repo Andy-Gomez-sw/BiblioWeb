@@ -175,7 +175,7 @@ window.submitForm = async function() {
             window.ocultarMsg();
 
             // ── INYECCIÓN DE TUS DATOS REALES EN LA TARJETA DE ÉXITO ──
-            const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
+            const iconos = { tesis: '🎓', articulo: '📄', libro: '📚', otro: '📁' };
             
             // 1. Tipo de documento real
             const docTypeEl = document.querySelector('#success-overlay .doc-type');
