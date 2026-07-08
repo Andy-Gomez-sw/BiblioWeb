@@ -57,7 +57,7 @@ window.cargarDocumentos = async function() {
         }
 
         // Mapear los nombres de columnas de MySQL a lo que espera el render
-        const iconos = { tesis: '🎓', articulo: '📄', libro: '📚' };
+        const iconos = { tesis: '🎓', articulo: '📄', libro: '📚', otro: '📁' };
         files = data.documentos.map(d => ({
             id: d.id,
             tipo: d.tipo,
@@ -166,6 +166,7 @@ window.updateCounts = function(list) {
     document.getElementById('count-tesis').textContent = files.filter(f => f.tipo === 'tesis').length;
     document.getElementById('count-art').textContent = files.filter(f => f.tipo === 'articulo').length;
     document.getElementById('count-lib').textContent = files.filter(f => f.tipo === 'libro').length;
+    document.getElementById('count-otro').textContent = files.filter(f => f.tipo === 'otro').length;
 };
 
 window.filterFiles = function() {
