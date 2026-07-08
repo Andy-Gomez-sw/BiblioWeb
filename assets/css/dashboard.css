@@ -220,7 +220,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=520&q=80') center/cover no-repeat;
+    background: url('../assets/img/INICIO.png') center/cover no-repeat;
     opacity: .45;
 }
 
