@@ -198,17 +198,12 @@
 .purpose-img-wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: 21 / 6;
-    overflow: hidden;
-    background: linear-gradient(135deg, var(--brown-900) 0%, var(--brown-800) 60%, var(--brown-600) 100%);
 }
 
-.purpose-img-wrap::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('../assets/img/INICIO.png') center center / cover no-repeat;
-    opacity: 1;
+.purpose-img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 .purpose-img-overlay {
@@ -225,24 +220,12 @@
     background: linear-gradient(to top, rgba(0,0,0,.6) 0%, rgba(0,0,0,0) 50%);
 }
 
-.purpose-img-icon {
-    font-size: 56px;
-    line-height: 1;
-    margin-bottom: 10px;
-}
-
 .purpose-img-label {
     font-family: 'Crimson Pro', serif;
     font-size: 18px;
     color: var(--white);
     opacity: .9;
     letter-spacing: .02em;
-}
-
-@media (max-width: 760px) {
-    .purpose-img-wrap {
-        aspect-ratio: 16 / 9;
-    }
 }
 
 /* ── Quick actions ── */
