@@ -81,7 +81,8 @@ document.getElementById('btn-login').addEventListener('click', async () => {
     setLoading('btn-login', true, 'Entrar');
 
     try {
-        const response = await fetch(`${API_URL}../assets/php/login_tradicional.php`, {
+            // Cambia la línea del fetch por una ruta relativa bien estructurada:
+            const response = await fetch('../assets/php/login_tradicional.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, password: password })
