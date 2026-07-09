@@ -54,8 +54,19 @@
     border: 1px solid var(--cream-300);
     border-radius: var(--radius-md);
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 0;
+}
+
+@media (max-width: 760px) {
+    .purpose-section {
+        grid-template-columns: 1fr;
+    }
+
+    .purpose-img-wrap {
+        display: none;
+    }
 }
 
 .purpose-body {
@@ -197,12 +208,14 @@
 
 .purpose-img-wrap {
     position: relative;
-    width: 100%;
+    overflow: hidden;
 }
 
 .purpose-img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    object-position: 65% center;
     display: block;
 }
 
