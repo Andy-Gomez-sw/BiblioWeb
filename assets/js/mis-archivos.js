@@ -193,7 +193,7 @@ window.confirmDelete = async function() {
     if (deleteTarget === null) return;
 
     const usuarioId = localStorage.getItem('usuario_id') || '';
-    const PHP_URL_DELETE = 'https://bibliowebb.com.mx/eliminar_documento.php';
+    const PHP_URL_DELETE = 'https://bibliowebb.com.mx/assets/php/eliminar_documento.php';
 
     try {
         const formData = new FormData();

@@ -37,7 +37,7 @@ document.getElementById('btn-google').addEventListener('click', async () => {
         const resultado = await signInWithPopup(auth, provider);
         const user = resultado.user;
 
-        const response = await fetch(`${API_URL}/login_google.php`, {
+        const response = await fetch(`${API_URL}/assets/php/login_google.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -81,7 +81,7 @@ document.getElementById('btn-login').addEventListener('click', async () => {
     setLoading('btn-login', true, 'Entrar');
 
     try {
-        const response = await fetch(`${API_URL}/login_tradicional.php`, {
+        const response = await fetch(`${API_URL}/assets/php/login_tradicional.php`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, password: password })

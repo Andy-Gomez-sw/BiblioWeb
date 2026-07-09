@@ -70,7 +70,7 @@ window.addEventListener('load', async () => {
             const user   = result.user;
             const genero = detectarGenero(user.displayName || '');
 
-            const response = await fetch(`${API_URL}/login_google.php`, {
+            const response = await fetch(`${API_URL}/assets/php/login_google.php`, {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -164,7 +164,7 @@ document.getElementById('btn-register').addEventListener('click', async () => {
     setLoading('btn-register', true, 'Crear mi cuenta');
 
     try {
-        const response = await fetch(`${API_URL}/registro_tradicional.php`, {
+        const response = await fetch(`${API_URL}/assets/php/registro_tradicional.php`, {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

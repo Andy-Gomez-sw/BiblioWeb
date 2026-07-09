@@ -66,7 +66,7 @@ async function cargarEstadisticas() {
     if (!usuarioId) return;
 
     try {
-        const res = await fetch(`https://bibliowebb.com.mx/obtener_estadisticas.php?usuario_id=${encodeURIComponent(usuarioId)}`);
+        const res = await fetch(`https://bibliowebb.com.mx/assets/php/obtener_estadisticas.php?usuario_id=${encodeURIComponent(usuarioId)}`);
         const data = await res.json();
 
         if (data.success) {
