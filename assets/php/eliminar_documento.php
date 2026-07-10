@@ -49,7 +49,7 @@ try {
     // 3. Borrar el archivo físico del servidor (Hostinger)
     if (!empty($doc['ruta_pdf'])) {
         $nombreArchivo = basename($doc['ruta_pdf']);
-        $rutaFisica = __DIR__ . '/../uploads/documentos/' . $nombreArchivo;
+        $rutaFisica = __DIR__ . '/../../uploads/documentos/' . $nombreArchivo;
         if (file_exists($rutaFisica)) {
             @unlink($rutaFisica);
         }

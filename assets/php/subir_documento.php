@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-define('UPLOAD_DIR', __DIR__ . '/uploads/documentos/');
+define('UPLOAD_DIR', __DIR__ . '/../../uploads/documentos/');
 define('UPLOAD_URL', 'https://bibliowebb.com.mx/uploads/documentos/');
 
 function responder(bool $ok, string $msg, array $extra = []): void {
