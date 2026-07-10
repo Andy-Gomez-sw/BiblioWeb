@@ -73,10 +73,14 @@ async function cargarEstadisticas() {
             const subidosEl = document.getElementById('dash-subidos');
             const favoritosEl = document.getElementById('dash-favoritos');
             const consultadosEl = document.getElementById('dash-consultados');
+            const subFavsEl = document.getElementById('card-sub-favs');
+            const subHistEl = document.getElementById('card-sub-hist');
 
             if (subidosEl) subidosEl.textContent = data.subidos;
             if (favoritosEl) favoritosEl.textContent = data.favoritos;
             if (consultadosEl) consultadosEl.textContent = data.consultados;
+            if (subFavsEl) subFavsEl.textContent = data.favoritos + ' guardados';
+            if (subHistEl) subHistEl.textContent = data.consultados + ' consultados';
         }
     } catch (err) {
         console.error('Error cargando estadísticas:', err);
