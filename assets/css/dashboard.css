@@ -209,7 +209,7 @@
 .purpose-img-wrap {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--brown-900) 0%, var(--brown-800) 60%, var(--brown-600) 100%);
+    background: var(--cream-200);
     display: flex;
     align-items: center;
     justify-content: center;
