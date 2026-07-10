@@ -64,6 +64,7 @@ async function cargarCatalogo() {
         }));
 
         // Actualizar contadores reales de "Colecciones disponibles"
+        const c = data.conteo;
         const elTesis = document.getElementById('count-tesis');
         const elArt = document.getElementById('count-articulo');
         const elLib = document.getElementById('count-libro');
@@ -71,7 +72,6 @@ async function cargarCatalogo() {
         if (elTesis) elTesis.textContent = c.tesis + ' documentos';
         if (elArt) elArt.textContent = c.articulo + ' publicaciones';
         if (elLib) elLib.textContent = c.libro + ' títulos';
-        if (elOtro) elOtro.textContent = c.otro + ' documentos';
         if (elOtro) elOtro.textContent = c.otro + ' documentos';
 
         // Si venimos de una búsqueda desde el dashboard (?q=...), precargar el término
