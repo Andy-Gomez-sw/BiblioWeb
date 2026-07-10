@@ -176,6 +176,37 @@ h3 {
     cursor: pointer;
 }
 
+/* ── Menú desplegable del avatar ── */
+.avatar-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    min-width: 160px;
+    overflow: hidden;
+    z-index: 500;
+}
+
+.avatar-dropdown.open {
+    display: block;
+}
+
+.avatar-dropdown-item {
+    display: block;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background .15s;
+}
+
+.avatar-dropdown-item:hover {
+    background: var(--cream-200);
+}
+
 /* ── Banner de Alertas (Invitados) ── */
 .alert-banner {
     background: var(--brown-700);
@@ -538,8 +569,11 @@ h3 {
 }
 
 /* ==========================================================
-   ── Modal de cuenta y notificaciones (global) ──
+   ── Modal de notificaciones (global) ──
    Usado en dashboard.html, mis-archivos.html, subir.html y visor.html.
+   (El modal de "Mi cuenta" que compartía estos estilos fue eliminado;
+   .cuenta-overlay/.cuenta-box/.cuenta-actions se conservan porque el
+   modal de notificaciones los sigue usando.)
    ========================================================== */
 .cuenta-overlay {
     position: fixed;
@@ -564,66 +598,9 @@ h3 {
     box-shadow: 0 10px 40px rgba(0, 0, 0, .25);
 }
 
-.cuenta-avatar-lg {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--amber);
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 600;
-    margin: 0 auto 14px;
-}
-
 .cuenta-box h3 {
     text-align: center;
     margin-bottom: 20px;
-}
-
-.cuenta-field {
-    margin-bottom: 14px;
-}
-
-.cuenta-field label {
-    display: block;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-}
-
-.cuenta-field input,
-.cuenta-field select {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--cream-300);
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.cuenta-field input:disabled {
-    background: var(--cream-200);
-    color: var(--text-muted);
-}
-
-.cuenta-msg {
-    font-size: 13px;
-    margin-bottom: 12px;
-    padding: 8px 10px;
-    border-radius: 6px;
-    display: none;
-}
-
-.cuenta-msg-error {
-    background: rgba(var(--red-rgb), .1);
-    color: var(--red-dark);
-}
-
-.cuenta-msg-success {
-    background: var(--green-bg);
-    color: var(--green);
 }
 
 .cuenta-actions {
@@ -634,25 +611,6 @@ h3 {
 
 .cuenta-actions button {
     flex: 1;
-}
-
-.cuenta-dato {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--cream-200);
-}
-
-.cuenta-dato-label {
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
-.cuenta-dato-valor {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
 }
 
 .notif-item {
