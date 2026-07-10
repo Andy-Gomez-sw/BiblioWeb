@@ -2,6 +2,13 @@ let currentType = 'libro';
 const GEN_CITAS_URL = 'https://bibliowebb.com.mx/assets/php/citas.php';
 const GUARDAR_CITA_URL = 'https://bibliowebb.com.mx/assets/php/guardar_cita.php'
 
+const ICONS = {
+    loading: `<svg class="icon icon-loading" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>`,
+    error: `<svg class="icon icon-error" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>`,
+    warning: `<svg class="icon icon-warning" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 20h20L12 3z"></path><line x1="12" y1="9" x2="12" y2="14"></line><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"></circle></svg>`,
+    check: `<svg class="icon icon-check" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Mantener la sesión activa en el avatar
     const nombreGuardado = localStorage.getItem('usuario_nombre');
@@ -22,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const fileInput = document.getElementById('file-input');
                 if (fileInput) {
                     fileInput.files = e.dataTransfer.files;
-                    document.getElementById('file-label').textContent = '✓ ' + file.name;
+                    document.getElementById('file-label').innerHTML = `${ICONS.check} ${file.name}`;
                     dz.style.borderColor = 'var(--amber)';
                     // En cuanto hay archivo, lo analizamos automáticamente
                     window.analyzeDocument();
@@ -37,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── SELECCIÓN DE ARCHIVO POR CLIC ──
 window.handleFile = function (input) {
     if (input.files[0]) {
-        document.getElementById('file-label').textContent = '✓ ' + input.files[0].name;
+        document.getElementById('file-label').innerHTML = `${ICONS.check} ${input.files[0].name}`;
         document.getElementById('dropzone').style.borderColor = 'var(--amber)';
         window.analyzeDocument();
     }
@@ -63,7 +70,7 @@ window.analyzeDocument = async function () {
     const warn = document.getElementById('warn-msg');
     if (warn) {
         warn.style.display = 'flex';
-        warn.textContent = '⏳ Analizando documento y extrayendo datos...';
+        warn.innerHTML = `${ICONS.loading} Analizando documento y extrayendo datos...`;
     }
 
     const formData = new FormData();
@@ -81,13 +88,13 @@ window.analyzeDocument = async function () {
         } else {
             if (warn) {
                 warn.style.display = 'flex';
-                warn.textContent = '❌ No se pudo analizar el documento: ' + data.message;
+                warn.innerHTML = `${ICONS.error} No se pudo analizar el documento: ${data.message}`;
             }
         }
     } catch (err) {
         if (warn) {
             warn.style.display = 'flex';
-            warn.textContent = '❌ Error de conexión. Verifica que el servidor esté activo.';
+            warn.innerHTML = `${ICONS.error} Error de conexión. Verifica que el servidor esté activo.`;
         }
         console.error('Detalles del error:', err);
     }
@@ -140,7 +147,7 @@ window.generateCita = function () {
     if (missing) {
         const warn = document.getElementById('warn-msg');
         warn.style.display = 'flex';
-        warn.textContent = '⚠️ Completa los campos obligatorios (marcados con *) antes de continuar.';
+        warn.innerHTML = `${ICONS.warning} Completa los campos obligatorios (marcados con *) antes de continuar.`;
         return;
     }
     document.getElementById('warn-msg').style.display = 'none';
@@ -149,7 +156,7 @@ window.generateCita = function () {
         const el = document.getElementById(id);
         if (el) {
             el.className = i === 1 ? 'step-dot active' : 'step-dot done';
-            if (i === 0) el.textContent = '✓';
+            if (i === 0) el.innerHTML = ICONS.check;
         }
     });
 

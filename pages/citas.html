@@ -33,7 +33,11 @@
 
         <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
             <input type="file" id="file-input" accept=".pdf,.docx" class="file-input" onchange="handleFile(this)">
-            <div class="dropzone-icon">⬆️</div>
+            <div class="dropzone-icon"><svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960"
+                    width="40px">
+                    <path
+                        d="M166.67-226.67q-38.67-45-59.34-99.66Q86.67-381 80-440h68.67Q156-395 172-353.17q16 41.84 44 77.84l-49.33 48.66ZM80-520q8.67-58.33 29.33-113 20.67-54.67 57.34-100.33L216-684.67q-28 36-44 77.84Q156-565 148.67-520H80ZM438-82q-58.33-6.67-112.83-27.5t-100.5-57.17l48.66-50.66q37 26.66 78.34 44.33Q393-155.33 438-148.67V-82ZM276-742.67l-51.33-50.66q47-36.34 102-57.17t114-27.5v66.67q-45 6.66-86.84 24Q312-770 276-742.67ZM518-82v-66.67q46-6.66 87.83-24.5 41.84-17.83 79.5-44.16L736-166.67Q689-129.33 633.5-109T518-82Zm169.33-660.67q-37-26.66-79-44.33-42-17.67-87.66-24.33V-878q59 6.67 113.5 27.83Q688.67-829 736-793.33l-48.67 50.66Zm106.67 516-48.67-48.66q27.34-36 43.34-77.84Q804.67-395 812-440h68.67q-8.67 58.33-29 113-20.34 54.67-57.67 100.33ZM812-520q-7.33-45-23.33-86.83-16-41.84-43.34-77.84L794-733.33q38.67 45 59.33 99.66Q874-579 880.67-520H812ZM447-280v-271.67L327.67-432.33 280.33-480l200-200 200 200-47.66 47.33-119-119V-280H447Z" />
+                </svg></div>
             <p class="dropzone-title">Arrastra tu archivo aquí</p>
             <p class="dropzone-sub">o selecciónalo desde tu dispositivo</p>
             <span class="tag" id="file-label">Formatos aceptados PDF · DOCX · Máx. 50 MB</span>
@@ -59,14 +63,34 @@
         </div>
 
         <div class="warn-banner" id="warn-msg" style="display: none;">
-            ⚠️ Análisis incompleto — completa los campos faltantes para generar tu cita APA
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px"
+                fill="var(--icons-color);">
+                <path
+                    d="m40-120 440-760 440 760H40Zm115.33-66.67h649.34L480-746.67l-324.67 560Zm351.17-60.95q9.5-9.61 9.5-23.83 0-14.22-9.62-23.72-9.61-9.5-23.83-9.5-14.22 0-23.72 9.62-9.5 9.62-9.5 23.83 0 14.22 9.62 23.72 9.62 9.5 23.83 9.5 14.22 0 23.72-9.62ZM449.33-352H516v-216h-66.67v216ZM480-466.67Z" />
+            </svg> Análisis incompleto — completa los campos faltantes para generar tu cita APA
         </div>
 
         <div class="doc-type-tabs">
-            <button class="doc-tab active" data-dtype="libro" onclick="setDocType(this)">📚 Libro</button>
-            <button class="doc-tab" data-dtype="tesis" onclick="setDocType(this)">🎓 Tesis</button>
-            <button class="doc-tab" data-dtype="articulo" onclick="setDocType(this)">📄 Artículo de revista</button>
-            <button class="doc-tab" data-dtype="capitulo" onclick="setDocType(this)">📑 Capítulo de libro</button>
+            <button class="doc-tab active" data-dtype="libro" onclick="setDocType(this)"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px">
+                    <path
+                        d="M288-96q-40 0-68-27.5T192-190v-553q0-34 22-59.5t56-32.5l354-74v626l-338.95 71.13Q277-210 270.5-203.75 264-197.5 264-190q0 10 7.2 16t16.8 6h407.55v-624H768v696H288Zm96-211 168-36v-477l-168 35v478Zm-72 15v-477l-30 6q-8 2-13 7.19T264-743v463q5-2 10.5-3t10.5-3l27-6Zm-48-469v481-481Z" />
+                </svg> Libro</button>
+            <button class="doc-tab" data-dtype="tesis" onclick="setDocType(this)"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="none">
+                    <path
+                        d="M480-144 216-276v-240L48-600l432-216 432 216v312h-72v-276l-96 48v240L480-144Zm0-321 271-135-271-135-271 135 271 135Zm0 240 192-96v-159l-192 96-192-96v159l192 96Zm0-240Zm0 81Zm0 0Z" />
+                </svg> Tesis</button>
+            <button class="doc-tab" data-dtype="articulo" onclick="setDocType(this)"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="none">
+                    <path
+                        d="M288-288h288v-72H288v72Zm0-156h384v-72H288v72Zm0-156h384v-72H288v72Zm-72 456q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h528q29.7 0 50.85 21.15Q816-773.7 816-744v528q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm0-72h528v-528H216v528Zm0-528v528-528Z" />
+                </svg> Artículo de revista</button>
+            <button class="doc-tab" data-dtype="capitulo" onclick="setDocType(this)"><svg
+                    xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="none">
+                    <path
+                        d="M216-216v-528 151-7 384Zm72-228h239.83q2.17-19 7.17-37t15-35H288v72Zm0 156h208q15-13 31.5-23.5T562-330q-5-7-9.5-14.5T544-360H288v72Zm0-312h384v-72H288v72Zm-72 456q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h528q29.7 0 50.85 21.15Q816-773.7 816-744v194q-15-15-33-26t-39-17v-151H216v528h241q-1 5-1 9.67V-144H216Zm412-219.77q-28-27.78-28-68Q600-472 627.77-500q27.78-28 68-28Q736-528 764-500.23q28 27.78 28 68Q792-392 764.23-364q-27.78 28-68 28Q656-336 628-363.77ZM528-144v-53q0-11.08 4-20.54 4-9.46 12-16.46 32-27 71-40.5t81-13.5q42 0 81 13.5t71 40.5q8 7 12 16.46t4 20.54v53H528Z" />
+                </svg> Capítulo de libro</button>
         </div>
 
         <div class="card">
@@ -145,7 +169,11 @@
                 </div>
 
                 <div class="result-actions">
-                    <button class="btn btn-dark" onclick="copyCita()">📋 Copiar cita</button>
+                    <button class="btn btn-dark" onclick="copyCita()"><svg xmlns="http://www.w3.org/2000/svg"
+                            height="20px" viewBox="0 -960 960 960" width="20px" fill="var(--white)">
+                            <path
+                                d="M144-240v-72h72v72h-72Zm0-144v-72h72v72h-72Zm0-144v-72h72v72h-72ZM288-96v-72h72v72h-72Zm72-144q-33 0-52.5-19.5T288-312v-480q0-33 19.5-52.5T360-864h384q33 0 52.5 19.5T816-792v480q0 33-19.5 52.5T744-240H360Zm0-72h384v-480H360v480Zm72 216v-72h72v72h-72Zm-216 0q-29.7 0-50.85-21.15Q144-138.3 144-168h72v72Zm360 0v-72h72q0 30-21.15 51T576-96ZM144-672q0-29.7 21.15-50.85Q186.3-744 216-744v72h-72Zm408 120Z" />
+                        </svg> Copiar cita</button>
                     <div class="result-grid-2">
                         <button class="btn btn-outline result-btn" onclick="window.location.href='citas.html'">Generar
                             otra

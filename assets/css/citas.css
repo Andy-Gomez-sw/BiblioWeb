@@ -131,6 +131,7 @@
 .dropzone-icon {
     font-size: 32px;
     margin-bottom: 10px;
+    fill: var(--icons-color);
 }
 
 .dropzone-title {
@@ -168,10 +169,18 @@
     color: var(--text-secondary);
 }
 
+.doc-tab svg{
+    fill: var(--icons-color);
+}
+
 .doc-tab.active {
     background: var(--brown-800);
     color: var(--white);
     border-color: var(--brown-800);
+}
+
+.doc-tab.active svg{
+    fill: var(--white);
 }
 
 .doc-tab:hover:not(.active) {

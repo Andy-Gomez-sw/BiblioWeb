@@ -30,33 +30,59 @@
         </div>
 
         <!-- Tipo de documento -->
-    <div class="type-selector">
-        <div class="type-opt selected" data-type="tesis" onclick="selectType(this)">
-            <div class="type-opt-icon">🎓</div>
-            <div class="type-opt-label">Tesis</div>
-            <div class="type-opt-sub">PDF · DOCX</div>
+        <div class="type-selector">
+            <div class="type-opt selected" data-type="tesis" onclick="selectType(this)">
+                <div class="type-opt-icon">
+                    <svg width="22" height="22" viewBox="0 -960 960 960" fill="currentColor">
+                        <path
+                            d="M480-144 216-276v-240L48-600l432-216 432 216v312h-72v-276l-96 48v240L480-144Zm0-321 271-135-271-135-271 135 271 135Zm0 240 192-96v-159l-192 96-192-96v159l192 96Zm0-240Zm0 81Zm0 0Z" />
+                    </svg>
+                </div>
+                <div class="type-opt-label">Tesis</div>
+                <div class="type-opt-sub">PDF · DOCX</div>
+            </div>
+            <div class="type-opt" data-type="articulo" onclick="selectType(this)">
+                <div class="type-opt-icon">
+                    <svg width="22" height="22" viewBox="0 -960 960 960" fill="currentColor">
+                        <path
+                            d="M288-288h288v-72H288v72Zm0-156h384v-72H288v72Zm0-156h384v-72H288v72Zm-72 456q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h528q29.7 0 50.85 21.15Q816-773.7 816-744v528q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm0-72h528v-528H216v528Zm0-528v528-528Z" />
+                    </svg>
+                </div>
+                <div class="type-opt-label">Artículo</div>
+                <div class="type-opt-sub">PDF · DOCX</div>
+            </div>
+            <div class="type-opt" data-type="libro" onclick="selectType(this)">
+                <div class="type-opt-icon">
+                    <svg width="22" height="22" viewBox="0 -960 960 960" fill="currentColor">
+                        <path
+                            d="M288-96q-40 0-68-27.5T192-190v-553q0-34 22-59.5t56-32.5l354-74v626l-338.95 71.13Q277-210 270.5-203.75 264-197.5 264-190q0 10 7.2 16t16.8 6h407.55v-624H768v696H288Zm96-211 168-36v-477l-168 35v478Zm-72 15v-477l-30 6q-8 2-13 7.19T264-743v463q5-2 10.5-3t10.5-3l27-6Zm-48-469v481-481Z" />
+                    </svg>
+                </div>
+                <div class="type-opt-label">Libro</div>
+                <div class="type-opt-sub">PDF · DOCX</div>
+            </div>
+            <div class="type-opt" data-type="otro" onclick="selectType(this)">
+                <div class="type-opt-icon">
+                    <svg width="22" height="22" viewBox="0 -960 960 960" fill="currentColor">
+                        <path
+                            d="M168-192q-32 0-52-21.16t-20-50.88v-432.24Q96-726 116-747t52-21h216l96 96h313q31 0 50.5 21t21.5 51H451l-96-96H168v432l78-264h690l-85 285q-8 23-21 37t-38 14H168Zm75-72h538l59-192H300l-57 192Zm0 0 57-192-57 192Zm-75-336v-96 96Z" />
+                    </svg>
+                </div>
+                <div class="type-opt-label">Otro</div>
+                <div class="type-opt-sub">PDF · DOCX</div>
+            </div>
         </div>
-        <div class="type-opt" data-type="articulo" onclick="selectType(this)">
-            <div class="type-opt-icon">📄</div>
-            <div class="type-opt-label">Artículo</div>
-            <div class="type-opt-sub">PDF · DOCX</div>
-        </div>
-        <div class="type-opt" data-type="libro" onclick="selectType(this)">
-            <div class="type-opt-icon">📚</div>
-            <div class="type-opt-label">Libro</div>
-            <div class="type-opt-sub">PDF · DOCX</div>
-        </div>
-        <div class="type-opt" data-type="otro" onclick="selectType(this)">
-            <div class="type-opt-icon">📁</div>
-            <div class="type-opt-label">Otro</div>
-            <div class="type-opt-sub">PDF · DOCX</div>
-        </div>
-    </div>
 
         <!-- Dropzone -->
         <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
             <input type="file" id="file-input" accept=".pdf,.docx" class="file-input" onchange="handleFile(this)">
-            <div class="dropzone-icon">⬆️</div>
+            <div class="dropzone-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="40px" fill="currentColor" stroke="currentColor"
+                    viewBox="0 -960 960 960" width="40px">
+                    <path
+                        d="M166.67-226.67q-38.67-45-59.34-99.66Q86.67-381 80-440h68.67Q156-395 172-353.17q16 41.84 44 77.84l-49.33 48.66ZM80-520q8.67-58.33 29.33-113 20.67-54.67 57.34-100.33L216-684.67q-28 36-44 77.84Q156-565 148.67-520H80ZM438-82q-58.33-6.67-112.83-27.5t-100.5-57.17l48.66-50.66q37 26.66 78.34 44.33Q393-155.33 438-148.67V-82ZM276-742.67l-51.33-50.66q47-36.34 102-57.17t114-27.5v66.67q-45 6.66-86.84 24Q312-770 276-742.67ZM518-82v-66.67q46-6.66 87.83-24.5 41.84-17.83 79.5-44.16L736-166.67Q689-129.33 633.5-109T518-82Zm169.33-660.67q-37-26.66-79-44.33-42-17.67-87.66-24.33V-878q59 6.67 113.5 27.83Q688.67-829 736-793.33l-48.67 50.66Zm106.67 516-48.67-48.66q27.34-36 43.34-77.84Q804.67-395 812-440h68.67q-8.67 58.33-29 113-20.34 54.67-57.67 100.33ZM812-520q-7.33-45-23.33-86.83-16-41.84-43.34-77.84L794-733.33q38.67 45 59.33 99.66Q874-579 880.67-520H812ZM447-280v-271.67L327.67-432.33 280.33-480l200-200 200 200-47.66 47.33-119-119V-280H447Z" />
+                </svg>
+            </div>
             <p class="dropzone-title">Arrastra tu archivo aquí</p>
             <p class="dropzone-sub">o selecciónalo desde tu dispositivo</p>
             <span class="tag" id="file-label">Formatos aceptados PDF · DOCX · Máx. 50 MB</span>
@@ -115,8 +141,18 @@
             <div class="field">
                 <label>Palabras clave <span>*</span></label>
                 <div class="tags-input" id="tags-container" onclick="document.getElementById('tag-input').focus()">
-                    <span class="tag-removable">Romanticismo <button onclick="removeTag(this)">×</button></span>
-                    <span class="tag-removable">Literatura Mexicana <button onclick="removeTag(this)">×</button></span>
+                    <span class="tag-removable">Romanticismo <button onclick="removeTag(this)"><svg width="10"
+                                height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                stroke-linecap="round">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg></button></span>
+                    <span class="tag-removable">Literatura Mexicana <button onclick="removeTag(this)"><svg width="10"
+                                height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                stroke-linecap="round">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg></button></span>
                     <input type="text" id="tag-input" placeholder="Agregar etiqueta..." onkeydown="addTag(event)">
                 </div>
             </div>
@@ -133,17 +169,36 @@
                 <p class="access-label">Acceso</p>
                 <div class="access-options">
                     <div class="access-opt selected" onclick="selectAccess(this)">
-                        <div class="access-opt-icon">🌐</div>
+                        <div class="access-opt-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="2" y1="12" x2="22" y2="12" />
+                                <path
+                                    d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                            </svg>
+                        </div>
                         <div class="access-opt-label">Acceso abierto</div>
                         <div class="access-opt-sub">Disponible para todos</div>
                     </div>
                     <div class="access-opt" onclick="selectAccess(this)">
-                        <div class="access-opt-icon">🎓</div>
+                        <div class="access-opt-icon">
+                            <svg width="20" height="20" viewBox="0 -960 960 960" fill="currentColor">
+                                <path
+                                    d="M480-144 216-276v-240L48-600l432-216 432 216v312h-72v-276l-96 48v240L480-144Zm0-321 271-135-271-135-271 135 271 135Zm0 240 192-96v-159l-192 96-192-96v159l192 96Zm0-240Zm0 81Zm0 0Z" />
+                            </svg>
+                        </div>
                         <div class="access-opt-label">Institucional</div>
                         <div class="access-opt-sub">Solo usuarios registrados</div>
                     </div>
                     <div class="access-opt" onclick="selectAccess(this)">
-                        <div class="access-opt-icon">🔒</div>
+                        <div class="access-opt-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                        </div>
                         <div class="access-opt-label">Restringido</div>
                         <div class="access-opt-sub">Solo yo</div>
                     </div>
@@ -153,8 +208,14 @@
             <!-- Actions -->
             <div class="form-actions">
                 <a href="dashboard.html" class="btn btn-outline btn-auto">Cancelar</a>
-                <button class="btn btn-dark" onclick="submitForm()">
-                    ⬆️ Subir documento
+                <button class="btn btn-dark" onclick="submitForm()"
+                    style="display:inline-flex;align-items:center;gap:6px;justify-content:center">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="19" x2="12" y2="5" />
+                        <polyline points="5 12 12 5 19 12" />
+                    </svg>
+                    Subir documento
                 </button>
             </div>
 
@@ -164,12 +225,23 @@
     <!-- Success overlay -->
     <div class="success-overlay" id="success-overlay">
         <div class="success-card">
-            <div class="success-check">✓</div>
+            <div class="success-check">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+            </div>
             <h2>¡Documento subido con éxito!</h2>
             <p>Tu archivo ya está disponible en la colección</p>
 
             <div class="success-doc">
-                <div class="doc-type">🎓 Tesis</div>
+                <div class="doc-type" style="display:flex;align-items:center;gap:6px">
+                    <svg width="16" height="16" viewBox="0 -960 960 960" fill="currentColor">
+                        <path
+                            d="M480-144 216-276v-240L48-600l432-216 432 216v312h-72v-276l-96 48v240L480-144Zm0-321 271-135-271-135-271 135 271 135Zm0 240 192-96v-159l-192 96-192-96v159l192 96Zm0-240Zm0 81Zm0 0Z" />
+                    </svg>
+                    Tesis
+                </div>
                 <div class="doc-title">El romanticismo tardío en la literatura mexicana</div>
                 <p class="success-doc-meta">García Martínez, L. A. · 2022 · 3.2 MB</p>
                 <div class="success-doc-badges">
@@ -181,17 +253,33 @@
 
             <div class="success-actions">
                 <button class="success-btn" onclick="window.location.href='mis-archivos.html'">
-                    <span class="success-btn-icon">🗂️</span>
+                    <span class="success-btn-icon">
+                        <svg width="20" height="20" viewBox="0 -960 960 960" fill="currentColor">
+                            <path
+                                d="M168-192q-29 0-50.5-21.5T96-264v-432q0-29.7 21.5-50.85Q139-768 168-768h216l96 96h312q29.7 0 50.85 21.15Q864-629.7 864-600v336q0 29-21.15 50.5T792-192H168Zm0-72h624v-336H450l-96-96H168v432Zm0 0v-432 432Z" />
+                        </svg>
+                    </span>
                     <span>Ver mis archivos</span>
                     <span class="success-btn-sub">Ver todos mis documentos</span>
                 </button>
                 <button class="success-btn" onclick="resetForm()">
-                    <span class="success-btn-icon">⬆️</span>
+                    <span class="success-btn-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="19" x2="12" y2="5" />
+                            <polyline points="5 12 12 5 19 12" />
+                        </svg>
+                    </span>
                     <span>Subir otro archivo</span>
                     <span class="success-btn-sub">Agregar más documentos</span>
                 </button>
                 <button class="success-btn single" onclick="window.location.href='citas.html'">
-                    <span class="success-btn-icon">❝</span>
+                    <span class="success-btn-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M7.17 6A5.17 5.17 0 0 0 2 11.17V18h6.83v-6.83H4.83c0-1.29 1.05-2.34 2.34-2.34V6Zm10 0A5.17 5.17 0 0 0 12 11.17V18h6.83v-6.83h-4.66c0-1.29 1.05-2.34 2.34-2.34V6Z" />
+                        </svg>
+                    </span>
                     <span>Generar cita APA</span>
                     <span class="success-btn-sub">Para este u otro documento</span>
                 </button>
@@ -235,6 +323,6 @@
         </div>
     </div>
 
-</body>
+</body>F
 
 </html>

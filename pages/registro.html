@@ -66,7 +66,12 @@
                 <div class="divider"><span>o con correo</span></div>
 
                 <div class="error-msg" id="error-msg">
-                    ⚠️ <span id="error-text"></span>
+                    <svg class="icon icon-error" viewBox="0 0 24 24" width="16" height="16" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                    </svg> <span id="error-text"></span>
                 </div>
 
                 <div class="form-grid-2-register">
@@ -117,11 +122,12 @@
                     </div>
                 </div>
 
-                
+
                 <div class="field">
-                   <label>Género <span>*</span></label>
-                   <div class="input-group">
-                        <select id="r-genero" style="border: none; outline: none; background: transparent; width: 100%; font-size: 14px; color: var(--text-primary); padding: 13px 0; font-family: 'Inter', sans-serif; cursor: pointer;">
+                    <label>Género <span>*</span></label>
+                    <div class="input-group">
+                        <select id="r-genero"
+                            style="border: none; outline: none; background: transparent; width: 100%; font-size: 14px; color: var(--text-primary); padding: 13px 0; font-family: 'Inter', sans-serif; cursor: pointer;">
                             <option value="M" selected>Masculino</option>
                             <option value="F">Femenino</option>
                         </select>

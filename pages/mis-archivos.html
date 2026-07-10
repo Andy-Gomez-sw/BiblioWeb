@@ -45,87 +45,102 @@
                 <div>
                     <div class="hstat-num" id="count-otro">0</div>
                     <div class="hstat-label">Otro</div>
-            </div>
-        </div>
-    </div>
-
-    <main class="page-content">
-
-        <div class="search-actions-row">
-            <div class="search-bar-sm">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="m21 21-4.35-4.35" />
-                </svg>
-                <input type="text" placeholder="Buscar en mis archivos" id="file-search" oninput="filterFiles()">
-            </div>
-            <a href="subir.html" class="btn btn-dark btn-auto">
-                ⬆️ Subir nuevo
-            </a>
-        </div>
-
-        <div class="files-list" id="files-list"></div>
-
-        <div id="empty-files" class="empty-files-wrapper">
-            <div class="empty-state">
-                <p>📂</p>
-                <p class="empty-state-title">No hay archivos que coincidan</p>
-                <p class="empty-state-sub">Intenta con otro término</p>
+                </div>
             </div>
         </div>
 
-        <div class="back-btn-row">
-            <a href="dashboard.html" class="btn btn-outline btn-auto">
-                ← Volver al inicio
-            </a>
-        </div>
+        <main class="page-content">
 
-    </main>
+            <div class="search-actions-row">
+                <div class="search-bar-sm">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input type="text" placeholder="Buscar en mis archivos" id="file-search" oninput="filterFiles()">
+                </div>
+                <a href="subir.html" class="btn btn-dark btn-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="25px" fill="currentColor" stroke="currentColor"
+                        viewBox="0 -960 960 960" width="25px">
+                        <path
+                            d="M166.67-226.67q-38.67-45-59.34-99.66Q86.67-381 80-440h68.67Q156-395 172-353.17q16 41.84 44 77.84l-49.33 48.66ZM80-520q8.67-58.33 29.33-113 20.67-54.67 57.34-100.33L216-684.67q-28 36-44 77.84Q156-565 148.67-520H80ZM438-82q-58.33-6.67-112.83-27.5t-100.5-57.17l48.66-50.66q37 26.66 78.34 44.33Q393-155.33 438-148.67V-82ZM276-742.67l-51.33-50.66q47-36.34 102-57.17t114-27.5v66.67q-45 6.66-86.84 24Q312-770 276-742.67ZM518-82v-66.67q46-6.66 87.83-24.5 41.84-17.83 79.5-44.16L736-166.67Q689-129.33 633.5-109T518-82Zm169.33-660.67q-37-26.66-79-44.33-42-17.67-87.66-24.33V-878q59 6.67 113.5 27.83Q688.67-829 736-793.33l-48.67 50.66Zm106.67 516-48.67-48.66q27.34-36 43.34-77.84Q804.67-395 812-440h68.67q-8.67 58.33-29 113-20.34 54.67-57.67 100.33ZM812-520q-7.33-45-23.33-86.83-16-41.84-43.34-77.84L794-733.33q38.67 45 59.33 99.66Q874-579 880.67-520H812ZM447-280v-271.67L327.67-432.33 280.33-480l200-200 200 200-47.66 47.33-119-119V-280H447Z" />
+                    </svg> Subir nuevo
+                </a>
+            </div>
 
-    <div class="delete-confirm" id="delete-modal">
-        <div class="delete-card">
-            <div class="delete-icon">🗑️</div>
-            <h3>¿Eliminar documento?</h3>
-            <p id="delete-doc-name">Esta acción no se puede deshacer.</p>
-            <div class="delete-actions">
-                <button class="btn btn-outline btn-flex" onclick="closeDelete()">Cancelar</button>
-                <button class="btn btn-danger btn-flex" onclick="confirmDelete()">Eliminar</button>
+            <div class="files-list" id="files-list"></div>
+
+            <div id="empty-files" class="empty-files-wrapper">
+                <div class="empty-state">
+                    <p><svg class="icon icon-folder" viewBSox="0 -960 960 960" width="16" height="16"
+                            fill="currentColor">
+                            <path
+                                d="M168-192q-29 0-50.5-21.5T96-264v-432q0-29.7 21.5-50.85Q139-768 168-768h216l96 96h312q29.7 0 50.85 21.15Q864-629.7 864-600v336q0 29-21.15 50.5T792-192H168Zm0-72h624v-336H450l-96-96H168v432Zm0 0v-432 432Z" />
+                        </svg></p>
+                    <p class="empty-state-title">No hay archivos que coincidan</p>
+                    <p class="empty-state-sub">Intenta con otro término</p>
+                </div>
+            </div>
+
+            <div class="back-btn-row">
+                <a href="dashboard.html" class="btn btn-outline btn-auto">
+                    ← Volver al inicio
+                </a>
+            </div>
+
+        </main>
+
+        <div class="delete-confirm" id="delete-modal">
+            <div class="delete-card">
+                <div class="delete-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14H6L5 6" />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                        <path d="M9 6V4h6v2" />
+                    </svg></div>
+                <h3>¿Eliminar documento?</h3>
+                <p id="delete-doc-name">Esta acción no se puede deshacer.</p>
+                <div class="delete-actions">
+                    <button class="btn btn-outline btn-flex" onclick="closeDelete()">Cancelar</button>
+                    <button class="btn btn-danger btn-flex" onclick="confirmDelete()">Eliminar</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal de cuenta -->
-    <div class="cuenta-overlay" id="cuenta-overlay">
-        <div class="cuenta-box">
-            <div class="cuenta-avatar-lg" id="cuenta-avatar-lg">-</div>
-            <h3>Mi cuenta</h3>
+        <!-- Modal de cuenta -->
+        <div class="cuenta-overlay" id="cuenta-overlay">
+            <div class="cuenta-box">
+                <div class="cuenta-avatar-lg" id="cuenta-avatar-lg">-</div>
+                <h3>Mi cuenta</h3>
 
-            <div class="cuenta-msg" id="cuenta-msg"></div>
+                <div class="cuenta-msg" id="cuenta-msg"></div>
 
-            <div class="cuenta-field">
-                <label>Nombre</label>
-                <input type="text" id="cuenta-nombre">
-            </div>
-            <div class="cuenta-field">
-                <label>Correo electrónico</label>
-                <input type="email" id="cuenta-email">
-            </div>
-            <div class="cuenta-field">
-                <label>Género</label>
-                <select id="cuenta-genero">
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
-                    <option value="O">Otro</option>
-                </select>
-            </div>
+                <div class="cuenta-field">
+                    <label>Nombre</label>
+                    <input type="text" id="cuenta-nombre">
+                </div>
+                <div class="cuenta-field">
+                    <label>Correo electrónico</label>
+                    <input type="email" id="cuenta-email">
+                </div>
+                <div class="cuenta-field">
+                    <label>Género</label>
+                    <select id="cuenta-genero">
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                        <option value="O">Otro</option>
+                    </select>
+                </div>
 
-            <div class="cuenta-actions">
-                <button class="btn btn-outline btn-flex" onclick="cerrarModalCuenta()">Cancelar</button>
-                <button class="btn btn-dark btn-flex" onclick="guardarCuenta()">Guardar cambios</button>
+                <div class="cuenta-actions">
+                    <button class="btn btn-outline btn-flex" onclick="cerrarModalCuenta()">Cancelar</button>
+                    <button class="btn btn-dark btn-flex" onclick="guardarCuenta()">Guardar cambios</button>
+                </div>
             </div>
         </div>
-    </div>
 </body>
 
 </html>
