@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis favoritos — Biblioteca Digital</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/mis-archivos.css">
+    <script src="../assets/js/favoritos.js" defer></script>
+    <script src="../assets/js/cuenta.js" defer></script>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">BIBLIOWEB<br>COLECCIÓN DIGITAL</div>
+        <div class="navbar-actions">
+            <button class="nav-btn" onclick="window.location.href='dashboard.html'">← Inicio</button>
+            <div class="avatar" id="global-avatar">-</div>
+        </div>
+    </nav>
+
+    <div class="header-bar">
+        <div class="header-inner">
+            <h1>Mis favoritos</h1>
+            <p>Documentos que has guardado como favoritos</p>
+        </div>
+    </div>
+
+    <main class="page-content">
+
+        <div class="search-actions-row">
+            <div class="search-bar-sm">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+                <input type="text" placeholder="Buscar en mis favoritos" id="file-search" oninput="filterFiles()">
+            </div>
+        </div>
+
+        <div class="files-list" id="files-list"></div>
+
+        <div id="empty-files" class="empty-files-wrapper" style="display:none">
+            <div class="empty-state">
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 8px;display:block">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/>
+                    <line x1="3" y1="3" x2="21" y2="21"/>
+                </svg>
+                <p class="empty-state-title">Aún no tienes favoritos</p>
+                <p class="empty-state-sub">Marca documentos con ♡ para verlos aquí</p>
+            </div>
+        </div>
+
+        <div class="back-btn-row">
+            <a href="dashboard.html" class="btn btn-outline btn-auto">
+                ← Volver al inicio
+            </a>
+        </div>
+
+    </main>
+
+</body>
+
+</html>
