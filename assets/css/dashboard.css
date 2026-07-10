@@ -209,13 +209,17 @@
 .purpose-img-wrap {
     position: relative;
     overflow: hidden;
+    background: linear-gradient(135deg, var(--brown-900) 0%, var(--brown-800) 60%, var(--brown-600) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .purpose-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 65% center;
+    height: auto;
+    max-width: 380px;
+    object-fit: contain;
     display: block;
 }
 
@@ -230,7 +234,7 @@
     align-items: center;
     justify-content: flex-end;
     padding-bottom: 20px;
-    background: linear-gradient(to top, rgba(0,0,0,.6) 0%, rgba(0,0,0,0) 50%);
+    pointer-events: none;
 }
 
 .purpose-img-label {
@@ -239,6 +243,9 @@
     color: var(--white);
     opacity: .9;
     letter-spacing: .02em;
+    background: rgba(0,0,0,.5);
+    padding: 4px 12px;
+    border-radius: var(--radius-pill, 999px);
 }
 
 /* ── Quick actions ── */
