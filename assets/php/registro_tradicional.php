@@ -1,5 +1,6 @@
 <?php
-require_once '../config.php';
+require_once __DIR__ . '/../../../config.php';
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
