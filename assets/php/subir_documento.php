@@ -1,6 +1,6 @@
 <?php
 // ════════════════════════════════════════
-//  subir_documento.php 
+//  subir_documento.php prueba de subida de documentos
 // ════════════════════════════════════════
 
 require_once __DIR__ . '/../../../config.php';
