@@ -55,7 +55,7 @@
     border-radius: var(--radius-md);
     overflow: hidden;
     display: grid;
-    grid-template-columns: 1fr 450px;
+    grid-template-columns: 1fr 400px;
     gap: 0;
 }
 
@@ -218,7 +218,7 @@
 .purpose-img {
     width: 100%;
     height: auto;
-    max-width: 450px;
+    max-width: 400px;
     object-fit: contain;
     display: block;
 }
