@@ -11,7 +11,7 @@
 
 /* ── Welcome bar ── */
 .welcome-bar {
-    background: var(--brown-900);
+    background: var(--brown-300);
     color: var(--white);
     padding: 24px 20px 0;
 }
