@@ -10,6 +10,7 @@
 
 :root {
     --icons-color: #49211a;
+    --brown-300: #956e67;
     --brown-900: #5C2A21;
     --brown-800: #6f3328;
     --brown-700: #823b2e;
@@ -61,7 +62,7 @@ h3 {
    ── Navbar (global, todas las páginas) ──
    ========================================================== */
 .navbar {
-    background: var(--brown-900);
+    background: var(--brown-300);
     color: var(--white);
     padding: 0 20px;
     height: 56px;
