@@ -64,7 +64,7 @@ async function cargarCatalogo() {
         }));
 
         // Actualizar contadores reales de "Colecciones disponibles"
-        const c = data.conteo;
+        const c = data.contadores;
         const elTesis = document.getElementById('count-tesis');
         const elArt = document.getElementById('count-articulo');
         const elLib = document.getElementById('count-libro');
