@@ -36,7 +36,7 @@ try {
     $stmt2->execute([':id' => $usuario_id]);
     $favoritos = (int) $stmt2->fetchColumn();
 
-    $stmt3 = $pdo->prepare("SELECT COUNT(*) FROM historial_consultas WHERE usuario_id = :id");
+    $stmt3 = $pdo->prepare("SELECT COUNT(DISTINCT documento_id) FROM historial_consultas WHERE usuario_id = :id");
     $stmt3->execute([':id' => $usuario_id]);
     $consultados = (int) $stmt3->fetchColumn();
 
