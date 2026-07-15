@@ -126,6 +126,13 @@ async function cargarEstadisticas() {
     }
 }
 
+const ICONOS_TIPO_DASH = {
+    tesis: `<svg width="14" height="14" viewBox="0 -960 960 960" fill="currentColor" style="vertical-align:-2px;margin-right:4px"><path d="M480-144 216-276v-240L48-600l432-216 432 216v312h-72v-276l-96 48v240L480-144Zm0-321 271-135-271-135-271 135 271 135Zm0 240 192-96v-159l-192 96-192-96v159l192 96Zm0-240Zm0 81Zm0 0Z"/></svg>`,
+    articulo: `<svg width="14" height="14" viewBox="0 -960 960 960" fill="currentColor" style="vertical-align:-2px;margin-right:4px"><path d="M288-288h288v-72H288v72Zm0-156h384v-72H288v72Zm0-156h384v-72H288v72Zm-72 456q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h528q29.7 0 50.85 21.15Q816-773.7 816-744v528q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm0-72h528v-528H216v528Zm0-528v528-528Z"/></svg>`,
+    libro: `<svg width="14" height="14" viewBox="0 -960 960 960" fill="currentColor" style="vertical-align:-2px;margin-right:4px"><path d="M288-96q-40 0-68-27.5T192-190v-553q0-34 22-59.5t56-32.5l354-74v626l-338.95 71.13Q277-210 270.5-203.75 264-197.5 264-190q0 10 7.2 16t16.8 6h407.55v-624H768v696H288Zm96-211 168-36v-477l-168 35v478Zm-72 15v-477l-30 6q-8 2-13 7.19T264-743v463q5-2 10.5-3t10.5-3l27-6Zm-48-469v481-481Z"/></svg>`,
+    otro: `<svg width="14" height="14" viewBox="0 -960 960 960" fill="currentColor" style="vertical-align:-2px;margin-right:4px"><path d="M168-192q-32 0-52-21.16t-20-50.88v-432.24Q96-726 116-747t52-21h216l96 96h313q31 0 50.5 21t21.5 51H451l-96-96H168v432l78-264h690l-85 285q-8 23-21 37t-38 14H168Zm75-72h538l59-192H300l-57 192Zm0 0 57-192-57 192Zm-75-336v-96 96Z"/></svg>`
+};
+
 // ── CARGAR "RECOMENDADOS" (documentos más vistos por todos los usuarios) ──
 async function cargarRecomendados() {
     const contenedor = document.getElementById('dash-recomendados');
@@ -144,11 +151,9 @@ async function cargarRecomendados() {
             return;
         }
 
-        const iconosTipo = { tesis: '🎓', articulo: '📄', libro: '📚', otro: '📁' };
-
         contenedor.innerHTML = data.documentos.map(d => `
             <div class="card-doc" onclick="window.location.href='visor.html?id=${d.id}'">
-                <div class="doc-type">${iconosTipo[d.tipo] || '📄'} ${d.tipo.charAt(0).toUpperCase() + d.tipo.slice(1)}</div>
+                <div class="doc-type" style="display:flex;align-items:center">${ICONOS_TIPO_DASH[d.tipo] || ICONOS_TIPO_DASH.articulo} ${d.tipo.charAt(0).toUpperCase() + d.tipo.slice(1)}</div>
                 <div class="doc-title">${d.titulo}</div>
                 <div class="doc-meta">${d.autor}</div>
                 <div class="doc-footer">
