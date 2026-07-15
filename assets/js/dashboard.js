@@ -85,6 +85,44 @@ async function cargarEstadisticas() {
     } catch (err) {
         console.error('Error cargando estadísticas:', err);
     }
+
+    cargarVistosRecientemente();
+}
+
+    // ── CARGAR "VISTOS RECIENTEMENTE" (últimos 3 documentos consultados) ──
+    async function cargarVistosRecientemente() {
+    const usuarioId = localStorage.getItem('usuario_id') || '';
+    const contenedor = document.getElementById('dash-recientes');
+    if (!usuarioId || !contenedor) return;
+
+    try {
+        const res = await fetch(`https://bibliowebb.com.mx/assets/php/obtener_historial.php?usuario_id=${encodeURIComponent(usuarioId)}`);
+        const data = await res.json();
+
+        if (!data.success || data.documentos.length === 0) {
+            contenedor.innerHTML = `
+                <p style="color:#8b7560;font-size:13px">
+                    Todavía no has consultado ningún documento.
+                </p>
+            `;
+            return;
+        }
+
+        const recientes = data.documentos.slice(0, 3);
+
+        contenedor.innerHTML = recientes.map(d => `
+            <div class="recent-item" style="cursor:pointer" onclick="window.location.href='visor.html?id=${d.id}'">
+                <div style="flex:1">
+                    <div class="recent-title">${d.titulo}</div>
+                    <div class="recent-meta">${d.autor} · ${d.anio_publicacion}</div>
+                </div>
+                <span class="tag">${d.tipo.charAt(0).toUpperCase() + d.tipo.slice(1)}</span>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        console.error('Error cargando vistos recientemente:', err);
+    }
 }
 
 // ── Buscar desde el dashboard, redirige al catálogo con el término ──
