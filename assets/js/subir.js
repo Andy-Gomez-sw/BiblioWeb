@@ -20,7 +20,7 @@ const ICONS = {
 document.addEventListener('DOMContentLoaded', () => {
     // ── PERSISTENCIA DEL AVATAR ──
     const nombreGuardado = localStorage.getItem('usuario_nombre');
-    const avatar = document.getElementById("global-avatar");
+    const avatar = document.getElementById("subir-avatar");
 
     if (nombreGuardado && avatar) {
         avatar.textContent = nombreGuardado.charAt(0).toUpperCase();
