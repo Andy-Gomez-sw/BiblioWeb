@@ -87,6 +87,7 @@ async function cargarEstadisticas() {
     }
 
     cargarVistosRecientemente();
+    cargarRecomendados()
 }
 
     // ── CARGAR "VISTOS RECIENTEMENTE" (últimos 3 documentos consultados) ──
@@ -122,6 +123,42 @@ async function cargarEstadisticas() {
 
     } catch (err) {
         console.error('Error cargando vistos recientemente:', err);
+    }
+}
+
+// ── CARGAR "RECOMENDADOS" (documentos más vistos por todos los usuarios) ──
+async function cargarRecomendados() {
+    const contenedor = document.getElementById('dash-recomendados');
+    if (!contenedor) return;
+
+    try {
+        const res = await fetch('https://bibliowebb.com.mx/assets/php/obtener_recomendados.php');
+        const data = await res.json();
+
+        if (!data.success || data.documentos.length === 0) {
+            contenedor.innerHTML = `
+                <p style="color:#8b7560;font-size:13px;grid-column:1/-1">
+                    Aún no hay recomendaciones disponibles. Explora el catálogo para descubrir documentos.
+                </p>
+            `;
+            return;
+        }
+
+        const iconosTipo = { tesis: '🎓', articulo: '📄', libro: '📚', otro: '📁' };
+
+        contenedor.innerHTML = data.documentos.map(d => `
+            <div class="card-doc" onclick="window.location.href='visor.html?id=${d.id}'">
+                <div class="doc-type">${iconosTipo[d.tipo] || '📄'} ${d.tipo.charAt(0).toUpperCase() + d.tipo.slice(1)}</div>
+                <div class="doc-title">${d.titulo}</div>
+                <div class="doc-meta">${d.autor}</div>
+                <div class="doc-footer">
+                    <span class="doc-year">${d.anio_publicacion}</span>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        console.error('Error cargando recomendados:', err);
     }
 }
 
