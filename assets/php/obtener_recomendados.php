@@ -31,7 +31,7 @@ try {
         WHERE d.estado = 'publicado'
         GROUP BY d.id
         ORDER BY total_vistas DESC
-        LIMIT 6
+        LIMIT 3
     ";
     $stmt = $pdo->query($sql);
     $recomendados = $stmt->fetchAll(PDO::FETCH_ASSOC);
