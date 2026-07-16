@@ -237,7 +237,7 @@
 }
 
 .register-footer {
-    background: var(--brown-900);
+    background: var(--brown-300);
     color: rgba(255, 255, 255, .5);
     padding: 24px 32px;
     display: flex;
