@@ -635,3 +635,29 @@ h3 {
     color: var(--text-muted);
     margin-top: 4px;
 }
+
+/* ── Footer discreto para páginas internas ── */
+.footer-mini {
+    text-align: center;
+    padding: 20px;
+    margin-top: 24px;
+}
+
+.footer-mini nav {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.footer-mini nav a {
+    font-size: 11px;
+    color: var(--brown-300);
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.footer-mini nav a:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
