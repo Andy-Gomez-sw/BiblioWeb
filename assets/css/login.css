@@ -197,7 +197,7 @@
 }
 
 .login-footer {
-    background: var(--brown-900);
+    background: var(--brown-300);
     color: rgba(255, 255, 255, .4);
     padding: 20px 32px;
     display: flex;
